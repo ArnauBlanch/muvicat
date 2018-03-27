@@ -7,5 +7,7 @@
     <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
     <item name="colorAccent">@color/colorAccent</item>
     <item name="android:fontFamily">@font/nunito_sans</item>
+    <item name="android:navigationBarColor">@color/colorPrimaryDark</item>
+    <item name="android:statusBarColor">@color/grey</item>
   </style>
 </resources>
