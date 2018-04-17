@@ -1,7 +1,8 @@
-package xyz.arnau.muvicat
+package xyz.arnau.muvicat.ui
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import xyz.arnau.muvicat.R
 
 class MainActivity : AppCompatActivity() {
 

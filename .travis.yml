@@ -24,4 +24,7 @@ android:
     - sys-img-armeabi-v7a-android-17
 
 script:
-- chmod +x ./gradlew
+- ./gradlew build connectedCheck jacocoTestReport -x lint
+
+after_success:
+- bash <(curl -s https://codecov.io/bash)
