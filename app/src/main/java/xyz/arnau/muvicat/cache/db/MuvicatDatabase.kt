@@ -14,6 +14,7 @@ import xyz.arnau.muvicat.cache.model.CachedMovie
 abstract class MuvicatDatabase : RoomDatabase() {
     abstract fun cachedMoviesDao(): CachedMovieDao
 
+    /*
     private var instance: MuvicatDatabase? = null
 
     private val sLock = Any()
@@ -33,4 +34,5 @@ abstract class MuvicatDatabase : RoomDatabase() {
         }
         return instance!!
     }
+    */
 }

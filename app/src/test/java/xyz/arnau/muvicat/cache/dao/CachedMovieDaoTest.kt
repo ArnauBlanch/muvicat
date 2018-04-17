@@ -14,7 +14,8 @@ import xyz.arnau.muvicat.cache.test.MovieFactory
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [16])
 open class CachedMovieDaoTest {
-    private lateinit var muvicatDatabase: MuvicatDatabase
+    private var muvicatDatabase = Room.inMemoryDatabaseBuilder(RuntimeEnvironment.application,
+        MuvicatDatabase::class.java).allowMainThreadQueries().build()
 
     @Before
     fun initDb() {
