@@ -1,12 +1,8 @@
-package xyz.arnau.muvicat.cache.model
+package xyz.arnau.muvicat.data.model
 
-import android.arch.persistence.room.Entity
-import android.arch.persistence.room.PrimaryKey
 import java.util.*
 
-@Entity(tableName = "movies")
-data class CachedMovie(
-    @PrimaryKey
+data class MovieEntity(
     var id: Long,
     var title: String?,
     var originalTitle: String?,

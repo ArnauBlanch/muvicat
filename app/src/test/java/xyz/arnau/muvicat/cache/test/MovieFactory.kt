@@ -5,22 +5,40 @@ import xyz.arnau.muvicat.cache.test.DataFactory.Factory.randomDate
 import xyz.arnau.muvicat.cache.test.DataFactory.Factory.randomInt
 import xyz.arnau.muvicat.cache.test.DataFactory.Factory.randomLong
 import xyz.arnau.muvicat.cache.test.DataFactory.Factory.randomString
+import xyz.arnau.muvicat.data.model.MovieEntity
 
 class MovieFactory {
     companion object Factory {
-        fun makeCachedMovie(): CachedMovie {
-            return CachedMovie(randomLong(), randomString(), randomString(), randomInt(),
-                    randomString(), randomString(), randomString(), randomDate(), randomString(),
-                    randomInt(), randomString(), randomString(), randomString())
+        fun makeCachedMovie() =
+            CachedMovie(
+                randomLong(), randomString(), randomString(), randomInt(),
+                randomString(), randomString(), randomString(), randomDate(), randomString(),
+                randomInt(), randomString(), randomString(), randomString()
+            )
+
+        fun makeMovieEntity() =
+            MovieEntity(
+                randomLong(), randomString(), randomString(), randomInt(),
+                randomString(), randomString(), randomString(), randomDate(), randomString(),
+                randomInt(), randomString(), randomString(), randomString()
+            )
+
+        private fun makeCachedMovieWithNullValues() =
+            CachedMovie(
+                randomLong(), null, null, null, null,
+                null, null, null, null, null,
+                null, null, null
+            )
+
+        fun makeMovieEntityList(count: Int): List<MovieEntity> {
+            val movieEntities = mutableListOf<MovieEntity>()
+            repeat(count) {
+                movieEntities.add(makeMovieEntity())
+            }
+            return movieEntities
         }
 
-        fun makeCachedMovieWithNullValues(): CachedMovie {
-            return CachedMovie(randomLong(), null, null, null, null,
-                    null, null, null, null, null,
-                    null, null, null)
-        }
-
-        fun makeCachedMovieList(count: Int): List<CachedMovie>  {
+        fun makeCachedMovieList(count: Int): List<CachedMovie> {
             val cachedMovies = mutableListOf<CachedMovie>()
             repeat(count) {
                 cachedMovies.add(makeCachedMovie())
@@ -28,7 +46,7 @@ class MovieFactory {
             return cachedMovies
         }
 
-        fun makeCachedMovieListWithNullValues(count: Int): List<CachedMovie>  {
+        fun makeCachedMovieListWithNullValues(count: Int): List<CachedMovie> {
             val cachedMovies = mutableListOf<CachedMovie>()
             repeat(count) {
                 cachedMovies.add(makeCachedMovieWithNullValues())

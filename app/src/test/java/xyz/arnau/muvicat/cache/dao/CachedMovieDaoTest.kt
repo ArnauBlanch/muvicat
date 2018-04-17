@@ -19,10 +19,11 @@ open class CachedMovieDaoTest {
     @Before
     fun initDb() {
         muvicatDatabase = Room.inMemoryDatabaseBuilder(
-                RuntimeEnvironment.application.baseContext,
-                MuvicatDatabase::class.java)
-                .allowMainThreadQueries()
-                .build()
+            RuntimeEnvironment.application.baseContext,
+            MuvicatDatabase::class.java
+        )
+            .allowMainThreadQueries()
+            .build()
     }
 
     @After
@@ -37,8 +38,10 @@ open class CachedMovieDaoTest {
         cachedMovies.forEach { muvicatDatabase.cachedMoviesDao().insertMovie(it) }
 
         val retrievedMovies = muvicatDatabase.cachedMoviesDao().getMovies()
-        assert(retrievedMovies == cachedMovies
-                .sortedWith(compareBy({ it.id }, { it.id })))
+        assert(
+            retrievedMovies == cachedMovies
+                .sortedWith(compareBy({ it.id }, { it.id }))
+        )
     }
 
     @Test
@@ -48,8 +51,10 @@ open class CachedMovieDaoTest {
         cachedMovies.forEach { muvicatDatabase.cachedMoviesDao().insertMovie(it) }
 
         val retrievedMovies = muvicatDatabase.cachedMoviesDao().getMovies()
-        assert(retrievedMovies == cachedMovies
-                .sortedWith(compareBy({ it.id }, { it.id })))
+        assert(
+            retrievedMovies == cachedMovies
+                .sortedWith(compareBy({ it.id }, { it.id }))
+        )
     }
 
     @Test
