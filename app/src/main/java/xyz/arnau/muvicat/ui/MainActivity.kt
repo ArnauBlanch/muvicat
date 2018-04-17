@@ -1,3 +1,4 @@
+/*
 package xyz.arnau.muvicat.ui
 
 import android.os.Bundle
@@ -12,3 +13,4 @@ class MainActivity : AppCompatActivity() {
     }
 
 }
+*/

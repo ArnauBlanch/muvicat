@@ -15,6 +15,10 @@ class MovieCacheImpl @Inject constructor(
     private val preferencesHelper: PreferencesHelper
 ) : MovieCache {
 
+    companion object {
+        const val EXPIRATION_TIME: Long = (3 * 60 * 60 * 1000).toLong() // 3 hours
+    }
+
     override fun clearMovies(): Completable =
         Completable.defer {
             muvicatDatabase.cachedMoviesDao().clearMovies()
@@ -50,8 +54,6 @@ class MovieCacheImpl @Inject constructor(
 
     private fun getLastCacheUpdateTimeMillis(): Long =
         preferencesHelper.lastCacheTime
-
-    private val EXPIRATION_TIME: Long = (3 * 60 * 60 * 1000).toLong() // 3 hours
 
     override fun isExpired(): Boolean {
         val currentTime = System.currentTimeMillis()

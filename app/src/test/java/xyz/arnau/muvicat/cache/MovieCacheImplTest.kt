@@ -1,17 +1,25 @@
 package xyz.arnau.muvicat.cache
 
 import android.arch.persistence.room.Room
+import org.junit.After
 import org.junit.Assert.assertEquals
+import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.Mockito
+import org.mockito.Mockito.*
+import org.mockito.MockitoAnnotations
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
 import org.robolectric.annotation.Config
+import org.robolectric.shadows.ShadowSystemClock
 import xyz.arnau.muvicat.cache.db.MuvicatDatabase
 import xyz.arnau.muvicat.cache.mapper.MovieEntityMapper
 import xyz.arnau.muvicat.cache.model.CachedMovie
 import xyz.arnau.muvicat.cache.test.MovieFactory
 import xyz.arnau.muvicat.data.model.MovieEntity
+import xyz.arnau.muvicat.data.repository.MovieCache
+
 
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [16])
@@ -19,9 +27,19 @@ class MovieCacheImplTest {
     private var muvicatDatabase = Room.inMemoryDatabaseBuilder(RuntimeEnvironment.application,
         MuvicatDatabase::class.java).allowMainThreadQueries().build()
     private var entityMapper = MovieEntityMapper()
-    private var preferencesHelper = PreferencesHelper(RuntimeEnvironment.application)
+    private var preferencesHelper: PreferencesHelper = mock(PreferencesHelper::class.java)
 
     private val databaseHelper = MovieCacheImpl(muvicatDatabase, entityMapper, preferencesHelper)
+
+    @Before
+    fun setUpMockito() {
+        MockitoAnnotations.initMocks(this)
+    }
+
+    @After
+    fun tearDownMockito() {
+        Mockito.validateMockitoUsage()
+    }
 
     @Test
     fun clearMoviesCompletes() {
@@ -60,6 +78,45 @@ class MovieCacheImplTest {
 
         val testObserver = databaseHelper.getMovies().test()
         testObserver.assertValue(movieEntities.sortedWith(compareBy({ it.id }, { it.id })))
+    }
+
+    @Test
+    fun isCachedReturnsFalseIfNoMovies() {
+        val testObserver = databaseHelper.isCached().test()
+        testObserver.assertValue(false)
+    }
+
+    @Test
+    fun isExpiredReturnsTrueIfExpired() {
+        val currentTime = System.currentTimeMillis()
+        `when`(preferencesHelper.lastCacheTime)
+            .thenReturn(currentTime - (MovieCacheImpl.EXPIRATION_TIME + 500))
+        assertEquals(databaseHelper.isExpired(), true)
+    }
+
+    @Test
+    fun isExpiredReturnsFalseIfNotExpired() {
+        val currentTime = System.currentTimeMillis()
+        `when`(preferencesHelper.lastCacheTime)
+            .thenReturn(currentTime - 5000)
+        assertEquals(databaseHelper.isExpired(), false)
+    }
+
+    @Test
+    fun isCachedReturnsTrueIfMoviesExist() {
+        val movieEntities = MovieFactory.makeMovieEntityList(3)
+        insertMovies(movieEntities)
+
+        val testObserver = databaseHelper.isCached().test()
+        testObserver.assertValue(true)
+    }
+
+    @Test
+    fun setLastTimeCacheTest() {
+        val lastTime = 150.toLong()
+
+        databaseHelper.setLastCacheTime(lastTime)
+        verify(preferencesHelper).lastCacheTime = lastTime
     }
 
     private fun getMovies(): List<MovieEntity> {
