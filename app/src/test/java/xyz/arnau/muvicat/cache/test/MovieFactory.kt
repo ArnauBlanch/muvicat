@@ -1,10 +1,10 @@
 package xyz.arnau.muvicat.cache.test
 
 import xyz.arnau.muvicat.cache.model.CachedMovie
-import xyz.arnau.muvicat.cache.test.DataFactory.Factory.randomDate
-import xyz.arnau.muvicat.cache.test.DataFactory.Factory.randomInt
-import xyz.arnau.muvicat.cache.test.DataFactory.Factory.randomLong
-import xyz.arnau.muvicat.cache.test.DataFactory.Factory.randomString
+import xyz.arnau.muvicat.utils.DataFactory.Factory.randomDate
+import xyz.arnau.muvicat.utils.DataFactory.Factory.randomInt
+import xyz.arnau.muvicat.utils.DataFactory.Factory.randomLong
+import xyz.arnau.muvicat.utils.DataFactory.Factory.randomString
 import xyz.arnau.muvicat.data.model.MovieEntity
 
 class MovieFactory {

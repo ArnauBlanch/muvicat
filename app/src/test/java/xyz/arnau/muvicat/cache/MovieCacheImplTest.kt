@@ -12,13 +12,11 @@ import org.mockito.MockitoAnnotations
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
 import org.robolectric.annotation.Config
-import org.robolectric.shadows.ShadowSystemClock
 import xyz.arnau.muvicat.cache.db.MuvicatDatabase
-import xyz.arnau.muvicat.cache.mapper.MovieEntityMapper
+import xyz.arnau.muvicat.cache.mapper.CachedMovieEntityMapper
 import xyz.arnau.muvicat.cache.model.CachedMovie
 import xyz.arnau.muvicat.cache.test.MovieFactory
 import xyz.arnau.muvicat.data.model.MovieEntity
-import xyz.arnau.muvicat.data.repository.MovieCache
 
 
 @RunWith(RobolectricTestRunner::class)
@@ -26,7 +24,7 @@ import xyz.arnau.muvicat.data.repository.MovieCache
 class MovieCacheImplTest {
     private var muvicatDatabase = Room.inMemoryDatabaseBuilder(RuntimeEnvironment.application,
         MuvicatDatabase::class.java).allowMainThreadQueries().build()
-    private var entityMapper = MovieEntityMapper()
+    private var entityMapper = CachedMovieEntityMapper()
     private var preferencesHelper: PreferencesHelper = mock(PreferencesHelper::class.java)
 
     private val databaseHelper = MovieCacheImpl(muvicatDatabase, entityMapper, preferencesHelper)
@@ -62,7 +60,7 @@ class MovieCacheImplTest {
 
         databaseHelper.saveMovies(movieEntities).test()
         val savedMovies = getMovies()
-        assertEquals(savedMovies, movieEntities.sortedWith(compareBy({ it.id }, { it.id })))
+        assertEquals(movieEntities.sortedWith(compareBy({ it.id }, { it.id })), savedMovies)
     }
 
     @Test
@@ -91,7 +89,7 @@ class MovieCacheImplTest {
         val currentTime = System.currentTimeMillis()
         `when`(preferencesHelper.lastCacheTime)
             .thenReturn(currentTime - (MovieCacheImpl.EXPIRATION_TIME + 500))
-        assertEquals(databaseHelper.isExpired(), true)
+        assertEquals(true, databaseHelper.isExpired())
     }
 
     @Test
@@ -99,7 +97,7 @@ class MovieCacheImplTest {
         val currentTime = System.currentTimeMillis()
         `when`(preferencesHelper.lastCacheTime)
             .thenReturn(currentTime - 5000)
-        assertEquals(databaseHelper.isExpired(), false)
+        assertEquals(false, databaseHelper.isExpired())
     }
 
     @Test

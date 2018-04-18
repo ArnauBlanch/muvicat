@@ -3,7 +3,7 @@ package xyz.arnau.muvicat.cache.mapper
 import xyz.arnau.muvicat.cache.model.CachedMovie
 import xyz.arnau.muvicat.data.model.MovieEntity
 
-open class MovieEntityMapper :
+open class CachedMovieEntityMapper :
     EntityMapper<CachedMovie, MovieEntity> {
     override fun mapToCached(type: MovieEntity) =
         CachedMovie(

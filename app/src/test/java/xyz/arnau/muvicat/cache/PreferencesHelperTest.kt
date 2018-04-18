@@ -23,7 +23,7 @@ class PreferencesHelperTest {
         val lastTime = 500.toLong()
         sharedPreferences.edit().putLong(PreferencesHelper.PREF_KEY_LAST_CACHE, lastTime).apply()
 
-        assertEquals(preferencesHelper.lastCacheTime, lastTime)
+        assertEquals(lastTime, preferencesHelper.lastCacheTime)
     }
 
     @Test
@@ -31,6 +31,6 @@ class PreferencesHelperTest {
         val lastTime = 300.toLong()
         preferencesHelper.lastCacheTime = lastTime
 
-        assertEquals(sharedPreferences.getLong(PreferencesHelper.PREF_KEY_LAST_CACHE, 0), 300)
+        assertEquals(300, sharedPreferences.getLong(PreferencesHelper.PREF_KEY_LAST_CACHE, 0))
     }
 }

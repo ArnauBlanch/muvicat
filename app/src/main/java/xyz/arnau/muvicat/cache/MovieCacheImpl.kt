@@ -4,14 +4,14 @@ import io.reactivex.Completable
 import io.reactivex.Flowable
 import io.reactivex.Single
 import xyz.arnau.muvicat.cache.db.MuvicatDatabase
-import xyz.arnau.muvicat.cache.mapper.MovieEntityMapper
+import xyz.arnau.muvicat.cache.mapper.CachedMovieEntityMapper
 import xyz.arnau.muvicat.data.model.MovieEntity
 import xyz.arnau.muvicat.data.repository.MovieCache
 import javax.inject.Inject
 
 class MovieCacheImpl @Inject constructor(
     private val muvicatDatabase: MuvicatDatabase,
-    private val entityMapper: MovieEntityMapper,
+    private val entityMapper: CachedMovieEntityMapper,
     private val preferencesHelper: PreferencesHelper
 ) : MovieCache {
 
