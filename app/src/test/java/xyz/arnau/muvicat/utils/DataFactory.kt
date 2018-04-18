@@ -1,4 +1,4 @@
-package xyz.arnau.muvicat.cache.test
+package xyz.arnau.muvicat.utils
 
 import java.util.*
 import java.util.concurrent.ThreadLocalRandom
