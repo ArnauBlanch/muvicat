@@ -16,7 +16,7 @@ import xyz.arnau.muvicat.cache.db.MuvicatDatabase
 import xyz.arnau.muvicat.cache.mapper.CachedMovieEntityMapper
 import xyz.arnau.muvicat.cache.model.CachedMovie
 import xyz.arnau.muvicat.cache.test.MovieFactory
-import xyz.arnau.muvicat.data.model.MovieEntity
+import xyz.arnau.muvicat.data.model.Movie
 
 
 @RunWith(RobolectricTestRunner::class)
@@ -117,9 +117,9 @@ class MovieCacheImplTest {
         verify(preferencesHelper).lastCacheTime = lastTime
     }
 
-    private fun getMovies(): List<MovieEntity> {
+    private fun getMovies(): List<Movie> {
         val cachedMovies = muvicatDatabase.cachedMoviesDao().getMovies()
-        val movieEntities = mutableListOf<MovieEntity>()
+        val movieEntities = mutableListOf<Movie>()
         cachedMovies.forEach {
             movieEntities.add(entityMapper.mapFromCached(it))
         }
@@ -127,9 +127,9 @@ class MovieCacheImplTest {
         return movieEntities
     }
 
-    private fun insertMovies(movieEntities: List<MovieEntity>) {
+    private fun insertMovies(movies: List<Movie>) {
         val cachedMovies = mutableListOf<CachedMovie>()
-        movieEntities.forEach {
+        movies.forEach {
             cachedMovies.add(entityMapper.mapToCached(it))
         }
         cachedMovies.forEach {

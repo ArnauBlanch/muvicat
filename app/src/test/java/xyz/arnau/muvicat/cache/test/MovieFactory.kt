@@ -5,7 +5,7 @@ import xyz.arnau.muvicat.utils.DataFactory.Factory.randomDate
 import xyz.arnau.muvicat.utils.DataFactory.Factory.randomInt
 import xyz.arnau.muvicat.utils.DataFactory.Factory.randomLong
 import xyz.arnau.muvicat.utils.DataFactory.Factory.randomString
-import xyz.arnau.muvicat.data.model.MovieEntity
+import xyz.arnau.muvicat.data.model.Movie
 
 class MovieFactory {
     companion object Factory {
@@ -17,7 +17,7 @@ class MovieFactory {
             )
 
         fun makeMovieEntity() =
-            MovieEntity(
+            Movie(
                 randomLong(), randomString(), randomString(), randomInt(),
                 randomString(), randomString(), randomString(), randomDate(), randomString(),
                 randomInt(), randomString(), randomString(), randomString()
@@ -30,8 +30,8 @@ class MovieFactory {
                 null, null, null
             )
 
-        fun makeMovieEntityList(count: Int): List<MovieEntity> {
-            val movieEntities = mutableListOf<MovieEntity>()
+        fun makeMovieEntityList(count: Int): List<Movie> {
+            val movieEntities = mutableListOf<Movie>()
             repeat(count) {
                 movieEntities.add(makeMovieEntity())
             }

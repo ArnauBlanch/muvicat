@@ -2,7 +2,7 @@ package xyz.arnau.muvicat.data.model
 
 import java.util.*
 
-data class MovieEntity(
+data class Movie(
     var id: Long,
     var title: String?,
     var originalTitle: String?,
