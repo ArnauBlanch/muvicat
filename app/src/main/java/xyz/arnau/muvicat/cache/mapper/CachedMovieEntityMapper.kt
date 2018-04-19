@@ -1,11 +1,11 @@
 package xyz.arnau.muvicat.cache.mapper
 
 import xyz.arnau.muvicat.cache.model.CachedMovie
-import xyz.arnau.muvicat.data.model.MovieEntity
+import xyz.arnau.muvicat.data.model.Movie
 
 open class CachedMovieEntityMapper :
-    EntityMapper<CachedMovie, MovieEntity> {
-    override fun mapToCached(type: MovieEntity) =
+    EntityMapper<CachedMovie, Movie> {
+    override fun mapToCached(type: Movie) =
         CachedMovie(
             type.id, type.title, type.originalTitle, type.year, type.direction,
             type.cast, type.plot, type.releaseDate, type.posterUrl, type.priority,
@@ -13,7 +13,7 @@ open class CachedMovieEntityMapper :
         )
 
     override fun mapFromCached(type: CachedMovie) =
-        MovieEntity(
+        Movie(
             type.id, type.title, type.originalTitle, type.year, type.direction,
             type.cast, type.plot, type.releaseDate, type.posterUrl, type.priority,
             type.originalLanguage, type.ageRating, type.trailerUrl

@@ -1,13 +1,13 @@
 package xyz.arnau.muvicat.remote
 
-import io.reactivex.Flowable
+import io.reactivex.Single
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock
-import xyz.arnau.muvicat.data.model.MovieEntity
+import xyz.arnau.muvicat.data.model.Movie
 import xyz.arnau.muvicat.remote.mapper.GencatMovieEntityMapper
 import xyz.arnau.muvicat.remote.service.GencatService
 import xyz.arnau.muvicat.remote.test.MovieFactory
@@ -28,7 +28,7 @@ class GencatRemoteImplTest {
     @Test
     fun getMoviesCompletes() {
         val response = MovieFactory.makeGencatMovieResponse()
-        `when`(gencatService.getMovies()).thenReturn(Flowable.just(response))
+        `when`(gencatService.getMovies()).thenReturn(Single.just(response))
 
         val testObserver = gencatRemoteImpl.getMovies().test()
         testObserver.assertComplete()
@@ -37,9 +37,9 @@ class GencatRemoteImplTest {
     @Test
     fun getMoviesReturnsData() {
         val response = MovieFactory.makeGencatMovieResponse()
-        `when`(gencatService.getMovies()).thenReturn(Flowable.just(response))
-        val movieEntities = mutableListOf<MovieEntity>()
-        response.movies.forEach {
+        `when`(gencatService.getMovies()).thenReturn(Single.just(response))
+        val movieEntities = mutableListOf<Movie>()
+        response.moviesList?.forEach {
             movieEntities.add(entityMapper.mapFromRemote(it))
         }
 

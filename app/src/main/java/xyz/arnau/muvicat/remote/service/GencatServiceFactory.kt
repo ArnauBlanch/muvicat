@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package xyz.arnau.muvicat.remote.service
 
 import okhttp3.OkHttpClient
@@ -17,7 +19,7 @@ object GencatServiceFactory {
 
     private fun makeGencatService(okHttpClient: OkHttpClient): GencatService {
         val retrofit = Retrofit.Builder()
-            .baseUrl("https://gencat.cat/llengua/cinema/")
+            .baseUrl("http://gencat.cat/llengua/cinema/")
             .client(okHttpClient)
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .addConverterFactory(SimpleXmlConverterFactory.create())

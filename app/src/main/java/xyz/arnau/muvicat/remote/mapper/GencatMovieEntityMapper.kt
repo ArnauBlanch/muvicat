@@ -1,19 +1,19 @@
 package xyz.arnau.muvicat.remote.mapper
 
 import android.annotation.SuppressLint
-import xyz.arnau.muvicat.data.model.MovieEntity
+import xyz.arnau.muvicat.data.model.Movie
 import xyz.arnau.muvicat.remote.model.GencatMovieModel
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 
-class GencatMovieEntityMapper : EntityMapper<GencatMovieModel, MovieEntity> {
-    override fun mapFromRemote(type: GencatMovieModel): MovieEntity {
+class GencatMovieEntityMapper : EntityMapper<GencatMovieModel, Movie> {
+    override fun mapFromRemote(type: GencatMovieModel): Movie {
         checkNullValues(type)
         val releaseDate = parseReleaseDate(type)
         val year = parseYear(type)
-        return MovieEntity(
-            type.id.toLong(),
+        return Movie(
+            type.id!!.toLong(),
             type.title,
             type.originalTitle,
             year,

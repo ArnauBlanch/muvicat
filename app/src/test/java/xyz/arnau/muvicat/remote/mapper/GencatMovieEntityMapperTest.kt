@@ -3,7 +3,7 @@ package xyz.arnau.muvicat.remote.mapper
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
-import xyz.arnau.muvicat.data.model.MovieEntity
+import xyz.arnau.muvicat.data.model.Movie
 import xyz.arnau.muvicat.remote.model.GencatMovieModel
 import xyz.arnau.muvicat.remote.test.MovieFactory
 import java.text.SimpleDateFormat
@@ -76,20 +76,20 @@ class GencatMovieEntityMapperTest {
     }
 
     private fun assertMovieEquality(
-        movieEntity: MovieEntity, movieModel: GencatMovieModel, year: Int?, releaseDate: Date?
+        movie: Movie, movieModel: GencatMovieModel, year: Int?, releaseDate: Date?
     ) {
-        assertEquals(movieModel.id.toLong(), movieEntity.id)
-        assertEquals(movieModel.title, movieEntity.title)
-        assertEquals(movieModel.originalTitle, movieEntity.originalTitle)
-        assertEquals(year, movieEntity.year)
-        assertEquals(movieModel.direction, movieEntity.direction)
-        assertEquals(movieModel.cast, movieEntity.cast)
-        assertEquals(movieModel.plot, movieEntity.plot)
-        assertEquals(releaseDate, movieEntity.releaseDate)
-        assertEquals(movieModel.posterUrl, movieEntity.posterUrl)
-        assertEquals(movieModel.priority, movieEntity.priority)
-        assertEquals(movieModel.originalLanguage, movieEntity.originalLanguage)
-        assertEquals(movieModel.ageRating, movieEntity.ageRating)
-        assertEquals(movieModel.trailerUrl, movieEntity.trailerUrl)
+        assertEquals(movieModel.id!!.toLong(), movie.id)
+        assertEquals(movieModel.title, movie.title)
+        assertEquals(movieModel.originalTitle, movie.originalTitle)
+        assertEquals(year, movie.year)
+        assertEquals(movieModel.direction, movie.direction)
+        assertEquals(movieModel.cast, movie.cast)
+        assertEquals(movieModel.plot, movie.plot)
+        assertEquals(releaseDate, movie.releaseDate)
+        assertEquals(movieModel.posterUrl, movie.posterUrl)
+        assertEquals(movieModel.priority, movie.priority)
+        assertEquals(movieModel.originalLanguage, movie.originalLanguage)
+        assertEquals(movieModel.ageRating, movie.ageRating)
+        assertEquals(movieModel.trailerUrl, movie.trailerUrl)
     }
 }

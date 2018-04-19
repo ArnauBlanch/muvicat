@@ -1,13 +1,11 @@
 package xyz.arnau.muvicat.remote.service
 
-import io.reactivex.Flowable
+import io.reactivex.Single
 import retrofit2.http.GET
-import xyz.arnau.muvicat.remote.model.GencatMovieModel
+import xyz.arnau.muvicat.remote.model.GencatMovieResponse
 
 interface GencatService {
-    @GET("/provacin.xml")
-    fun getMovies(): Flowable<GencatMovieResponse>
-
-    data class GencatMovieResponse(var movies: List<GencatMovieModel>) // TODO: fix this in the coverage report
+    @GET("provacin.xml")
+    fun getMovies(): Single<GencatMovieResponse>
 }
 // TODO: test with mock response

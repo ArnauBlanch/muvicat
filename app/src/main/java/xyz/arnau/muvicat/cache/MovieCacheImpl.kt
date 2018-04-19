@@ -5,8 +5,9 @@ import io.reactivex.Flowable
 import io.reactivex.Single
 import xyz.arnau.muvicat.cache.db.MuvicatDatabase
 import xyz.arnau.muvicat.cache.mapper.CachedMovieEntityMapper
-import xyz.arnau.muvicat.data.model.MovieEntity
+import xyz.arnau.muvicat.data.model.Movie
 import xyz.arnau.muvicat.data.repository.MovieCache
+import xyz.arnau.muvicat.remote.model.GencatMovieModel
 import javax.inject.Inject
 
 class MovieCacheImpl @Inject constructor(
@@ -26,7 +27,7 @@ class MovieCacheImpl @Inject constructor(
         }
 
 
-    override fun saveMovies(movies: List<MovieEntity>): Completable =
+    override fun saveMovies(movies: List<GencatMovieModel>): Completable =
         Completable.defer {
             movies.forEach {
                 muvicatDatabase.cachedMoviesDao().insertMovie(
@@ -36,7 +37,7 @@ class MovieCacheImpl @Inject constructor(
             Completable.complete()
         }
 
-    override fun getMovies(): Flowable<List<MovieEntity>> =
+    override fun getMovies(): Flowable<List<Movie>> =
         Flowable.defer {
             Flowable.just(muvicatDatabase.cachedMoviesDao().getMovies())
         }.map {
