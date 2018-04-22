@@ -1,4 +1,4 @@
-package xyz.arnau.muvicat.cache
+package xyz.arnau.muvicat.data
 
 import android.content.Context
 import org.junit.Assert.assertEquals
@@ -7,6 +7,7 @@ import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
 import org.robolectric.annotation.Config
+import xyz.arnau.muvicat.data.PreferencesHelper
 
 
 @RunWith(RobolectricTestRunner::class)
@@ -32,5 +33,21 @@ class PreferencesHelperTest {
         preferencesHelper.lastCacheTime = lastTime
 
         assertEquals(300, sharedPreferences.getLong(PreferencesHelper.PREF_KEY_LAST_CACHE, 0))
+    }
+
+    @Test
+    fun getMoviesETagReturnETag() {
+        val eTag = "\"movies-etag\""
+        sharedPreferences.edit().putString(PreferencesHelper.PREF_KEY_MOVIES_ETAG, eTag).apply()
+
+        assertEquals(eTag, preferencesHelper.moviesETag)
+    }
+
+    @Test
+    fun setMoviesETagSavesETag() {
+        val eTag = "\"movies-etag\""
+        preferencesHelper.moviesETag = eTag
+
+        assertEquals(eTag, sharedPreferences.getString(PreferencesHelper.PREF_KEY_MOVIES_ETAG, null))
     }
 }

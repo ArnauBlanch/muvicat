@@ -2,6 +2,7 @@ package xyz.arnau.muvicat.cache
 
 import android.arch.lifecycle.LiveData
 import xyz.arnau.muvicat.cache.db.MuvicatDatabase
+import xyz.arnau.muvicat.data.PreferencesHelper
 import xyz.arnau.muvicat.data.model.Movie
 import xyz.arnau.muvicat.data.repository.MovieCache
 import javax.inject.Inject

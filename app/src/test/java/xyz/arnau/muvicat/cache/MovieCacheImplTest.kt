@@ -1,20 +1,19 @@
 package xyz.arnau.muvicat.cache
 
-import android.arch.lifecycle.LiveData
+import android.arch.core.executor.testing.InstantTaskExecutorRule
 import android.arch.lifecycle.MutableLiveData
-import junit.framework.Assert.assertEquals
+import junit.framework.TestCase.assertEquals
+import org.junit.Rule
 import org.junit.Test
+import org.junit.rules.TestRule
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
 import org.mockito.Mockito.*
 import xyz.arnau.muvicat.cache.dao.MovieDao
 import xyz.arnau.muvicat.cache.db.MuvicatDatabase
+import xyz.arnau.muvicat.data.PreferencesHelper
 import xyz.arnau.muvicat.data.model.Movie
 import xyz.arnau.muvicat.data.test.MovieFactory
-import android.arch.core.executor.testing.InstantTaskExecutorRule
-import org.junit.Rule
-import org.junit.rules.TestRule
-
 
 
 @RunWith(JUnit4::class)
