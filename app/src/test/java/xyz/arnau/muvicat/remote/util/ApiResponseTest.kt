@@ -16,7 +16,7 @@ class ApiResponseTest {
     @Test
     fun testSetters() {
         val throwable = Throwable("ERROR MESSAGE")
-        val apiResponse = ApiResponse<String>(throwable)
+        ApiResponse<String>(throwable)
     }
 
     @Test

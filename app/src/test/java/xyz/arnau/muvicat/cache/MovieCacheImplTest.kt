@@ -90,4 +90,9 @@ class MovieCacheImplTest {
         `when`(movieDao.isCached()).thenReturn(false)
         assertEquals(false, movieCacheImpl.isCached())
     }
+
+    @Test
+    fun companionObjectTest() {
+        assertEquals((3 * 60 * 60 * 1000).toLong(), MovieCacheImpl.EXPIRATION_TIME)
+    }
 }
