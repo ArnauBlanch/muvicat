@@ -1,4 +1,4 @@
-package xyz.arnau.muvicat.remote
+/*package xyz.arnau.muvicat.remote
 
 import io.reactivex.Single
 import org.junit.Before
@@ -46,4 +46,4 @@ class GencatRemoteImplTest {
         val testObserver = gencatRemoteImpl.getMovies().test()
         testObserver.assertValue(movieEntities)
     }
-}
+}*/

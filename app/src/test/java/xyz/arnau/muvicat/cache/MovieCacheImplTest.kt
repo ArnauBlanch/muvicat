@@ -1,139 +1,94 @@
 package xyz.arnau.muvicat.cache
 
-import android.arch.persistence.room.Room
-import org.junit.After
-import org.junit.Assert.assertEquals
-import org.junit.Before
+import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.MutableLiveData
+import junit.framework.Assert.assertEquals
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.Mockito
+import org.junit.runners.JUnit4
 import org.mockito.Mockito.*
-import org.mockito.MockitoAnnotations
-import org.robolectric.RobolectricTestRunner
-import org.robolectric.RuntimeEnvironment
-import org.robolectric.annotation.Config
+import xyz.arnau.muvicat.cache.dao.MovieDao
 import xyz.arnau.muvicat.cache.db.MuvicatDatabase
-import xyz.arnau.muvicat.cache.mapper.CachedMovieEntityMapper
-import xyz.arnau.muvicat.cache.model.CachedMovie
-import xyz.arnau.muvicat.cache.test.MovieFactory
 import xyz.arnau.muvicat.data.model.Movie
+import xyz.arnau.muvicat.data.test.MovieFactory
+import android.arch.core.executor.testing.InstantTaskExecutorRule
+import org.junit.Rule
+import org.junit.rules.TestRule
 
 
-@RunWith(RobolectricTestRunner::class)
-@Config(sdk = [16])
+
+@RunWith(JUnit4::class)
 class MovieCacheImplTest {
-    private var muvicatDatabase = Room.inMemoryDatabaseBuilder(RuntimeEnvironment.application,
-        MuvicatDatabase::class.java).allowMainThreadQueries().build()
-    private var entityMapper = CachedMovieEntityMapper()
-    private var preferencesHelper: PreferencesHelper = mock(PreferencesHelper::class.java)
+    @get:Rule
+    var rule: TestRule = InstantTaskExecutorRule()
 
-    private val databaseHelper = MovieCacheImpl(muvicatDatabase, entityMapper, preferencesHelper)
+    private val muvicatDatabase = mock(MuvicatDatabase::class.java)
+    private val preferencesHelper = mock(PreferencesHelper::class.java)
+    private val movieDao = mock(MovieDao::class.java)
 
-    @Before
-    fun setUpMockito() {
-        MockitoAnnotations.initMocks(this)
-    }
-
-    @After
-    fun tearDownMockito() {
-        Mockito.validateMockitoUsage()
-    }
+    private val movieCacheImpl = MovieCacheImpl(muvicatDatabase, preferencesHelper)
 
     @Test
-    fun clearMoviesCompletes() {
-        val testObserver = databaseHelper.clearMovies().test()
-        testObserver.assertComplete()
-    }
-
-    @Test
-    fun saveMoviesCompletes() {
-        val movieEntities = MovieFactory.makeMovieEntityList(3)
-
-        val testObserver = databaseHelper.saveMovies(movieEntities).test()
-        testObserver.assertComplete()
-    }
-
-    @Test
-    fun saveMoviesSavesData() {
-        val countMovies = 3
-        val movieEntities = MovieFactory.makeMovieEntityList(countMovies)
-
-        databaseHelper.saveMovies(movieEntities).test()
-        val savedMovies = getMovies()
-        assertEquals(movieEntities.sortedWith(compareBy({ it.id }, { it.id })), savedMovies)
-    }
-
-    @Test
-    fun getMoviesCompletes() {
-        val testObserver = databaseHelper.getMovies().test()
-        testObserver.assertComplete()
+    fun clearMoviesDeletesMovies() {
+        `when`(muvicatDatabase.movieDao()).thenReturn(movieDao)
+        movieCacheImpl.clearMovies()
+        verify(movieDao).clearMovies()
     }
 
     @Test
     fun getMoviesReturnsData() {
-        val movieEntities = MovieFactory.makeMovieEntityList(3)
-        insertMovies(movieEntities)
-
-        val testObserver = databaseHelper.getMovies().test()
-        testObserver.assertValue(movieEntities.sortedWith(compareBy({ it.id }, { it.id })))
+        `when`(muvicatDatabase.movieDao()).thenReturn(movieDao)
+        val movies = MovieFactory.makeMovieList(5)
+        val moviesLiveData = MutableLiveData<List<Movie>>()
+        moviesLiveData.value = movies
+        `when`(movieDao.getMovies()).thenReturn(moviesLiveData)
+        val moviesFromCache = movieCacheImpl.getMovies()
+        verify(movieDao).getMovies()
+        assertEquals(movies, moviesFromCache.value)
     }
 
     @Test
-    fun isCachedReturnsFalseIfNoMovies() {
-        val testObserver = databaseHelper.isCached().test()
-        testObserver.assertValue(false)
+    fun saveMoviesInsertsData() {
+        `when`(muvicatDatabase.movieDao()).thenReturn(movieDao)
+        val movies = MovieFactory.makeMovieList(5)
+        movieCacheImpl.saveMovies(movies)
+
+        movies.forEach { verify(movieDao).insertMovie(it) }
+    }
+
+    @Test
+    fun setLastTimeCacheUpdatesSharedPreferences() {
+        movieCacheImpl.setLastCacheTime(1000.toLong())
+        verify(preferencesHelper).lastCacheTime = 1000.toLong()
     }
 
     @Test
     fun isExpiredReturnsTrueIfExpired() {
         val currentTime = System.currentTimeMillis()
         `when`(preferencesHelper.lastCacheTime)
-            .thenReturn(currentTime - (MovieCacheImpl.EXPIRATION_TIME + 500))
-        assertEquals(true, databaseHelper.isExpired())
+                .thenReturn(currentTime - (MovieCacheImpl.EXPIRATION_TIME + 500))
+        assertEquals(true, movieCacheImpl.isExpired())
     }
 
     @Test
     fun isExpiredReturnsFalseIfNotExpired() {
         val currentTime = System.currentTimeMillis()
         `when`(preferencesHelper.lastCacheTime)
-            .thenReturn(currentTime - 5000)
-        assertEquals(false, databaseHelper.isExpired())
+                .thenReturn(currentTime - 5000)
+        assertEquals(false, movieCacheImpl.isExpired())
     }
 
     @Test
     fun isCachedReturnsTrueIfMoviesExist() {
-        val movieEntities = MovieFactory.makeMovieEntityList(3)
-        insertMovies(movieEntities)
-
-        val testObserver = databaseHelper.isCached().test()
-        testObserver.assertValue(true)
+        `when`(muvicatDatabase.movieDao()).thenReturn(movieDao)
+        `when`(movieDao.isCached()).thenReturn(true)
+        assertEquals(true, movieCacheImpl.isCached())
     }
 
     @Test
-    fun setLastTimeCacheTest() {
-        val lastTime = 150.toLong()
-
-        databaseHelper.setLastCacheTime(lastTime)
-        verify(preferencesHelper).lastCacheTime = lastTime
-    }
-
-    private fun getMovies(): List<Movie> {
-        val cachedMovies = muvicatDatabase.cachedMoviesDao().getMovies()
-        val movieEntities = mutableListOf<Movie>()
-        cachedMovies.forEach {
-            movieEntities.add(entityMapper.mapFromCached(it))
-        }
-
-        return movieEntities
-    }
-
-    private fun insertMovies(movies: List<Movie>) {
-        val cachedMovies = mutableListOf<CachedMovie>()
-        movies.forEach {
-            cachedMovies.add(entityMapper.mapToCached(it))
-        }
-        cachedMovies.forEach {
-            muvicatDatabase.cachedMoviesDao().insertMovie(it)
-        }
+    fun isCachedReturnFalseIfNotMoviesExist() {
+        `when`(muvicatDatabase.movieDao()).thenReturn(movieDao)
+        `when`(movieDao.isCached()).thenReturn(false)
+        assertEquals(false, movieCacheImpl.isCached())
     }
 }

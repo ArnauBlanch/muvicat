@@ -5,6 +5,6 @@ import org.simpleframework.xml.Root
 
 @Root(name = "dataroot", strict = false)
 data class GencatMovieResponse(
-    @field:ElementList(name = "FILM", inline = true)
-    var moviesList: List<GencatMovieModel>? = null
+        @field:ElementList(name = "FILM", inline = true)
+        var moviesList: List<GencatMovie>? = null
 )

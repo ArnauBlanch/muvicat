@@ -14,8 +14,8 @@ import org.robolectric.annotation.Config
 class PreferencesHelperTest {
     private var preferencesHelper = PreferencesHelper(RuntimeEnvironment.application)
     private val sharedPreferences = RuntimeEnvironment.application.getSharedPreferences(
-        PreferencesHelper.PREF_BUFFER_PACKAGE_NAME,
-        Context.MODE_PRIVATE
+            PreferencesHelper.PREF_BUFFER_PACKAGE_NAME,
+            Context.MODE_PRIVATE
     )
 
     @Test
