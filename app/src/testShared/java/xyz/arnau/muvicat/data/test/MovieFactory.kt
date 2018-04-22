@@ -1,10 +1,10 @@
 package xyz.arnau.muvicat.data.test
 
+import xyz.arnau.muvicat.data.model.Movie
 import xyz.arnau.muvicat.utils.DataFactory.Factory.randomDate
 import xyz.arnau.muvicat.utils.DataFactory.Factory.randomInt
 import xyz.arnau.muvicat.utils.DataFactory.Factory.randomLong
 import xyz.arnau.muvicat.utils.DataFactory.Factory.randomString
-import xyz.arnau.muvicat.data.model.Movie
 
 class MovieFactory {
     companion object Factory {

@@ -12,7 +12,6 @@ import org.junit.runners.JUnit4
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock
 import retrofit2.Response
-import xyz.arnau.muvicat.data.PreferencesHelper
 import xyz.arnau.muvicat.remote.mapper.GencatMovieEntityMapper
 import xyz.arnau.muvicat.remote.mapper.GencatMovieListEntityMapper
 import xyz.arnau.muvicat.remote.model.GencatMovie
