@@ -81,6 +81,10 @@ android {
     lintOptions {
         abortOnError false
     }
+    compileOptions {
+        sourceCompatibility = '1.8'
+        targetCompatibility = '1.8'
+    }
 }
 
 dependencies {
@@ -150,7 +154,6 @@ dependencies {
     testImplementation "org.mockito:mockito-core:2.18.0"
     implementation 'com.android.support:gridlayout-v7:27.1.1'
     implementation 'com.android.support:cardview-v7:27.1.1'
-    implementation "com.github.leonardoxh:retrofit2-livedata-adapter:1.1.1"
 
 }
 

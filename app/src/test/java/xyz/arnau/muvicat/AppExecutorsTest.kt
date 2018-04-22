@@ -2,7 +2,6 @@ package xyz.arnau.muvicat
 
 import junit.framework.TestCase.assertEquals
 import org.junit.Test
-import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock
 import java.util.concurrent.Executor
 
