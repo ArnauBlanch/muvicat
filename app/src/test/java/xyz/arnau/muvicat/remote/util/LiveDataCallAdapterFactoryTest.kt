@@ -1,7 +1,6 @@
 package xyz.arnau.muvicat.remote.util
 
 import android.arch.lifecycle.LiveData
-import com.github.leonardoxh.livedatacalladapter.LiveDataResponseBodyConverterFactory
 import com.google.common.reflect.TypeToken
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.fail
@@ -27,7 +26,6 @@ class LiveDataCallAdapterFactoryTest {
         retrofit = Retrofit.Builder()
                 .baseUrl(server.url("/"))
                 .addCallAdapterFactory(factory)
-                .addConverterFactory(LiveDataResponseBodyConverterFactory.create())
                 .build()
     }
 

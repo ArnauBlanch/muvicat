@@ -104,29 +104,31 @@ class ApiResponseTest {
         assertEquals(ERROR, apiResponse.status)
     }
 
-    private fun mockResponse(code: Int, body: String? = null, etag: String? = null,
-                             errorBody: String? = null, message: String? = null,
-                             errorBodyException: IOException? = null): Response<*> {
-        val response: Response<*> = mock(Response::class.java)
-        `when`(response.code()).thenReturn(code)
-        if (code in 200..299) {
-            `when`(response.isSuccessful).thenReturn(true)
-        }
-        `when`(response.body()).thenReturn(body)
-        val headers = mock(Headers::class.java)
-        `when`(response.headers()).thenReturn(headers)
-        `when`(headers.get("ETag")).thenReturn(etag)
-        val responseErrorBody = mock(ResponseBody::class.java)
-        if (errorBodyException != null) {
-            `when`(responseErrorBody.string()).thenThrow(errorBodyException)
-        } else {
-            `when`(responseErrorBody.string()).thenReturn(errorBody)
-        }
-        if (errorBody != null) {
-            `when`(response.errorBody()).thenReturn(responseErrorBody)
-        }
-        `when`(response.message()).thenReturn(message)
+    companion object {
+        fun mockResponse(code: Int, body: String? = null, etag: String? = null,
+                         errorBody: String? = null, message: String? = null,
+                         errorBodyException: IOException? = null): Response<*> {
+            val response: Response<*> = mock(Response::class.java)
+            `when`(response.code()).thenReturn(code)
+            if (code in 200..299) {
+                `when`(response.isSuccessful).thenReturn(true)
+            }
+            `when`(response.body()).thenReturn(body)
+            val headers = mock(Headers::class.java)
+            `when`(response.headers()).thenReturn(headers)
+            `when`(headers.get("ETag")).thenReturn(etag)
+            val responseErrorBody = mock(ResponseBody::class.java)
+            if (errorBodyException != null) {
+                `when`(responseErrorBody.string()).thenThrow(errorBodyException)
+            } else {
+                `when`(responseErrorBody.string()).thenReturn(errorBody)
+            }
+            if (errorBody != null) {
+                `when`(response.errorBody()).thenReturn(responseErrorBody)
+            }
+            `when`(response.message()).thenReturn(message)
 
-        return response
+            return response
+        }
     }
 }
