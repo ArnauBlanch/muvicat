@@ -19,7 +19,7 @@ object GencatServiceFactory {
         return makeGencatService(okHttpClient)
     }
 
-    private fun makeGencatService(okHttpClient: OkHttpClient): GencatService {
+    fun makeGencatService(okHttpClient: OkHttpClient): GencatService {
         val retrofit = Retrofit.Builder()
                 .baseUrl("http://gencat.cat/llengua/cinema/")
                 .client(okHttpClient)

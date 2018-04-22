@@ -14,7 +14,7 @@ class GencatRemoteImpl(
     private val entityMapper: GencatMovieListEntityMapper
 ) : GencatRemote {
     override fun getMovies(): LiveData<Response<List<Movie>>> {
-        return Transformations.switchMap(gencatService.getMovies(), { apiResponse ->
+        return Transformations.switchMap(gencatService.getMovies(null), { apiResponse ->
             val data = MutableLiveData<Response<List<Movie>>>()
             data.postValue(
                     Response(

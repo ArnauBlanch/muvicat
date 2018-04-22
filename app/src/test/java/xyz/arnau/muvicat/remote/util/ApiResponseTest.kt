@@ -115,7 +115,7 @@ class ApiResponseTest {
         `when`(response.body()).thenReturn(body)
         val headers = mock(Headers::class.java)
         `when`(response.headers()).thenReturn(headers)
-        `when`(headers.get("Etag")).thenReturn(etag)
+        `when`(headers.get("ETag")).thenReturn(etag)
         val responseErrorBody = mock(ResponseBody::class.java)
         if (errorBodyException != null) {
             `when`(responseErrorBody.string()).thenThrow(errorBodyException)

@@ -34,7 +34,7 @@ class ApiResponse<T> {
         when {
             response.isSuccessful -> {
                 body = response.body()
-                eTag = response.headers().get("Etag")
+                eTag = response.headers().get("ETag")
                 status = ResponseStatus.SUCCESSFUL
             }
             code == HTTP_NOT_MODIFIED -> status = ResponseStatus.NOT_MODIFIED
