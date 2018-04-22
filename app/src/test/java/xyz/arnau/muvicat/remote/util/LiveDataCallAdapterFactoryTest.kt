@@ -3,8 +3,8 @@ package xyz.arnau.muvicat.remote.util
 import android.arch.lifecycle.LiveData
 import com.github.leonardoxh.livedatacalladapter.LiveDataResponseBodyConverterFactory
 import com.google.common.reflect.TypeToken
-import junit.framework.Assert.assertEquals
-import junit.framework.Assert.fail
+import junit.framework.TestCase.assertEquals
+import junit.framework.TestCase.fail
 import okhttp3.mockwebserver.MockWebServer
 import org.junit.Before
 import org.junit.Rule
