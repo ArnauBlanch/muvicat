@@ -1,12 +1,12 @@
 package xyz.arnau.muvicat.remote.util
 
+import okhttp3.Headers
+import okhttp3.ResponseBody
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock
 import retrofit2.Response
-import okhttp3.Headers
-import okhttp3.ResponseBody
 import xyz.arnau.muvicat.remote.model.ResponseStatus.*
 import java.io.IOException
 import java.net.HttpURLConnection.*

@@ -5,7 +5,6 @@ import com.github.leonardoxh.livedatacalladapter.LiveDataResponseBodyConverterFa
 import com.google.common.reflect.TypeToken
 import junit.framework.Assert.assertEquals
 import junit.framework.Assert.fail
-import retrofit2.Response
 import okhttp3.mockwebserver.MockWebServer
 import org.junit.Before
 import org.junit.Rule

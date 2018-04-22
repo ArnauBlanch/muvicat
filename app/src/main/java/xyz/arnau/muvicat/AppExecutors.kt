@@ -1,4 +1,4 @@
-package xyz.arnau.muvicat.data
+package xyz.arnau.muvicat
 
 import android.os.Handler
 import android.os.Looper
@@ -8,15 +8,15 @@ import javax.inject.Inject
 
 
 class AppExecutors(
-    private val diskIO: Executor,
-    private val networkIO: Executor,
-    private val mainThread: Executor
+        private val diskIO: Executor,
+        private val networkIO: Executor,
+        private val mainThread: Executor
 ) {
 
     @Inject
     constructor() : this(
-        Executors.newSingleThreadExecutor(), Executors.newFixedThreadPool(3),
-        MainThreadExecutor()
+            Executors.newSingleThreadExecutor(), Executors.newFixedThreadPool(3),
+            MainThreadExecutor()
     )
 
     fun diskIO(): Executor {

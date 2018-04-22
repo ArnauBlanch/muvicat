@@ -3,12 +3,11 @@ package xyz.arnau.muvicat.remote
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Transformations
-import xyz.arnau.muvicat.data.PreferencesHelper
 import xyz.arnau.muvicat.data.model.Movie
 import xyz.arnau.muvicat.data.repository.GencatRemote
 import xyz.arnau.muvicat.remote.mapper.GencatMovieListEntityMapper
-import xyz.arnau.muvicat.remote.service.GencatService
 import xyz.arnau.muvicat.remote.model.Response
+import xyz.arnau.muvicat.remote.service.GencatService
 
 class GencatRemoteImpl(
         private val gencatService: GencatService,

@@ -1,4 +1,4 @@
-package xyz.arnau.muvicat.data
+package xyz.arnau.muvicat.data.model
 
 enum class Status {
     SUCCESS,

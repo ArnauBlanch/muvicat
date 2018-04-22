@@ -16,9 +16,9 @@ import org.junit.runners.JUnit4
 import retrofit2.Retrofit
 import retrofit2.converter.simplexml.SimpleXmlConverterFactory
 import xyz.arnau.muvicat.remote.model.ResponseStatus.*
-import xyz.arnau.muvicat.remote.util.GencatRemoteSampleMovieData.xml
 import xyz.arnau.muvicat.remote.util.GencatRemoteSampleMovieData.body
 import xyz.arnau.muvicat.remote.util.GencatRemoteSampleMovieData.eTag
+import xyz.arnau.muvicat.remote.util.GencatRemoteSampleMovieData.xml
 import xyz.arnau.muvicat.remote.util.LiveDataCallAdapterFactory
 import xyz.arnau.muvicat.utils.getValueBlocking
 import java.net.HttpURLConnection.*

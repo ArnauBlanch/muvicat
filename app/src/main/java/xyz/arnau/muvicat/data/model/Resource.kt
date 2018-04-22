@@ -1,4 +1,4 @@
-package xyz.arnau.muvicat.data
+package xyz.arnau.muvicat.data.model
 
 
 data class Resource<out T>(val status: Status, val data: T?, val message: String?) {
