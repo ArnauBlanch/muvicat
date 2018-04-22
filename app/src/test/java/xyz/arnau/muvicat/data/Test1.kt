@@ -10,7 +10,7 @@ import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
 import xyz.arnau.muvicat.cache.MovieCacheImpl
-import xyz.arnau.muvicat.cache.PreferencesHelper
+import xyz.arnau.muvicat.data.PreferencesHelper
 import xyz.arnau.muvicat.cache.db.MuvicatDatabase
 import xyz.arnau.muvicat.cache.db.constants.DatabaseConstants
 import xyz.arnau.muvicat.cache.mapper.CachedMovieEntityMapper

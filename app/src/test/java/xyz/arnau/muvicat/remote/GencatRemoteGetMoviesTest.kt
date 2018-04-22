@@ -1,6 +1,6 @@
 @file:Suppress("DEPRECATION")
 
-package xyz.arnau.muvicat.remote.service
+package xyz.arnau.muvicat.remote
 
 import android.arch.core.executor.testing.InstantTaskExecutorRule
 import junit.framework.Assert.assertEquals
@@ -15,20 +15,25 @@ import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
 import retrofit2.Retrofit
 import retrofit2.converter.simplexml.SimpleXmlConverterFactory
+import xyz.arnau.muvicat.data.repository.GencatRemote
+import xyz.arnau.muvicat.remote.mapper.GencatMovieEntityMapper
+import xyz.arnau.muvicat.remote.mapper.GencatMovieListEntityMapper
 import xyz.arnau.muvicat.remote.model.ResponseStatus.*
-import xyz.arnau.muvicat.remote.util.GencatRemoteSampleMovieData.xml
+import xyz.arnau.muvicat.remote.service.GencatService
 import xyz.arnau.muvicat.remote.util.GencatRemoteSampleMovieData.body
 import xyz.arnau.muvicat.remote.util.GencatRemoteSampleMovieData.eTag
+import xyz.arnau.muvicat.remote.util.GencatRemoteSampleMovieData.xml
 import xyz.arnau.muvicat.remote.util.LiveDataCallAdapterFactory
 import xyz.arnau.muvicat.utils.getValueBlocking
 import java.net.HttpURLConnection.*
 
-
-@Suppress("DEPRECATION")
 @RunWith(JUnit4::class)
-class GencatServiceTest {
+class GencatServiceGetMoviesTest {
     private lateinit var mockServer: MockWebServer
     private lateinit var gencatService: GencatService
+
+    private lateinit var entityMapper: GencatMovieListEntityMapper
+    private lateinit var gencatRemote: GencatRemote
 
     @get:Rule
     var rule: TestRule = InstantTaskExecutorRule()
@@ -39,11 +44,14 @@ class GencatServiceTest {
         mockServer.start()
         gencatService = Retrofit.Builder()
                 .baseUrl(mockServer.url("/").toString())
-                //.baseUrl("http://www.gencat.cat/llengua/cinema/aa/")
+                //.baseUrl("http://www.gencat.cat/llengua/cinema/")
                 .addCallAdapterFactory(LiveDataCallAdapterFactory())
                 .addConverterFactory(SimpleXmlConverterFactory.create())
                 .build()
                 .create(GencatService::class.java)
+
+        entityMapper = GencatMovieListEntityMapper(GencatMovieEntityMapper())
+        gencatRemote = GencatRemoteImpl(gencatService, entityMapper)
     }
 
     @After
@@ -57,23 +65,16 @@ class GencatServiceTest {
         mockServer.enqueue(
                 MockResponse()
                         .addHeader("Content-Type", "application/xml")
-                        .addHeader("ETag", "\"new_etag\"")
+                        .addHeader("ETag", eTag)
                         .setResponseCode(HTTP_OK)
                         .setBody(xml)
         )
-        val response = gencatService.getMovies(eTag).getValueBlocking()
 
-        val request = mockServer.takeRequest()
-        //var body2 = body.copy()
-        //body2.moviesList!![0].cast = "--" // [fix] test in Jacoco fails but not in Android Studio
-        assertEquals("/provacin.xml", request.path)
-        assertEquals(eTag, request.getHeader("If-None-Match"))
-
-        assertEquals(HTTP_OK, response?.code)
-        assertEquals(SUCCESSFUL, response?.status)
-        assertEquals("\"new_etag\"", response?.eTag)
-        assertEquals(null, response?.errorMessage)
-        assertEquals(body, response?.body)
+        val result = gencatRemote.getMovies(null).getValueBlocking()
+        assertEquals(entityMapper.mapFromRemote(body), result?.body)
+        assertEquals(SUCCESSFUL, result?.type)
+        assertEquals(null, result?.errorMessage)
+        assertEquals(eTag, result?.eTag)
     }
 
     @Test
@@ -84,17 +85,12 @@ class GencatServiceTest {
                         .setResponseCode(HTTP_NOT_MODIFIED)
                         .setBody(xml)
         )
-        val response = gencatService.getMovies(eTag).getValueBlocking()
 
-        val request = mockServer.takeRequest()
-        assertEquals("/provacin.xml", request.path)
-        assertEquals(eTag, request.getHeader("If-None-Match"))
-
-        assertEquals(HTTP_NOT_MODIFIED, response?.code)
-        assertEquals(NOT_MODIFIED, response?.status)
-        assertEquals(null, response?.eTag)
-        assertEquals(null, response?.errorMessage)
-        assertEquals(null, response?.body)
+        val result = gencatRemote.getMovies(eTag).getValueBlocking()
+        assertEquals(null, result?.body)
+        assertEquals(NOT_MODIFIED, result?.type)
+        assertEquals(null, result?.errorMessage)
+        assertEquals(null, result?.eTag)
     }
 
     @Test
@@ -105,16 +101,11 @@ class GencatServiceTest {
                         .setResponseCode(HTTP_BAD_REQUEST)
                         .setBody("ERROR BODY")
         )
-        val response = gencatService.getMovies(eTag).getValueBlocking()
 
-        val request = mockServer.takeRequest()
-        assertEquals("/provacin.xml", request.path)
-        assertEquals(eTag, request.getHeader("If-None-Match"))
-
-        assertEquals(HTTP_BAD_REQUEST, response?.code)
-        assertEquals(ERROR, response?.status)
-        assertEquals(null, response?.eTag)
-        assertEquals("ERROR BODY", response?.errorMessage)
-        assertEquals(null, response?.body)
+        val result = gencatRemote.getMovies(eTag).getValueBlocking()
+        assertEquals(null, result?.body)
+        assertEquals(ERROR, result?.type)
+        assertEquals("ERROR BODY", result?.errorMessage)
+        assertEquals(null, result?.eTag)
     }
 }

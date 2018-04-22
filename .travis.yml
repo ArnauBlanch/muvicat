@@ -4,8 +4,8 @@ jdk:
 
 env:
   global:
-   - ANDROID_API=22
-   - ANDROID_BUILD_TOOLS=22.0.1
+   - ANDROID_API=27
+   - ANDROID_BUILD_TOOLS=27.0.3
    - EMULATOR_API=22
 
 android:
