@@ -1,8 +1,8 @@
 package xyz.arnau.muvicat.remote.util
 
+import junit.framework.TestCase.assertEquals
 import okhttp3.Headers
 import okhttp3.ResponseBody
-import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock

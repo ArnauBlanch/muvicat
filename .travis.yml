@@ -40,6 +40,9 @@ before_script:
   - ./gradlew --version
   - ./gradlew clean
 
+script:
+  - ./gradlew build connectedCheck jacocoTestReport -x lint
+
 notifications:
   email: false
 
