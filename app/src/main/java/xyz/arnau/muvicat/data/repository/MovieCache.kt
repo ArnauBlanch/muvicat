@@ -1,16 +1,17 @@
 package xyz.arnau.muvicat.data.repository
 
-import io.reactivex.Completable
-import io.reactivex.Flowable
-import io.reactivex.Single
+import android.arch.lifecycle.LiveData
+import xyz.arnau.muvicat.data.Resource
 import xyz.arnau.muvicat.data.model.Movie
-import xyz.arnau.muvicat.remote.model.GencatMovieModel
 
 interface MovieCache {
-    fun clearMovies(): Completable
-    fun saveMovies(movies: List<Movie>): Completable
+    fun clearMovies()
+    /*fun saveMovies(movies: List<Movie>): Completable
     fun getMovies(): Flowable<List<Movie>>
-    fun isCached(): Single<Boolean>
+    fun isCached(): Single<Boolean>*/
+    fun getMovies(): LiveData<List<Movie>>
+    fun saveMovies(movies: List<Movie>)
     fun setLastCacheTime(lastCache: Long)
     fun isExpired(): Boolean
+    fun isCached(): Boolean
 }

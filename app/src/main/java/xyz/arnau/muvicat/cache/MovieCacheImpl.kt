@@ -1,60 +1,32 @@
 package xyz.arnau.muvicat.cache
 
-import io.reactivex.Completable
-import io.reactivex.Flowable
-import io.reactivex.Single
+import android.arch.lifecycle.LiveData
 import xyz.arnau.muvicat.cache.db.MuvicatDatabase
-import xyz.arnau.muvicat.cache.mapper.CachedMovieEntityMapper
 import xyz.arnau.muvicat.data.model.Movie
 import xyz.arnau.muvicat.data.repository.MovieCache
-import xyz.arnau.muvicat.remote.model.GencatMovieModel
 import javax.inject.Inject
 
 class MovieCacheImpl @Inject constructor(
-    private val muvicatDatabase: MuvicatDatabase,
-    private val entityMapper: CachedMovieEntityMapper,
-    private val preferencesHelper: PreferencesHelper
+        private val muvicatDatabase: MuvicatDatabase,
+        private val preferencesHelper: PreferencesHelper
 ) : MovieCache {
 
     companion object {
         const val EXPIRATION_TIME: Long = (3 * 60 * 60 * 1000).toLong() // 3 hours
     }
 
-    override fun clearMovies(): Completable =
-        Completable.defer {
-            muvicatDatabase.cachedMoviesDao().clearMovies()
-            Completable.complete()
-        }
+    override fun clearMovies() = muvicatDatabase.movieDao().clearMovies()
 
-
-    override fun saveMovies(movies: List<GencatMovieModel>): Completable =
-        Completable.defer {
-            movies.forEach {
-                muvicatDatabase.cachedMoviesDao().insertMovie(
-                    entityMapper.mapToCached(it)
-                )
-            }
-            Completable.complete()
-        }
-
-    override fun getMovies(): Flowable<List<Movie>> =
-        Flowable.defer {
-            Flowable.just(muvicatDatabase.cachedMoviesDao().getMovies())
-        }.map {
-            it.map { entityMapper.mapFromCached(it) }
-        }
-
-    override fun isCached(): Single<Boolean> =
-        Single.defer {
-            Single.just(muvicatDatabase.cachedMoviesDao().getMovies().isNotEmpty())
-        }
+    override fun getMovies(): LiveData<List<Movie>> {
+        return muvicatDatabase.movieDao().getMovies()
+    }
 
     override fun setLastCacheTime(lastCache: Long) {
         preferencesHelper.lastCacheTime = lastCache
     }
 
     private fun getLastCacheUpdateTimeMillis(): Long =
-        preferencesHelper.lastCacheTime
+            preferencesHelper.lastCacheTime
 
     override fun isExpired(): Boolean {
         val currentTime = System.currentTimeMillis()
@@ -62,4 +34,9 @@ class MovieCacheImpl @Inject constructor(
         return currentTime - lastUpdateTime > EXPIRATION_TIME
     }
 
+    override fun isCached(): Boolean = muvicatDatabase.movieDao().isCached()
+
+    override fun saveMovies(movies: List<Movie>) {
+        movies.forEach { muvicatDatabase.movieDao().insertMovie(it) }
+    }
 }

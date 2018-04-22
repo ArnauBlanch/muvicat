@@ -1,4 +1,4 @@
-package xyz.arnau.muvicat.data
+/*package xyz.arnau.muvicat.data
 
 import android.arch.persistence.room.Room
 import android.util.Log
@@ -53,4 +53,4 @@ class Test1 {
         }
         while (true) {}
     }
-}
+}*/

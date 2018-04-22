@@ -4,7 +4,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import xyz.arnau.muvicat.data.model.Movie
-import xyz.arnau.muvicat.remote.model.GencatMovieModel
+import xyz.arnau.muvicat.remote.model.GencatMovie
 import xyz.arnau.muvicat.remote.test.MovieFactory
 import java.text.SimpleDateFormat
 import java.util.*
@@ -76,9 +76,9 @@ class GencatMovieEntityMapperTest {
     }
 
     private fun assertMovieEquality(
-        movie: Movie, movieModel: GencatMovieModel, year: Int?, releaseDate: Date?
+            movie: Movie, movieModel: GencatMovie, year: Int?, releaseDate: Date?
     ) {
-        assertEquals(movieModel.id!!.toLong(), movie.id)
+        assertEquals(movieModel.id?.toLong(), movie.id)
         assertEquals(movieModel.title, movie.title)
         assertEquals(movieModel.originalTitle, movie.originalTitle)
         assertEquals(year, movie.year)

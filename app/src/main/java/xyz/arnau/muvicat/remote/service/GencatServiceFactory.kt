@@ -2,37 +2,43 @@
 
 package xyz.arnau.muvicat.remote.service
 
+import android.content.Context
+import okhttp3.Cache
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.simplexml.SimpleXmlConverterFactory
+import xyz.arnau.muvicat.remote.util.LiveDataCallAdapterFactory
 import java.util.concurrent.TimeUnit
 
 object GencatServiceFactory {
-    fun makeGencatService(isDebug: Boolean): GencatService {
+    fun makeGencatService(context: Context, isDebug: Boolean): GencatService {
         val okHttpClient = makeOkHttpClient(
-            makeLoggingInterceptor(isDebug)
+                makeLoggingInterceptor(isDebug), context
         )
         return makeGencatService(okHttpClient)
     }
 
     private fun makeGencatService(okHttpClient: OkHttpClient): GencatService {
         val retrofit = Retrofit.Builder()
-            .baseUrl("http://gencat.cat/llengua/cinema/")
-            .client(okHttpClient)
-            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-            .addConverterFactory(SimpleXmlConverterFactory.create())
-            .build()
+                .baseUrl("http://gencat.cat/llengua/cinema/")
+                .client(okHttpClient)
+                .addCallAdapterFactory(LiveDataCallAdapterFactory())
+                .addConverterFactory(SimpleXmlConverterFactory.create())
+                .build()
         return retrofit.create(GencatService::class.java)
     }
 
-    private fun makeOkHttpClient(httpLoggingInterceptor: HttpLoggingInterceptor): OkHttpClient {
+    private fun makeOkHttpClient(
+            httpLoggingInterceptor: HttpLoggingInterceptor,
+            context: Context
+    ): OkHttpClient {
         return OkHttpClient.Builder()
-            .addInterceptor(httpLoggingInterceptor)
-            .connectTimeout(120, TimeUnit.SECONDS)
-            .readTimeout(120, TimeUnit.SECONDS)
-            .build()
+                .addInterceptor(httpLoggingInterceptor)
+                .connectTimeout(120, TimeUnit.SECONDS)
+                .readTimeout(120, TimeUnit.SECONDS)
+                .cache(Cache(context.cacheDir, 1024 * 1024 * 4))
+                .build()
 
     }
 

@@ -3,9 +3,8 @@ package xyz.arnau.muvicat.remote.model
 import org.simpleframework.xml.Element
 import org.simpleframework.xml.Root
 
-//@Element(name = "FILM")
 @Root(name = "FILM", strict = false)
-data class GencatMovieModel(
+data class GencatMovie(
     @field:Element(name = "IDFILM")
     var id: Int? = null, // TODO: Test rare cases
 

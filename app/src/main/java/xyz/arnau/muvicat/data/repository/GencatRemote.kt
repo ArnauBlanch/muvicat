@@ -1,8 +1,9 @@
 package xyz.arnau.muvicat.data.repository
 
-import io.reactivex.Single
+import android.arch.lifecycle.LiveData
 import xyz.arnau.muvicat.data.model.Movie
+import xyz.arnau.muvicat.remote.model.Response
 
 interface GencatRemote {
-    fun getMovies(): Single<List<Movie>>
+    fun getMovies(): LiveData<Response<List<Movie>>>
 }
