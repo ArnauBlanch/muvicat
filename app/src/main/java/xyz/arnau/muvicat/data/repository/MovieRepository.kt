@@ -9,6 +9,7 @@ import xyz.arnau.muvicat.data.model.Movie
 import xyz.arnau.muvicat.data.model.Resource
 import xyz.arnau.muvicat.remote.model.Response
 import xyz.arnau.muvicat.remote.model.ResponseStatus
+import xyz.arnau.muvicat.remote.model.ResponseStatus.*
 
 class MovieRepository constructor(
         private val movieCache: MovieCache,
@@ -20,11 +21,14 @@ class MovieRepository constructor(
     fun getMovies(): LiveData<Resource<List<Movie>>> =
             object : NetworkBoundResource<List<Movie>>(appExecutors) {
                 override fun saveResponse(response: Response<List<Movie>>) {
-                    if (response.type == ResponseStatus.SUCCESSFUL) {
-                        response.body?.let { movieCache.saveMovies(it) }
+                    if (response.type == SUCCESSFUL) {
+                        response.body?.let { movieCache.updateMovies(it) }
                     }
                     response.eTag?.let { preferencesHelper.moviesETag = response.eTag }
-                    preferencesHelper.moviesUpdated()
+                    if ((response.type == SUCCESSFUL && response.body != null)
+                            || response.type == NOT_MODIFIED) {
+                        preferencesHelper.moviesUpdated()
+                    }
                 }
 
                 override fun createCall(): LiveData<Response<List<Movie>>> {

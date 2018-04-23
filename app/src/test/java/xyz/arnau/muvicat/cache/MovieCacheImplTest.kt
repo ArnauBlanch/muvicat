@@ -47,12 +47,12 @@ class MovieCacheImplTest {
     }
 
     @Test
-    fun saveMoviesInsertsData() {
+    fun updateMoviesUpdateData() {
         `when`(muvicatDatabase.movieDao()).thenReturn(movieDao)
         val movies = MovieFactory.makeMovieList(5)
-        movieCacheImpl.saveMovies(movies)
+        movieCacheImpl.updateMovies(movies)
 
-        movies.forEach { verify(movieDao).insertMovie(it) }
+        verify(movieDao).updateMovieDb(movies)
     }
 
     @Test

@@ -3,11 +3,14 @@ package xyz.arnau.muvicat.cache.dao
 import android.arch.persistence.room.Room
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
+import junit.framework.Assert
 import junit.framework.TestCase.assertEquals
 import org.junit.After
 import org.junit.Test
 import org.junit.runner.RunWith
+import xyz.arnau.muvicat.R.string.movies
 import xyz.arnau.muvicat.cache.db.MuvicatDatabase
+import xyz.arnau.muvicat.data.model.Movie
 import xyz.arnau.muvicat.data.test.MovieFactory
 import xyz.arnau.muvicat.utils.getValueBlocking
 
@@ -29,7 +32,7 @@ class MovieDaoTest {
     fun getMoviesRetrievesData() {
         val movies = MovieFactory.makeMovieList(5)
 
-        movies.forEach { muvicatDatabase.movieDao().insertMovie(it) }
+        muvicatDatabase.movieDao().insertMovies(movies)
 
         val retrievedMovies = muvicatDatabase.movieDao().getMovies().getValueBlocking()
         assertEquals(movies.sortedWith(compareBy({ it.id }, { it.id })), retrievedMovies)
@@ -39,7 +42,7 @@ class MovieDaoTest {
     fun getMoviesRetrievesDataWithNullValues() {
         val movies = MovieFactory.makeMovieListWithNullValues(6)
 
-        movies.forEach { muvicatDatabase.movieDao().insertMovie(it) }
+        muvicatDatabase.movieDao().insertMovies(movies)
 
         val retrievedMovies = muvicatDatabase.movieDao().getMovies().getValueBlocking()
         assertEquals(movies.sortedWith(compareBy({ it.id }, { it.id })), retrievedMovies)
@@ -48,24 +51,24 @@ class MovieDaoTest {
     @Test
     fun clearMoviesDeletesAllMovies() {
         val movies = MovieFactory.makeMovieList(5)
-        movies.forEach { muvicatDatabase.movieDao().insertMovie(it) }
+        muvicatDatabase.movieDao().insertMovies(movies)
         muvicatDatabase.movieDao().clearMovies()
         val retrievedMovies = muvicatDatabase.movieDao().getMovies().getValueBlocking()
         assertEquals(true, retrievedMovies!!.isEmpty())
     }
 
     @Test
-    fun insertMovieInDB() {
-        val movie = MovieFactory.makeMovie()
-        muvicatDatabase.movieDao().insertMovie(movie)
+    fun insertMoviesInDB() {
+        val movies = MovieFactory.makeMovieList(3)
+        muvicatDatabase.movieDao().insertMovies(movies)
 
-        assertEquals(movie, muvicatDatabase.movieDao().getMovies().getValueBlocking()!!.first())
+        assertEquals(movies.sortedWith(compareBy({ it.id }, { it.id })), muvicatDatabase.movieDao().getMovies().getValueBlocking()!!)
     }
 
     @Test
     fun isCachedReturnsTrueIfThereAreMovies() {
         val movies = MovieFactory.makeMovieList(3)
-        movies.forEach { muvicatDatabase.movieDao().insertMovie(it) }
+        muvicatDatabase.movieDao().insertMovies(movies)
 
         assertEquals(true, muvicatDatabase.movieDao().isCached())
     }
@@ -73,5 +76,72 @@ class MovieDaoTest {
     @Test
     fun isCachedReturnsFalseIfThereAreNoMovies() {
         assertEquals(false, muvicatDatabase.movieDao().isCached())
+    }
+
+    @Test
+    fun getMovieIdsReturnAllExistingIds() {
+        val movies = MovieFactory.makeMovieList(5)
+        val ids = movies.map { it.id }
+        muvicatDatabase.movieDao().insertMovies(movies)
+
+        assertEquals(ids.sorted(), muvicatDatabase.movieDao().getMovieIds())
+    }
+
+    @Test
+    fun deleteMoviesByIdDeletesOutdatedMovies() {
+        val oldMovies = MovieFactory.makeMovieList(2)
+        val newMovies = MovieFactory.makeMovieList(5)
+        muvicatDatabase.movieDao().insertMovies(oldMovies)
+        muvicatDatabase.movieDao().insertMovies(newMovies)
+        val oldIds = oldMovies.map { it.id }
+
+        muvicatDatabase.movieDao().deleteMoviesById(oldIds)
+        assertEquals(newMovies.sortedWith(compareBy({ it.id },
+                { it.id })), muvicatDatabase.movieDao().getMovies().getValueBlocking())
+    }
+
+    @Test
+    fun updateMovieUpdateFields() {
+        val movies = MovieFactory.makeMovieList(4)
+        muvicatDatabase.movieDao().insertMovies(movies)
+
+        val movieIdToUpdate = movies[1].id
+        val updatedMovie = MovieFactory.makeMovie()
+        updatedMovie.id = movieIdToUpdate
+        muvicatDatabase.movieDao().updateMovie(updatedMovie.id, updatedMovie.title,
+                updatedMovie.originalTitle, updatedMovie.year, updatedMovie.direction,
+                updatedMovie.cast, updatedMovie.plot, updatedMovie.releaseDate,
+                updatedMovie.posterUrl, updatedMovie.priority, updatedMovie.originalLanguage,
+                updatedMovie.ageRating, updatedMovie.trailerUrl)
+
+        val movies2 = (movies - movies[1]) + updatedMovie
+        assertEquals(movies2.sortedWith(compareBy({ it.id }, { it.id })),
+                muvicatDatabase.movieDao().getMovies().getValueBlocking())
+    }
+
+    @Test
+    fun updateMovieDbWhenNothingIsCached() {
+        val movies = MovieFactory.makeMovieList(5)
+        muvicatDatabase.movieDao().updateMovieDb(movies)
+
+        Assert.assertEquals(movies.sortedWith(compareBy({ it.id }, { it.id })),
+                muvicatDatabase.movieDao().getMovies().getValueBlocking())
+    }
+
+    @Test
+    fun updateMovieDbInsertsUpdatesAndDeletesAsExpected() {
+        val movies1 = MovieFactory.makeMovieList(5)
+        movies1.forEachIndexed { index, item -> item.id = index.toLong() }
+        muvicatDatabase.movieDao().insertMovies(movies1)
+
+        val updatedMovies = MovieFactory.makeMovieList(3)
+        updatedMovies.forEachIndexed { index, item -> item.id = index.toLong() }
+
+        val movies2 = MovieFactory.makeMovieList(4) + updatedMovies
+        updatedMovies.forEachIndexed { index, item -> item.id = (index + 10).toLong() }
+        muvicatDatabase.movieDao().updateMovieDb(movies2)
+
+        assertEquals(movies2.sortedWith(compareBy({ it.id }, { it.id })),
+                muvicatDatabase.movieDao().getMovies().getValueBlocking())
     }
 }

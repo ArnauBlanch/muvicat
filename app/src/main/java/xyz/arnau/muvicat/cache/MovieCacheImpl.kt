@@ -30,7 +30,7 @@ class MovieCacheImpl @Inject constructor(
 
     override fun isCached(): Boolean = muvicatDatabase.movieDao().isCached()
 
-    override fun saveMovies(movies: List<Movie>) {
-        movies.forEach { muvicatDatabase.movieDao().insertMovie(it) }
+    override fun updateMovies(movies: List<Movie>) {
+        muvicatDatabase.movieDao().updateMovieDb(movies)
     }
 }

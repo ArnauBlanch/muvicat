@@ -1,10 +1,12 @@
 package xyz.arnau.muvicat.data.model
 
+import android.arch.persistence.room.ColumnInfo
 import android.arch.persistence.room.Entity
+import android.arch.persistence.room.Index
 import android.arch.persistence.room.PrimaryKey
 import java.util.*
 
-@Entity(tableName = "movies")
+@Entity(tableName = "movies", indices = [(Index(value = ["id"], name = "id"))])
 data class Movie(
         @PrimaryKey
         var id: Long,
@@ -12,6 +14,7 @@ data class Movie(
         var originalTitle: String?,
         var year: Int?,
         var direction: String?,
+        @ColumnInfo(name = "castList")
         var cast: String?,
         var plot: String?,
         var releaseDate: Date?,
