@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "aaa53c57b3b948366f3b3a503c61fc1c",
+    "identityHash": "b8b9f5720a2e1cea4c1a4eb34ffb0069",
     "entities": [
       {
         "tableName": "movies",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `title` TEXT, `originalTitle` TEXT, `year` INTEGER, `direction` TEXT, `cast` TEXT, `plot` TEXT, `releaseDate` INTEGER, `posterUrl` TEXT, `priority` INTEGER, `originalLanguage` TEXT, `ageRating` TEXT, `trailerUrl` TEXT, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `title` TEXT, `originalTitle` TEXT, `year` INTEGER, `direction` TEXT, `castList` TEXT, `plot` TEXT, `releaseDate` INTEGER, `posterUrl` TEXT, `priority` INTEGER, `originalLanguage` TEXT, `ageRating` TEXT, `trailerUrl` TEXT, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -40,7 +40,7 @@
           },
           {
             "fieldPath": "cast",
-            "columnName": "cast",
+            "columnName": "castList",
             "affinity": "TEXT",
             "notNull": false
           },
@@ -93,13 +93,22 @@
           ],
           "autoGenerate": false
         },
-        "indices": [],
+        "indices": [
+          {
+            "name": "id",
+            "unique": false,
+            "columnNames": [
+              "id"
+            ],
+            "createSql": "CREATE  INDEX `id` ON `${TABLE_NAME}` (`id`)"
+          }
+        ],
         "foreignKeys": []
       }
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"aaa53c57b3b948366f3b3a503c61fc1c\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"b8b9f5720a2e1cea4c1a4eb34ffb0069\")"
     ]
   }
 }

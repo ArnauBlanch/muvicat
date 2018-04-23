@@ -1,12 +1,15 @@
+/*
 package xyz.arnau.muvicat.ui
 
 import android.content.Context
 import android.util.AttributeSet
 import android.widget.ImageView
 
+*/
 /**
  * ImageView that keeps aspect ratio when scaled
- */
+ *//*
+
 class MoviePosterView : ImageView {
 
     constructor(context: Context) : super(context)
@@ -25,4 +28,4 @@ class MoviePosterView : ImageView {
         super.onMeasure(widthMeasureSpec, newHeightSpec)
     }
 
-}
+}*/

@@ -7,6 +7,8 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
+import org.mockito.ArgumentMatchers
+import org.mockito.Mockito
 import org.mockito.Mockito.*
 import xyz.arnau.muvicat.AppExecutors
 import xyz.arnau.muvicat.data.model.Movie
@@ -46,6 +48,8 @@ class MovieRepositoryTest {
         @Suppress("UNCHECKED_CAST")
         movies.observeForever(observer as Observer<Resource<List<Movie>>>)
         verify(observer).onChanged(Resource.success(dbMovies))
+        verify(preferencesHelper, never()).moviesUpdated()
+        verify(gencatRemote, never()).getMovies(ArgumentMatchers.anyString())
     }
 
     @Test
@@ -75,6 +79,7 @@ class MovieRepositoryTest {
         verify(observer).onChanged(Resource.success(remoteMovies))
         verify(preferencesHelper).moviesETag = "movie-etag2"
         verify(preferencesHelper).moviesUpdated()
+        verify(movieCache).updateMovies(remoteMovies)
     }
 
     @Test
@@ -101,6 +106,7 @@ class MovieRepositoryTest {
                 ResponseStatus.NOT_MODIFIED, null))
         verify(observer).onChanged(Resource.success(dbMovies))
         verify(preferencesHelper).moviesUpdated()
+        verify(movieCache, never()).updateMovies(Mockito.anyList())
     }
 
     @Test
@@ -129,6 +135,7 @@ class MovieRepositoryTest {
         verify(observer).onChanged(Resource.success(remoteMovies))
         verify(preferencesHelper).moviesETag = "movie-etag2"
         verify(preferencesHelper).moviesUpdated()
+        verify(movieCache).updateMovies(remoteMovies)
     }
 
     @Test
@@ -154,6 +161,7 @@ class MovieRepositoryTest {
         dbMovieLiveData.postValue(dbMovies)
         verify(observer).onChanged(Resource.success(dbMovies))
         verify(preferencesHelper).moviesETag = "movie-etag2"
-        verify(preferencesHelper).moviesUpdated()
+        verify(preferencesHelper, never()).moviesUpdated()
+        verify(movieCache, never()).updateMovies(Mockito.anyList())
     }
 }
