@@ -1,4 +1,4 @@
-package xyz.arnau.muvicat.data
+package xyz.arnau.muvicat.data.utils
 
 import android.content.Context
 import org.junit.Assert.assertEquals

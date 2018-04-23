@@ -2,7 +2,7 @@ package xyz.arnau.muvicat.cache
 
 import android.arch.lifecycle.LiveData
 import xyz.arnau.muvicat.cache.db.MuvicatDatabase
-import xyz.arnau.muvicat.data.PreferencesHelper
+import xyz.arnau.muvicat.data.utils.PreferencesHelper
 import xyz.arnau.muvicat.data.model.Movie
 import xyz.arnau.muvicat.data.repository.MovieCache
 import javax.inject.Inject
@@ -13,7 +13,7 @@ class MovieCacheImpl @Inject constructor(
 ) : MovieCache {
 
     companion object {
-        const val EXPIRATION_TIME: Long = (3 * 60 * 60 * 1000).toLong() // 3 hours
+        const val EXPIRATION_TIME: Long = (3 * 60 * 60 * 1000).toLong() // $COVERAGE-IGNORE$
     }
 
     override fun clearMovies() = muvicatDatabase.movieDao().clearMovies()

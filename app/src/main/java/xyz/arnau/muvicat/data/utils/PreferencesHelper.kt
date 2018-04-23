@@ -1,4 +1,4 @@
-package xyz.arnau.muvicat.data
+package xyz.arnau.muvicat.data.utils
 
 import android.content.Context
 import android.content.SharedPreferences
@@ -6,7 +6,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-open class PreferencesHelper @Inject constructor(context: Context) {
+open class PreferencesHelper constructor(context: Context) {
 
     companion object {
         const val PREF_BUFFER_PACKAGE_NAME = "xyz.arnau.muvicat.preferences"

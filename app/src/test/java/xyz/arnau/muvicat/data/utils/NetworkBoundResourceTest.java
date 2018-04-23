@@ -1,4 +1,4 @@
-package xyz.arnau.muvicat.data;
+package xyz.arnau.muvicat.data.utils;
 
 import android.arch.core.executor.testing.InstantTaskExecutorRule;
 import android.arch.lifecycle.LiveData;
@@ -24,6 +24,7 @@ import java.util.function.Function;
 
 import xyz.arnau.muvicat.AppExecutors;
 import xyz.arnau.muvicat.data.model.Resource;
+import xyz.arnau.muvicat.data.utils.NetworkBoundResource;
 import xyz.arnau.muvicat.remote.model.Response;
 import xyz.arnau.muvicat.remote.model.ResponseStatus;
 import xyz.arnau.muvicat.utils.ApiUtil;
