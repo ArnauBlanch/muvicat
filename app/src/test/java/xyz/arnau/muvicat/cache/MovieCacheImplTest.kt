@@ -56,15 +56,9 @@ class MovieCacheImplTest {
     }
 
     @Test
-    fun setLastTimeCacheUpdatesSharedPreferences() {
-        movieCacheImpl.setLastCacheTime(1000.toLong())
-        verify(preferencesHelper).lastCacheTime = 1000.toLong()
-    }
-
-    @Test
     fun isExpiredReturnsTrueIfExpired() {
         val currentTime = System.currentTimeMillis()
-        `when`(preferencesHelper.lastCacheTime)
+        `when`(preferencesHelper.movieslastUpdateTime)
                 .thenReturn(currentTime - (MovieCacheImpl.EXPIRATION_TIME + 500))
         assertEquals(true, movieCacheImpl.isExpired())
     }
@@ -72,7 +66,7 @@ class MovieCacheImplTest {
     @Test
     fun isExpiredReturnsFalseIfNotExpired() {
         val currentTime = System.currentTimeMillis()
-        `when`(preferencesHelper.lastCacheTime)
+        `when`(preferencesHelper.movieslastUpdateTime)
                 .thenReturn(currentTime - 5000)
         assertEquals(false, movieCacheImpl.isExpired())
     }

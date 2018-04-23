@@ -39,14 +39,15 @@ abstract class NetworkBoundResource<T> @MainThread constructor(private val appEx
             result.removeSource(apiResponse)
             result.removeSource(dbSource)
             when {
-                response?.type == ResponseStatus.SUCCESSFUL -> appExecutors.diskIO().execute({
-                    saveResponse(response)
-                    appExecutors.mainThread().execute({
-                        result.addSource(loadFromDb(), { newData ->
-                            setValue(Resource.success(newData))
+                response?.type == ResponseStatus.SUCCESSFUL ->
+                    appExecutors.diskIO().execute({
+                        saveResponse(response)
+                        appExecutors.mainThread().execute({
+                            result.addSource(loadFromDb(), { newData ->
+                                setValue(Resource.success(newData))
+                            })
                         })
                     })
-                })
                 response?.type == ResponseStatus.NOT_MODIFIED -> {
                     saveResponse(response)
                     result.addSource(dbSource, { newData -> setValue(Resource.success(newData)) })
@@ -62,12 +63,13 @@ abstract class NetworkBoundResource<T> @MainThread constructor(private val appEx
     }
 
     @Suppress("MemberVisibilityCanBePrivate")
-    protected fun onFetchFailed() {}
+    protected fun onFetchFailed() {
+    }
 
     fun asLiveData(): LiveData<Resource<T>> = result
 
     @WorkerThread
-    protected abstract fun saveResponse(item: Response<T>)
+    protected abstract fun saveResponse(response: Response<T>)
 
     @MainThread
     protected abstract fun shouldFetch(): Boolean

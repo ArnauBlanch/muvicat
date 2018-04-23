@@ -22,16 +22,9 @@ class MovieCacheImpl @Inject constructor(
         return muvicatDatabase.movieDao().getMovies()
     }
 
-    override fun setLastCacheTime(lastCache: Long) {
-        preferencesHelper.lastCacheTime = lastCache
-    }
-
-    private fun getLastCacheUpdateTimeMillis(): Long =
-            preferencesHelper.lastCacheTime
-
     override fun isExpired(): Boolean {
         val currentTime = System.currentTimeMillis()
-        val lastUpdateTime = this.getLastCacheUpdateTimeMillis()
+        val lastUpdateTime = preferencesHelper.movieslastUpdateTime
         return currentTime - lastUpdateTime > EXPIRATION_TIME
     }
 

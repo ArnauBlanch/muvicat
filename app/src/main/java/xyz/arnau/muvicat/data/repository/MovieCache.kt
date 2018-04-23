@@ -7,7 +7,6 @@ interface MovieCache {
     fun getMovies(): LiveData<List<Movie>>
     fun saveMovies(movies: List<Movie>)
     fun clearMovies()
-    fun setLastCacheTime(lastCache: Long)
     fun isExpired(): Boolean
     fun isCached(): Boolean
 }
