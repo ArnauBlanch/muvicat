@@ -11,7 +11,7 @@ open class PreferencesHelper @Inject constructor(context: Context) {
     companion object {
         const val PREF_BUFFER_PACKAGE_NAME = "xyz.arnau.muvicat.preferences"
 
-        const val PREF_KEY_LAST_CACHE = "last_cache"
+        const val PREF_KEY_LAST_MOVIE_UPDATE = "last_movie_update"
         const val PREF_KEY_MOVIES_ETAG = "movies_etag"
     }
 
@@ -21,11 +21,17 @@ open class PreferencesHelper @Inject constructor(context: Context) {
         bufferPref = context.getSharedPreferences(PREF_BUFFER_PACKAGE_NAME, Context.MODE_PRIVATE)
     }
 
-    open var lastCacheTime: Long
-        get() = bufferPref.getLong(PREF_KEY_LAST_CACHE, 0)
-        set(lastCache) = bufferPref.edit().putLong(PREF_KEY_LAST_CACHE, lastCache).apply()
+    var movieslastUpdateTime: Long
+        get() = bufferPref.getLong(PREF_KEY_LAST_MOVIE_UPDATE, 0)
+        private set(lastCache) = bufferPref.edit().putLong(PREF_KEY_LAST_MOVIE_UPDATE, lastCache).apply()
 
-    open var moviesETag: String?
+    var moviesETag: String?
         get() = bufferPref.getString(PREF_KEY_MOVIES_ETAG, null)
-        set(moviesETag) = bufferPref.edit().putString(PREF_KEY_MOVIES_ETAG, moviesETag).apply()
+        set(moviesETag) {
+            bufferPref.edit().putString(PREF_KEY_MOVIES_ETAG, moviesETag).apply()
+        }
+
+    fun moviesUpdated() {
+        movieslastUpdateTime = System.currentTimeMillis()
+    }
 }
