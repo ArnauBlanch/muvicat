@@ -45,6 +45,24 @@ class GencatRemoteImplTest {
         assertEquals("movies-etag2", result?.eTag)
     }
 
+    @Test
+    fun getMoviesReturnsMovieListWithNullIds() {
+        val eTag = "movies-etag1"
+        val liveData = MutableLiveData<ApiResponse<GencatMovieResponse>>()
+        `when`(gencatService.getMovies(eTag)).thenReturn(liveData)
+        val movieResponseWithNullIds = movieResponse.copy()
+        movieResponseWithNullIds.moviesList!![0].id = null
+        val response = Response.success(movieResponseWithNullIds, Headers.of(mapOf("ETag" to "movies-etag2")))
+        liveData.postValue(ApiResponse<GencatMovieResponse>(response))
+
+        val result = gencatRemote.getMovies(eTag).getValueBlocking()
+        assertEquals(entityMapper.mapFromRemote(movieResponseWithNullIds), result?.body)
+        assertEquals(SUCCESSFUL, result?.type)
+        assertEquals(null, result?.errorMessage)
+        assertEquals("movies-etag2", result?.eTag)
+        assertEquals(1, result?.body!!.size)
+    }
+
 
     private val movieResponse = GencatMovieResponse(listOf(
             GencatMovie(

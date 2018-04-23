@@ -7,7 +7,7 @@ import java.util.*
 @Entity(tableName = "movies")
 data class Movie(
         @PrimaryKey
-        var id: Long?,
+        var id: Long,
         var title: String?,
         var originalTitle: String?,
         var year: Int?,

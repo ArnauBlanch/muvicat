@@ -26,7 +26,7 @@ class GencatMovieEntityMapperTest {
 
         val sdf = SimpleDateFormat("dd/MM/yyyy")
         val date = sdf.parse("01/02/2003")
-        assertMovieEquality(movieEntity, movieModel, 2000, date)
+        assertMovieEquality(movieEntity!!, movieModel, 2000, date)
     }
 
     @Test
@@ -36,7 +36,7 @@ class GencatMovieEntityMapperTest {
         movieModel.releaseDate = "01/02/----"
         val movieEntity = movieEntityMapper.mapFromRemote(movieModel)
 
-        assertMovieEquality(movieEntity, movieModel, 2000, null)
+        assertMovieEquality(movieEntity!!, movieModel, 2000, null)
     }
 
     @Test
@@ -44,7 +44,7 @@ class GencatMovieEntityMapperTest {
         val movieModel = MovieFactory.makeGencatMovieModelWithUnknownValues()
         val movieEntity = movieEntityMapper.mapFromRemote(movieModel)
 
-        assertMovieEquality(movieEntity, movieModel, null, null)
+        assertEquals(null, movieEntity)
     }
 
     @Test
@@ -52,7 +52,7 @@ class GencatMovieEntityMapperTest {
         val movieModel = MovieFactory.makeGencatMovieModelWithEmptyValues()
         val movieEntity = movieEntityMapper.mapFromRemote(movieModel)
 
-        assertMovieEquality(movieEntity, movieModel, null, null)
+        assertMovieEquality(movieEntity!!, movieModel, null, null)
     }
 
     @Test
@@ -62,7 +62,7 @@ class GencatMovieEntityMapperTest {
         movieModel.releaseDate = "--"
         val movieEntity = movieEntityMapper.mapFromRemote(movieModel)
 
-        assertMovieEquality(movieEntity, movieModel, 2014, null)
+        assertMovieEquality(movieEntity!!, movieModel, 2014, null)
     }
 
     @Test()
@@ -72,7 +72,7 @@ class GencatMovieEntityMapperTest {
         movieModel.releaseDate = "--"
         val movieEntity = movieEntityMapper.mapFromRemote(movieModel)
 
-        assertMovieEquality(movieEntity, movieModel, null, null)
+        assertMovieEquality(movieEntity!!, movieModel, null, null)
     }
 
     private fun assertMovieEquality(

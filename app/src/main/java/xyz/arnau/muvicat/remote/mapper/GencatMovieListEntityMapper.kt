@@ -7,5 +7,5 @@ class GencatMovieListEntityMapper constructor(private val itemMapper: GencatMovi
         EntityMapper<GencatMovieResponse?, List<Movie>?> {
 
     override fun mapFromRemote(type: GencatMovieResponse?): List<Movie>? =
-            type?.moviesList?.map { itemMapper.mapFromRemote(it) }
+            type?.moviesList?.mapNotNull { itemMapper.mapFromRemote(it) }
 }
