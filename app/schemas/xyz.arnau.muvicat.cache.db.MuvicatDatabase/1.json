@@ -2,17 +2,17 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "8cc9b5c3a1425b2077a2cc0629e4f281",
+    "identityHash": "aaa53c57b3b948366f3b3a503c61fc1c",
     "entities": [
       {
         "tableName": "movies",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER, `title` TEXT, `originalTitle` TEXT, `year` INTEGER, `direction` TEXT, `cast` TEXT, `plot` TEXT, `releaseDate` INTEGER, `posterUrl` TEXT, `priority` INTEGER, `originalLanguage` TEXT, `ageRating` TEXT, `trailerUrl` TEXT, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `title` TEXT, `originalTitle` TEXT, `year` INTEGER, `direction` TEXT, `cast` TEXT, `plot` TEXT, `releaseDate` INTEGER, `posterUrl` TEXT, `priority` INTEGER, `originalLanguage` TEXT, `ageRating` TEXT, `trailerUrl` TEXT, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
             "columnName": "id",
             "affinity": "INTEGER",
-            "notNull": false
+            "notNull": true
           },
           {
             "fieldPath": "title",
@@ -99,7 +99,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"8cc9b5c3a1425b2077a2cc0629e4f281\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"aaa53c57b3b948366f3b3a503c61fc1c\")"
     ]
   }
 }

@@ -12,7 +12,17 @@ class GencatMovieListEntityMapperTest {
 
     @Test
     fun mapFromRemoteMapsData() {
-        val movieResponse = MovieFactory.makeGencatMovieResponse()
+        val movieResponse = MovieFactory.makeGencatMovieResponse(5)
+        val movieList =
+                movieResponse.moviesList?.map { movieEntityMapper.mapFromRemote(it) }
+
+        val mappedResponse = movieListEntityMapper.mapFromRemote(movieResponse)
+        assertEquals(movieList, mappedResponse)
+    }
+
+    @Test
+    fun mapFromRemoteMapsDataWithNullMovies() {
+        val movieResponse = MovieFactory.makeGencatMovieResponse(5)
         val movieList =
                 movieResponse.moviesList?.map { movieEntityMapper.mapFromRemote(it) }
 

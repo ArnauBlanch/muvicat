@@ -58,8 +58,8 @@ class MovieFactory {
                         ""
                 )
 
-        fun makeGencatMovieResponse(): GencatMovieResponse {
-            return GencatMovieResponse(makeGencatMovieModelList(5))
+        fun makeGencatMovieResponse(count: Int): GencatMovieResponse {
+            return GencatMovieResponse(makeGencatMovieModelList(count))
         }
 
         private fun makeGencatMovieModelList(count: Int): List<GencatMovie> {

@@ -8,12 +8,13 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class GencatMovieEntityMapper : EntityMapper<GencatMovie, Movie> {
-    override fun mapFromRemote(type: GencatMovie): Movie {
+    override fun mapFromRemote(type: GencatMovie): Movie? {
+        if (type.id == null) return null
         checkNullValues(type)
         val releaseDate = parseReleaseDate(type)
         val year = parseYear(type)
         return Movie(
-                type.id?.toLong(),
+                type.id!!.toLong(),
                 type.title,
                 type.originalTitle,
                 year,
