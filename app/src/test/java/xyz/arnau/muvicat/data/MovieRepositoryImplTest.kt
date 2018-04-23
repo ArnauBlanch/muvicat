@@ -15,14 +15,14 @@ import xyz.arnau.muvicat.data.model.Movie
 import xyz.arnau.muvicat.data.model.Resource
 import xyz.arnau.muvicat.data.repository.GencatRemote
 import xyz.arnau.muvicat.data.repository.MovieCache
-import xyz.arnau.muvicat.data.repository.MovieRepository
 import xyz.arnau.muvicat.data.test.MovieFactory
+import xyz.arnau.muvicat.data.utils.PreferencesHelper
 import xyz.arnau.muvicat.remote.model.Response
 import xyz.arnau.muvicat.remote.model.ResponseStatus
 import xyz.arnau.muvicat.utils.InstantAppExecutors
 
 @RunWith(JUnit4::class)
-class MovieRepositoryTest {
+class MovieRepositoryImplTest {
     @get:Rule
     val rule = InstantTaskExecutorRule()
 
@@ -32,7 +32,7 @@ class MovieRepositoryTest {
     private val preferencesHelper: PreferencesHelper = mock(PreferencesHelper::class.java)
 
     private val movieRepository =
-            MovieRepository(movieCache, gencatRemote, appExecutors, preferencesHelper)
+            MovieRepositoryImpl(movieCache, gencatRemote, appExecutors, preferencesHelper)
 
     @Test
     fun getMoviesWhenMoviesAreCachedAndNotExpired() {

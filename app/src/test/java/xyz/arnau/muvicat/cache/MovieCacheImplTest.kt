@@ -11,7 +11,7 @@ import org.junit.runners.JUnit4
 import org.mockito.Mockito.*
 import xyz.arnau.muvicat.cache.dao.MovieDao
 import xyz.arnau.muvicat.cache.db.MuvicatDatabase
-import xyz.arnau.muvicat.data.PreferencesHelper
+import xyz.arnau.muvicat.data.utils.PreferencesHelper
 import xyz.arnau.muvicat.data.model.Movie
 import xyz.arnau.muvicat.data.test.MovieFactory
 

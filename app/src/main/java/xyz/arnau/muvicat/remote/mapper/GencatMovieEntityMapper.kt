@@ -54,22 +54,16 @@ class GencatMovieEntityMapper : EntityMapper<GencatMovie, Movie> {
 
     private fun checkNullValues(t: GencatMovie) {
         t.title = if (t.title != "--" && t.title != "") t.title else null
-        t.posterUrl =
-                if (t.posterUrl != "--" && t.posterUrl != "") t.posterUrl else null
-        t.direction =
-                if (t.direction != "--" && t.direction != "") t.direction else null
+        t.posterUrl = if (t.posterUrl != "--" && t.posterUrl != "") t.posterUrl else null
+        t.direction = if (t.direction != "--" && t.direction != "") t.direction else null
         t.year = if (t.year != "--" && t.year != "") t.year else null
         t.releaseDate = if (t.releaseDate != "--" && t.releaseDate != "") t.releaseDate else null
         t.cast = if (t.cast != "--" && t.cast != "") t.cast else null
-        t.originalTitle =
-                if (t.originalTitle != "--" && t.originalTitle != "") t.originalTitle else null
+        t.originalTitle = if (t.originalTitle != "--" && t.originalTitle != "") t.originalTitle else null
         t.plot = if (t.plot != "--" && t.plot != "") t.plot else null
-        t.originalLanguage =
-                if (t.originalLanguage != "--" && t.originalLanguage != "") t.originalLanguage else null
-        t.ageRating =
-                if (t.ageRating != "--" && t.ageRating != "") t.ageRating else null
-        t.trailerUrl =
-                if (t.trailerUrl != "--" && t.trailerUrl != "") t.trailerUrl else null
+        t.originalLanguage = if (t.originalLanguage != "--" && t.originalLanguage != "") t.originalLanguage else null
+        t.ageRating = if (t.ageRating != "--" && t.ageRating != "") t.ageRating else null
+        t.trailerUrl = if (t.trailerUrl != "--" && t.trailerUrl != "") t.trailerUrl else null
     }
 
 
