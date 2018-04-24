@@ -1,4 +1,4 @@
-package xyz.arnau.muvicat.presentation.movie
+package xyz.arnau.muvicat.viewmodel.movie
 
 import android.arch.core.executor.testing.InstantTaskExecutorRule
 import android.arch.lifecycle.MutableLiveData
@@ -9,10 +9,10 @@ import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock
+import xyz.arnau.muvicat.data.MovieRepository
 import xyz.arnau.muvicat.data.model.Movie
 import xyz.arnau.muvicat.data.model.Resource
 import xyz.arnau.muvicat.data.model.Status
-import xyz.arnau.muvicat.data.repository.MovieRepository
 import xyz.arnau.muvicat.data.test.MovieFactory
 import xyz.arnau.muvicat.utils.getValueBlocking
 

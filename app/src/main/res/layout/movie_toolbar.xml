@@ -3,8 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:minHeight="?attr/actionBarSize"
-    app:contentInsetStart="12dp"
+    app:contentInsetStart="15dp"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toTopOf="parent">
@@ -19,7 +18,7 @@
             android:fontFamily="@font/nunito_sans_black"
             android:text="@string/movies"
             android:textColor="#000000"
-            android:textSize="22sp"
+            android:textSize="28sp"
             android:textStyle="normal" />
     </android.support.constraint.ConstraintLayout>
 </android.support.v7.widget.Toolbar>

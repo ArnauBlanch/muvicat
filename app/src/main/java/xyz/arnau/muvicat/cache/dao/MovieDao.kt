@@ -7,7 +7,7 @@ import java.util.*
 
 @Dao
 abstract class MovieDao {
-    @Query("SELECT * FROM movies")
+    @Query("SELECT * FROM movies ORDER BY priority DESC")
     abstract fun getMovies(): LiveData<List<Movie>>
 
     @Query("DELETE FROM movies")

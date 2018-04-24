@@ -6,4 +6,5 @@
     <color name="grey">#767676</color>
     <color name="darkGrey">#363636</color>
     <color name="yellow">#D5A300</color>
+    <color name="background_material_light">#ffffff</color>
 </resources>

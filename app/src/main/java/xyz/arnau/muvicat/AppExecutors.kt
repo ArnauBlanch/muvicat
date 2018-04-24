@@ -5,9 +5,10 @@ import android.os.Looper
 import java.util.concurrent.Executor
 import java.util.concurrent.Executors
 import javax.inject.Inject
+import javax.inject.Singleton
 
-
-open class AppExecutors(
+@Singleton
+open class AppExecutors constructor(
         private val diskIO: Executor,
         private val networkIO: Executor,
         private val mainThread: Executor
@@ -37,4 +38,6 @@ open class AppExecutors(
             mainThreadHandler.post(command)
         }
     }
+
+
 }

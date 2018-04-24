@@ -71,7 +71,7 @@ abstract class NetworkBoundResource<T> @MainThread constructor(private val appEx
     @WorkerThread
     protected abstract fun saveResponse(response: Response<T>)
 
-    @MainThread
+    @WorkerThread
     protected abstract fun shouldFetch(): Boolean
 
     @MainThread

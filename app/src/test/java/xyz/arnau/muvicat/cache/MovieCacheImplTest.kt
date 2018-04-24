@@ -10,10 +10,9 @@ import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
 import org.mockito.Mockito.*
 import xyz.arnau.muvicat.cache.dao.MovieDao
-import xyz.arnau.muvicat.cache.db.MuvicatDatabase
-import xyz.arnau.muvicat.data.utils.PreferencesHelper
 import xyz.arnau.muvicat.data.model.Movie
 import xyz.arnau.muvicat.data.test.MovieFactory
+import xyz.arnau.muvicat.data.utils.PreferencesHelper
 
 
 @RunWith(JUnit4::class)
@@ -21,22 +20,19 @@ class MovieCacheImplTest {
     @get:Rule
     var rule: TestRule = InstantTaskExecutorRule()
 
-    private val muvicatDatabase = mock(MuvicatDatabase::class.java)
     private val preferencesHelper = mock(PreferencesHelper::class.java)
     private val movieDao = mock(MovieDao::class.java)
 
-    private val movieCacheImpl = MovieCacheImpl(muvicatDatabase, preferencesHelper)
+    private val movieCacheImpl = MovieCacheImpl(movieDao, preferencesHelper)
 
     @Test
     fun clearMoviesDeletesMovies() {
-        `when`(muvicatDatabase.movieDao()).thenReturn(movieDao)
         movieCacheImpl.clearMovies()
         verify(movieDao).clearMovies()
     }
 
     @Test
     fun getMoviesReturnsData() {
-        `when`(muvicatDatabase.movieDao()).thenReturn(movieDao)
         val movies = MovieFactory.makeMovieList(5)
         val moviesLiveData = MutableLiveData<List<Movie>>()
         moviesLiveData.value = movies
@@ -48,7 +44,6 @@ class MovieCacheImplTest {
 
     @Test
     fun updateMoviesUpdateData() {
-        `when`(muvicatDatabase.movieDao()).thenReturn(movieDao)
         val movies = MovieFactory.makeMovieList(5)
         movieCacheImpl.updateMovies(movies)
 
@@ -73,14 +68,12 @@ class MovieCacheImplTest {
 
     @Test
     fun isCachedReturnsTrueIfMoviesExist() {
-        `when`(muvicatDatabase.movieDao()).thenReturn(movieDao)
         `when`(movieDao.isCached()).thenReturn(true)
         assertEquals(true, movieCacheImpl.isCached())
     }
 
     @Test
     fun isCachedReturnFalseIfNotMoviesExist() {
-        `when`(muvicatDatabase.movieDao()).thenReturn(movieDao)
         `when`(movieDao.isCached()).thenReturn(false)
         assertEquals(false, movieCacheImpl.isCached())
     }

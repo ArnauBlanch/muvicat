@@ -9,19 +9,21 @@ import xyz.arnau.muvicat.data.model.Movie
 import xyz.arnau.muvicat.data.model.Resource
 import xyz.arnau.muvicat.data.repository.GencatRemote
 import xyz.arnau.muvicat.data.repository.MovieCache
-import xyz.arnau.muvicat.data.repository.MovieRepository
 import xyz.arnau.muvicat.remote.model.Response
 import xyz.arnau.muvicat.remote.model.ResponseStatus.NOT_MODIFIED
 import xyz.arnau.muvicat.remote.model.ResponseStatus.SUCCESSFUL
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class MovieRepositoryImpl constructor(
+@Singleton
+class MovieRepository @Inject constructor(
         private val movieCache: MovieCache,
         private val gencatRemote: GencatRemote,
         private val appExecutors: AppExecutors,
         private val preferencesHelper: PreferencesHelper
-): MovieRepository {
+) {
 
-    override fun getMovies(): LiveData<Resource<List<Movie>>> =
+    fun getMovies(): LiveData<Resource<List<Movie>>> =
             object : NetworkBoundResource<List<Movie>>(appExecutors) {
                 override fun saveResponse(response: Response<List<Movie>>) {
                     if (response.type == SUCCESSFUL) {
@@ -43,7 +45,7 @@ class MovieRepositoryImpl constructor(
                 }
 
                 override fun shouldFetch(): Boolean {
-                    return !movieCache.isCached() || movieCache.isExpired()
+                    return /*!movieCache.isCached() || */movieCache.isExpired()
                 }
 
             }.asLiveData()
