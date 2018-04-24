@@ -1,14 +1,15 @@
 package xyz.arnau.muvicat.cache
 
 import android.arch.lifecycle.LiveData
-import xyz.arnau.muvicat.cache.db.MuvicatDatabase
-import xyz.arnau.muvicat.data.utils.PreferencesHelper
+import android.support.annotation.WorkerThread
+import xyz.arnau.muvicat.cache.dao.MovieDao
 import xyz.arnau.muvicat.data.model.Movie
 import xyz.arnau.muvicat.data.repository.MovieCache
+import xyz.arnau.muvicat.data.utils.PreferencesHelper
 import javax.inject.Inject
 
 class MovieCacheImpl @Inject constructor(
-        private val muvicatDatabase: MuvicatDatabase,
+        private val movieDao: MovieDao,
         private val preferencesHelper: PreferencesHelper
 ) : MovieCache {
 
@@ -16,10 +17,10 @@ class MovieCacheImpl @Inject constructor(
         const val EXPIRATION_TIME: Long = (3 * 60 * 60 * 1000).toLong() // $COVERAGE-IGNORE$
     }
 
-    override fun clearMovies() = muvicatDatabase.movieDao().clearMovies()
+    override fun clearMovies() = movieDao.clearMovies()
 
     override fun getMovies(): LiveData<List<Movie>> {
-        return muvicatDatabase.movieDao().getMovies()
+        return movieDao.getMovies()
     }
 
     override fun isExpired(): Boolean {
@@ -28,9 +29,10 @@ class MovieCacheImpl @Inject constructor(
         return currentTime - lastUpdateTime > EXPIRATION_TIME
     }
 
-    override fun isCached(): Boolean = muvicatDatabase.movieDao().isCached()
+    @WorkerThread
+    override fun isCached(): Boolean = movieDao.isCached()
 
     override fun updateMovies(movies: List<Movie>) {
-        muvicatDatabase.movieDao().updateMovieDb(movies)
+        movieDao.updateMovieDb(movies)
     }
 }

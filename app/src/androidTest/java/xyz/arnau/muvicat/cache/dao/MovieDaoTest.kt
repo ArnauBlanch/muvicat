@@ -35,7 +35,7 @@ class MovieDaoTest {
         muvicatDatabase.movieDao().insertMovies(movies)
 
         val retrievedMovies = muvicatDatabase.movieDao().getMovies().getValueBlocking()
-        assertEquals(movies.sortedWith(compareBy({ it.id }, { it.id })), retrievedMovies)
+        assertEquals(movies.sortedWith(compareByDescending<Movie> { it.priority }.thenBy { it.id }), retrievedMovies)
     }
 
     @Test
@@ -45,7 +45,7 @@ class MovieDaoTest {
         muvicatDatabase.movieDao().insertMovies(movies)
 
         val retrievedMovies = muvicatDatabase.movieDao().getMovies().getValueBlocking()
-        assertEquals(movies.sortedWith(compareBy({ it.id }, { it.id })), retrievedMovies)
+        assertEquals(movies.sortedWith(compareByDescending<Movie> { it.priority }.thenBy { it.id }), retrievedMovies)
     }
 
     @Test
@@ -62,7 +62,7 @@ class MovieDaoTest {
         val movies = MovieFactory.makeMovieList(3)
         muvicatDatabase.movieDao().insertMovies(movies)
 
-        assertEquals(movies.sortedWith(compareBy({ it.id }, { it.id })), muvicatDatabase.movieDao().getMovies().getValueBlocking()!!)
+        assertEquals(movies.sortedWith(compareByDescending<Movie> { it.priority }.thenBy { it.id }), muvicatDatabase.movieDao().getMovies().getValueBlocking()!!)
     }
 
     @Test
@@ -96,8 +96,7 @@ class MovieDaoTest {
         val oldIds = oldMovies.map { it.id }
 
         muvicatDatabase.movieDao().deleteMoviesById(oldIds)
-        assertEquals(newMovies.sortedWith(compareBy({ it.id },
-                { it.id })), muvicatDatabase.movieDao().getMovies().getValueBlocking())
+        assertEquals(newMovies.sortedWith(compareByDescending<Movie> { it.priority }.thenBy { it.id }), muvicatDatabase.movieDao().getMovies().getValueBlocking())
     }
 
     @Test
@@ -115,7 +114,7 @@ class MovieDaoTest {
                 updatedMovie.ageRating, updatedMovie.trailerUrl)
 
         val movies2 = (movies - movies[1]) + updatedMovie
-        assertEquals(movies2.sortedWith(compareBy({ it.id }, { it.id })),
+        assertEquals(movies2.sortedWith(compareByDescending<Movie> { it.priority }.thenBy { it.id }),
                 muvicatDatabase.movieDao().getMovies().getValueBlocking())
     }
 
@@ -124,7 +123,7 @@ class MovieDaoTest {
         val movies = MovieFactory.makeMovieList(5)
         muvicatDatabase.movieDao().updateMovieDb(movies)
 
-        Assert.assertEquals(movies.sortedWith(compareBy({ it.id }, { it.id })),
+        Assert.assertEquals(movies.sortedWith(compareByDescending<Movie> { it.priority }.thenBy { it.id }),
                 muvicatDatabase.movieDao().getMovies().getValueBlocking())
     }
 
@@ -141,7 +140,7 @@ class MovieDaoTest {
         updatedMovies.forEachIndexed { index, item -> item.id = (index + 10).toLong() }
         muvicatDatabase.movieDao().updateMovieDb(movies2)
 
-        assertEquals(movies2.sortedWith(compareBy({ it.id }, { it.id })),
+        assertEquals(movies2.sortedWith(compareByDescending<Movie> { it.priority }.thenBy { it.id }),
                 muvicatDatabase.movieDao().getMovies().getValueBlocking())
     }
 }

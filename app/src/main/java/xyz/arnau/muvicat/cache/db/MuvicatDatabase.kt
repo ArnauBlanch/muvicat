@@ -10,26 +10,4 @@ import xyz.arnau.muvicat.data.model.Movie
 @TypeConverters(DateTypeConverter::class)
 abstract class MuvicatDatabase : RoomDatabase() {
     abstract fun movieDao(): MovieDao
-
-    /*
-    private var instance: MuvicatDatabase? = null
-
-    private val sLock = Any()
-
-    fun getInstance(context: Context): MuvicatDatabase {
-        if (instance == null) {
-            synchronized(sLock) {
-                if (instance == null) {
-                    instance = Room.databaseBuilder(
-                        context.applicationContext,
-                        MuvicatDatabase::class.java, DATABASE_NAME
-                    )
-                        .build()
-                }
-                return instance!!
-            }
-        }
-        return instance!!
-    }
-    */
 }
