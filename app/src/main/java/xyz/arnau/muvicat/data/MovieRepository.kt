@@ -45,7 +45,7 @@ class MovieRepository @Inject constructor(
                 }
 
                 override fun shouldFetch(): Boolean {
-                    return /*!movieCache.isCached() || */movieCache.isExpired()
+                    return !movieCache.isCached() || movieCache.isExpired()
                 }
 
             }.asLiveData()

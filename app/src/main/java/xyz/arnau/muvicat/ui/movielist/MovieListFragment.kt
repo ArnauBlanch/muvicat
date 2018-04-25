@@ -84,13 +84,15 @@ class MovieListFragment : Fragment(), Injectable {
                 updateMovieList(it)
                 skeleton.hide()
             }
-            Status.LOADING -> if (data != null && !data.isEmpty()) {
+        /*Status.LOADING -> if (data != null && !data.isEmpty()) {
                 updateMovieList(data)
                 skeleton.hide()
-            }
+            }*/
             Status.ERROR -> {
                 skeleton.hide()
-                if (!moviesAdapter.movies.isEmpty()) {
+                if (data != null) {
+                    updateMovieList(data)
+                    skeleton.hide()
                     view?.let {
                         Snackbar.make(it, getString(R.string.couldnt_update_data), 10000)
                                 .show()
