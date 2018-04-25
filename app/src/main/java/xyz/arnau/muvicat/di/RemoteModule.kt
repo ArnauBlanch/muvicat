@@ -44,7 +44,7 @@ class RemoteModule {
     @Singleton
     @Provides
     fun provideGencatService(): GencatService {
-        return provideGencatService(false)
+        return provideGencatService(true)
     }
 
     private fun provideGencatService(isDebug: Boolean): GencatService {

@@ -11,7 +11,7 @@
     app:cardCornerRadius="0dp"
     android:focusable="true">
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -21,31 +21,20 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:ari_aspect="height"
+            app:ari_ratio="1.43"
             android:background="@color/skeleton_light"
-            app:ari_ratio="1.43"/>
-        <TextView
-            android:id="@+id/releaseDate"
-            android:visibility="gone"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@color/colorPrimary"
-            android:textAlignment="center"
-            android:textSize="14sp"
-            android:padding="3dp"
-            android:fontFamily="@font/nunito_sans_semibold"
-            android:background="@color/colorAccentTransparent"
-            android:layout_alignBottom="@+id/moviePoster" />
+            />
 
         <TextView
             android:id="@+id/movieTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/moviePoster"
-            android:layout_marginTop="5dp"
             android:fontFamily="@font/nunito_sans_extrabold"
-            android:lineSpacingMultiplier="0.9"
             android:textColor="#000000"
+            android:layout_marginTop="5dp"
+            android:lineSpacingMultiplier="0.9"
+            android:background="@color/skeleton_light"
             android:textSize="16sp" />
-    </RelativeLayout>
+    </LinearLayout>
 
 </android.support.v7.widget.CardView>

@@ -7,6 +7,6 @@ import xyz.arnau.muvicat.data.model.Movie
 import xyz.arnau.muvicat.data.model.Resource
 import javax.inject.Inject
 
-class MovieListViewModel @Inject constructor(movieRepository: MovieRepository) : ViewModel() {
+class MovieListViewModel @Inject constructor(private val movieRepository: MovieRepository) : ViewModel() {
     val movies: LiveData<Resource<List<Movie>>> = movieRepository.getMovies()
 }

@@ -11,23 +11,36 @@ import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.module.AppGlideModule
 import com.bumptech.glide.request.RequestOptions
+import org.w3c.dom.Text
 import timber.log.Timber
 import xyz.arnau.muvicat.GlideApp
 import xyz.arnau.muvicat.R
 import xyz.arnau.muvicat.data.model.Movie
-import xyz.arnau.muvicat.ui.MoviePosterView
+import xyz.arnau.muvicat.utils.DateFormatter
+import java.text.SimpleDateFormat
+import java.util.*
 import javax.inject.Inject
 
 class MovieListAdapter @Inject constructor() : RecyclerView.Adapter<MovieListAdapter.ViewHolder>() {
+    @Inject
+    lateinit var dateFormatter: DateFormatter
+
     var movies: List<Movie> = arrayListOf()
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val movie = movies[position]
         holder.titleText.text = movie.title
+        if (movie.releaseDate != null) {
+            val dateString = dateFormatter.shortDate(movie.releaseDate)
+            dateString?.let {
+                holder.releaseDate.text = dateString
+                holder.releaseDate.visibility = View.VISIBLE
+            }
+        }
 
         GlideApp.with(holder.itemView.context)
                 .load("http://www.gencat.cat/llengua/cinema/${movie.posterUrl}")
-                .placeholder(R.drawable.poster_placeholder)
+                .error(R.drawable.poster_placeholder)
                 .centerCrop()
                 .into(holder.posterImage)
 
@@ -48,5 +61,6 @@ class MovieListAdapter @Inject constructor() : RecyclerView.Adapter<MovieListAda
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         var posterImage: ImageView = view.findViewById(R.id.moviePoster)
         var titleText: TextView = view.findViewById(R.id.movieTitle)
+        var releaseDate: TextView = view.findViewById(R.id.releaseDate)
     }
 }
