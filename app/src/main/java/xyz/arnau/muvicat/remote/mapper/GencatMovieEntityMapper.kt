@@ -14,19 +14,19 @@ class GencatMovieEntityMapper : EntityMapper<GencatMovie, Movie> {
         val releaseDate = parseReleaseDate(type)
         val year = parseYear(type)
         return Movie(
-                type.id!!.toLong(),
-                type.title,
-                type.originalTitle,
-                year,
-                type.direction,
-                type.cast,
-                type.plot,
-                releaseDate,
-                type.posterUrl,
-                type.priority,
-                type.originalLanguage,
-                type.ageRating,
-                type.trailerUrl
+            type.id!!.toLong(),
+            type.title,
+            type.originalTitle,
+            year,
+            type.direction,
+            type.cast,
+            type.plot,
+            releaseDate,
+            type.posterUrl,
+            type.priority,
+            type.originalLanguage,
+            type.ageRating,
+            type.trailerUrl
         )
     }
 
@@ -59,9 +59,11 @@ class GencatMovieEntityMapper : EntityMapper<GencatMovie, Movie> {
         t.year = if (t.year != "--" && t.year != "") t.year else null
         t.releaseDate = if (t.releaseDate != "--" && t.releaseDate != "") t.releaseDate else null
         t.cast = if (t.cast != "--" && t.cast != "") t.cast else null
-        t.originalTitle = if (t.originalTitle != "--" && t.originalTitle != "") t.originalTitle else null
+        t.originalTitle =
+                if (t.originalTitle != "--" && t.originalTitle != "") t.originalTitle else null
         t.plot = if (t.plot != "--" && t.plot != "") t.plot else null
-        t.originalLanguage = if (t.originalLanguage != "--" && t.originalLanguage != "") t.originalLanguage else null
+        t.originalLanguage =
+                if (t.originalLanguage != "--" && t.originalLanguage != "") t.originalLanguage else null
         t.ageRating = if (t.ageRating != "--" && t.ageRating != "") t.ageRating else null
         t.trailerUrl = if (t.trailerUrl != "--" && t.trailerUrl != "") t.trailerUrl else null
     }

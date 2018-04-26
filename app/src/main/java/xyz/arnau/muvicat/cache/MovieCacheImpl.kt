@@ -1,7 +1,6 @@
 package xyz.arnau.muvicat.cache
 
 import android.arch.lifecycle.LiveData
-import android.support.annotation.WorkerThread
 import xyz.arnau.muvicat.cache.dao.MovieDao
 import xyz.arnau.muvicat.data.model.Movie
 import xyz.arnau.muvicat.data.repository.MovieCache
@@ -9,8 +8,8 @@ import xyz.arnau.muvicat.data.utils.PreferencesHelper
 import javax.inject.Inject
 
 class MovieCacheImpl @Inject constructor(
-        private val movieDao: MovieDao,
-        private val preferencesHelper: PreferencesHelper
+    private val movieDao: MovieDao,
+    private val preferencesHelper: PreferencesHelper
 ) : MovieCache {
 
     companion object {

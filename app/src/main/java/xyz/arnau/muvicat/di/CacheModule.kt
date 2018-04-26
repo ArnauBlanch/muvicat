@@ -17,8 +17,8 @@ class CacheModule {
     @Provides
     fun provideDb(app: Application): MuvicatDatabase {
         return Room
-                .databaseBuilder(app, MuvicatDatabase::class.java, "muvicat-db")
-                .build()
+            .databaseBuilder(app, MuvicatDatabase::class.java, "muvicat-db")
+            .build()
     }
 
     @Singleton

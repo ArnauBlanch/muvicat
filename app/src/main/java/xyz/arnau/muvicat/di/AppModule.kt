@@ -8,7 +8,6 @@ import dagger.Module
 import dagger.Provides
 import xyz.arnau.muvicat.data.utils.PreferencesHelper
 import xyz.arnau.muvicat.utils.DateFormatter
-import java.util.*
 import javax.inject.Singleton
 
 @Module(includes = [RemoteModule::class, CacheModule::class, ViewModelModule::class])

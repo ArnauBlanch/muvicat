@@ -7,18 +7,21 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:fontFamily">@font/nunito_sans</item>
-        <item name="android:navigationBarColor">@color/colorPrimaryDark</item>
-        <item name="android:statusBarColor">@color/grey</item>
+        <item name="android:navigationBarColor" tools:targetApi="lollipop">@color/colorPrimaryDark</item>
+        <item name="android:statusBarColor" tools:targetApi="lollipop">@color/grey</item>
         <item name="android:colorBackground">@color/background_material_light</item>
     </style>
 
+    <style name="AppTheme.Launcher">
+    <item name="android:windowBackground">@drawable/splash_screen</item>
+        <item name="colorPrimaryDark">@color/darkGrey</item>
+    </style>
+
     <style name="CollapsingToolbarLayoutExpandedTextStyle" parent="AppTheme">
-        <!--<item name="android:fontFamily">@font/nunito_sans_black</item>-->
         <item name="android:textSize">32sp</item>
     </style>
 
     <style name="CollapsingToolbarLayoutCollapsedTextStyle" parent="AppTheme">
-        <!--<item name="android:fontFamily">@font/nunito_sans_black</item>-->
         <item name="android:textSize">26sp</item>
     </style>
 </resources>

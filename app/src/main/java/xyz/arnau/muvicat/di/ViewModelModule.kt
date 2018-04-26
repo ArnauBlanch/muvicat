@@ -8,13 +8,14 @@ import dagger.multibindings.IntoMap
 import xyz.arnau.muvicat.viewmodel.MuvicatViewModelFactory
 import xyz.arnau.muvicat.viewmodel.movie.MovieListViewModel
 
+@Suppress("unused")
 @Module
 abstract class ViewModelModule {
     @Binds
     @IntoMap
     @ViewModelKey(MovieListViewModel::class)
-    internal abstract fun bindMovieListViewModel(movieListViewModel: MovieListViewModel): ViewModel
+    abstract fun bindMovieListViewModel(movieListViewModel: MovieListViewModel): ViewModel
 
     @Binds
-    internal abstract fun bindViewModelFactory(factory: MuvicatViewModelFactory): ViewModelProvider.Factory
+    abstract fun bindViewModelFactory(factory: MuvicatViewModelFactory): ViewModelProvider.Factory
 }

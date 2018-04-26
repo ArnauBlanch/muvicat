@@ -16,25 +16,33 @@ class AppInjector private constructor() {
     companion object {
         fun init(muvicatApplication: MuvicatApplication) {
             DaggerAppComponent.builder().application(muvicatApplication)
-                    .build().inject(muvicatApplication)
+                .build().inject(muvicatApplication)
             muvicatApplication
-                    .registerActivityLifecycleCallbacks(object : Application.ActivityLifecycleCallbacks {
-                        override fun onActivityCreated(activity: Activity?, savedInstanceState: Bundle?) {
-                            activity?.let { handleActivity(it) }
-                        }
+                .registerActivityLifecycleCallbacks(object :
+                    Application.ActivityLifecycleCallbacks {
+                    override fun onActivityCreated(
+                        activity: Activity?,
+                        savedInstanceState: Bundle?
+                    ) {
+                        activity?.let { handleActivity(it) }
+                    }
 
-                        override fun onActivityStarted(activity: Activity?) {}
+                    override fun onActivityStarted(activity: Activity?) {}
 
-                        override fun onActivityStopped(activity: Activity?) {}
+                    override fun onActivityStopped(activity: Activity?) {}
 
-                        override fun onActivitySaveInstanceState(activity: Activity?, outState: Bundle?) {}
+                    override fun onActivitySaveInstanceState(
+                        activity: Activity?,
+                        outState: Bundle?
+                    ) {
+                    }
 
-                        override fun onActivityDestroyed(activity: Activity?) {}
+                    override fun onActivityDestroyed(activity: Activity?) {}
 
-                        override fun onActivityResumed(activity: Activity?) {}
+                    override fun onActivityResumed(activity: Activity?) {}
 
-                        override fun onActivityPaused(activity: Activity?) {}
-                    })
+                    override fun onActivityPaused(activity: Activity?) {}
+                })
         }
 
         fun handleActivity(activity: Activity) {
@@ -43,19 +51,21 @@ class AppInjector private constructor() {
             }
 
             if (activity is FragmentActivity) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    activity.supportFragmentManager
-                            .registerFragmentLifecycleCallbacks(
-                                    object : FragmentManager.FragmentLifecycleCallbacks() {
-                                        override fun onFragmentCreated(fm: FragmentManager?, f: Fragment?, savedInstanceState: Bundle?) {
-                                            if (f is Injectable) {
-                                                AndroidSupportInjection.inject(f)
-                                            }
-                                        }
-                                    }, true)
-                }
+                activity.supportFragmentManager
+                    .registerFragmentLifecycleCallbacks(
+                        object : FragmentManager.FragmentLifecycleCallbacks() {
+                            override fun onFragmentCreated(
+                                fm: FragmentManager?,
+                                f: Fragment?,
+                                savedInstanceState: Bundle?
+                            ) {
+                                if (f is Injectable) {
+                                    AndroidSupportInjection.inject(f)
+                                }
+                            }
+                        }, true
+                    )
             }
         }
     }
-
 }
