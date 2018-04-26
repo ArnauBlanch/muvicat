@@ -10,3 +10,5 @@
 /captures
 .externalNativeBuild
 app/google-services.json
+libs/
+src/main/res/layout-v21/
