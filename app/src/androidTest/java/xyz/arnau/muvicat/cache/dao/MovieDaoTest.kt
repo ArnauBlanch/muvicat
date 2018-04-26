@@ -66,19 +66,6 @@ class MovieDaoTest {
     }
 
     @Test
-    fun isCachedReturnsTrueIfThereAreMovies() {
-        val movies = MovieFactory.makeMovieList(3)
-        muvicatDatabase.movieDao().insertMovies(movies)
-
-        assertEquals(true, muvicatDatabase.movieDao().isCached())
-    }
-
-    @Test
-    fun isCachedReturnsFalseIfThereAreNoMovies() {
-        assertEquals(false, muvicatDatabase.movieDao().isCached())
-    }
-
-    @Test
     fun getMovieIdsReturnAllExistingIds() {
         val movies = MovieFactory.makeMovieList(5)
         val ids = movies.map { it.id }

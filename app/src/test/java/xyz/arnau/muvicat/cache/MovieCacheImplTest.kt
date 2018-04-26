@@ -67,18 +67,6 @@ class MovieCacheImplTest {
     }
 
     @Test
-    fun isCachedReturnsTrueIfMoviesExist() {
-        `when`(movieDao.isCached()).thenReturn(true)
-        assertEquals(true, movieCacheImpl.isCached())
-    }
-
-    @Test
-    fun isCachedReturnFalseIfNotMoviesExist() {
-        `when`(movieDao.isCached()).thenReturn(false)
-        assertEquals(false, movieCacheImpl.isCached())
-    }
-
-    @Test
     fun companionObjectTest() {
         assertEquals((3 * 60 * 60 * 1000).toLong(), MovieCacheImpl.EXPIRATION_TIME)
     }

@@ -29,9 +29,6 @@ class MovieCacheImpl @Inject constructor(
         return currentTime - lastUpdateTime > EXPIRATION_TIME
     }
 
-    @WorkerThread
-    override fun isCached(): Boolean = movieDao.isCached()
-
     override fun updateMovies(movies: List<Movie>) {
         movieDao.updateMovieDb(movies)
     }

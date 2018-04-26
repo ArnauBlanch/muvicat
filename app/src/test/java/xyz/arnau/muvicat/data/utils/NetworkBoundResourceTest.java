@@ -7,6 +7,7 @@ import android.arch.lifecycle.Observer;
 
 import org.hamcrest.Matchers;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
@@ -88,7 +89,7 @@ public class NetworkBoundResourceTest {
             }
 
             @Override
-            protected boolean shouldFetch() {
+            protected boolean shouldFetch(@Nullable Foo data) {
                 return shouldFetch.apply(null) && fetchedOnce.compareAndSet(false, true);
             }
 

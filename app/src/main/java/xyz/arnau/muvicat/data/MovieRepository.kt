@@ -1,6 +1,5 @@
 package xyz.arnau.muvicat.data
 
-//import xyz.arnau.muvicat.data.GencatNetworkBoundResource
 import android.arch.lifecycle.LiveData
 import xyz.arnau.muvicat.AppExecutors
 import xyz.arnau.muvicat.data.utils.NetworkBoundResource
@@ -44,8 +43,8 @@ class MovieRepository @Inject constructor(
                     return movieCache.getMovies()
                 }
 
-                override fun shouldFetch(): Boolean {
-                    return !movieCache.isCached() || movieCache.isExpired()
+                override fun shouldFetch(data: List<Movie>?): Boolean {
+                    return data == null || data.isEmpty() || movieCache.isExpired()
                 }
 
             }.asLiveData()
