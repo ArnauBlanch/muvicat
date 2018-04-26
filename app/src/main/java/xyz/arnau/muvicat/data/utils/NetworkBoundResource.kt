@@ -4,7 +4,6 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MediatorLiveData
 import android.support.annotation.MainThread
 import android.support.annotation.WorkerThread
-import timber.log.Timber
 import xyz.arnau.muvicat.AppExecutors
 import xyz.arnau.muvicat.data.model.Resource
 import xyz.arnau.muvicat.remote.model.Response

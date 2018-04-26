@@ -8,19 +8,19 @@ import java.util.*
 
 @Entity(tableName = "movies", indices = [(Index(value = ["id"], name = "id"))])
 data class Movie(
-        @PrimaryKey
-        var id: Long,
-        var title: String?,
-        var originalTitle: String?,
-        var year: Int?,
-        var direction: String?,
-        @ColumnInfo(name = "castList")
-        var cast: String?,
-        var plot: String?,
-        var releaseDate: Date?,
-        var posterUrl: String?,
-        var priority: Int?,
-        var originalLanguage: String?,
-        var ageRating: String?,
-        var trailerUrl: String?
+    @PrimaryKey
+    var id: Long,
+    var title: String?,
+    var originalTitle: String?,
+    var year: Int?,
+    var direction: String?,
+    @ColumnInfo(name = "castList")
+    var cast: String?,
+    var plot: String?,
+    var releaseDate: Date?,
+    var posterUrl: String?,
+    var priority: Int?,
+    var originalLanguage: String?,
+    var ageRating: String?,
+    var trailerUrl: String?
 )

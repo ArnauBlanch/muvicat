@@ -10,19 +10,19 @@ import xyz.arnau.muvicat.remote.model.Response
 import xyz.arnau.muvicat.remote.service.GencatService
 
 class GencatRemoteImpl(
-        private val gencatService: GencatService,
-        private val entityMapper: GencatMovieListEntityMapper
+    private val gencatService: GencatService,
+    private val entityMapper: GencatMovieListEntityMapper
 ) : GencatRemote {
     override fun getMovies(eTag: String?): LiveData<Response<List<Movie>>> {
         return Transformations.switchMap(gencatService.getMovies(eTag), { apiResponse ->
             val data = MutableLiveData<Response<List<Movie>>>()
             data.postValue(
-                    Response(
-                            entityMapper.mapFromRemote(apiResponse.body),
-                            apiResponse.errorMessage,
-                            apiResponse.status,
-                            apiResponse.eTag
-                    )
+                Response(
+                    entityMapper.mapFromRemote(apiResponse.body),
+                    apiResponse.errorMessage,
+                    apiResponse.status,
+                    apiResponse.eTag
+                )
             )
             data
         })

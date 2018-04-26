@@ -23,10 +23,10 @@ class RemoteModule {
     @Provides
     fun provideOkHttpClient(httpLoggingInterceptor: HttpLoggingInterceptor): OkHttpClient {
         return OkHttpClient.Builder()
-                .addInterceptor(httpLoggingInterceptor)
-                .connectTimeout(120, TimeUnit.SECONDS)
-                .readTimeout(120, TimeUnit.SECONDS)
-                .build()
+            .addInterceptor(httpLoggingInterceptor)
+            .connectTimeout(120, TimeUnit.SECONDS)
+            .readTimeout(120, TimeUnit.SECONDS)
+            .build()
 
     }
 
@@ -55,16 +55,19 @@ class RemoteModule {
     @Singleton
     @Provides
     fun provideGencatRemote(gencatService: GencatService): GencatRemote {
-        return GencatRemoteImpl(gencatService, GencatMovieListEntityMapper(GencatMovieEntityMapper()))
+        return GencatRemoteImpl(
+            gencatService,
+            GencatMovieListEntityMapper(GencatMovieEntityMapper())
+        )
     }
 
     private fun makeGencatService(okHttpClient: OkHttpClient): GencatService {
         val retrofit = Retrofit.Builder()
-                .baseUrl("http://gencat.cat/llengua/cinema/")
-                .client(okHttpClient)
-                .addCallAdapterFactory(LiveDataCallAdapterFactory())
-                .addConverterFactory(SimpleXmlConverterFactory.create())
-                .build()
+            .baseUrl("http://gencat.cat/llengua/cinema/")
+            .client(okHttpClient)
+            .addCallAdapterFactory(LiveDataCallAdapterFactory())
+            .addConverterFactory(SimpleXmlConverterFactory.create())
+            .build()
         return retrofit.create(GencatService::class.java)
     }
 
