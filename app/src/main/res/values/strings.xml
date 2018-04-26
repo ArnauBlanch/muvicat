@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">Muvicat</string>
+    <string name="movies">Pel·lícules</string>
+    <string name="couldnt_update_data">No s\'han pogut actualitzar les dades. Torna-ho a provar més endavant...</string>
+    <string name="couldnt_get_data">No s\'ha pogut descarregar les dades. Torna-ho a provar més endavant...</string>
+    <string name="try_again">Torna a provar</string>
+    <string name="release">Estrena %s</string>
+    <string name="today">avui</string>
+    <string name="tomorrow">demà</string>
 </resources>
