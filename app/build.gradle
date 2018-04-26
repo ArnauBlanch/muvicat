@@ -198,7 +198,7 @@ task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest', 'crea
 
     def fileFilter = ['**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*',
                       '**/*Test*.*', 'android/**/*.*', '**/model/**', '**/constants/**',
-                      '**/**_Impl**', '**/*_Factory.*']
+                      '**/**_Impl**', '**/*_Factory.*', '**/di/**', '**/ui/**']
     def javaClasses = fileTree(dir: "$project.buildDir/intermediates/classes/debug", excludes: fileFilter)
     def kotlinClasses = fileTree(dir: "$project.buildDir/tmp/kotlin-classes/debug", excludes: fileFilter)
     def javaSrc = "$project.projectDir/src/main/java"
