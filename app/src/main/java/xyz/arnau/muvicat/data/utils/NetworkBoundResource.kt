@@ -16,9 +16,9 @@ abstract class NetworkBoundResource<T> @MainThread constructor(private val appEx
     init {
         result.value = Resource.loading(null)
         val dbSource: LiveData<T> = loadFromDb()
-        result.addSource(dbSource, {
+        result.addSource(dbSource, { data ->
             result.removeSource(dbSource)
-            if (shouldFetch()) {
+            if (shouldFetch(data)) {
                 fetchFromNetwork(dbSource)
             } else {
                 result.addSource(dbSource, { newData -> setValue(Resource.success(newData)) })
@@ -72,8 +72,8 @@ abstract class NetworkBoundResource<T> @MainThread constructor(private val appEx
     @WorkerThread
     protected abstract fun saveResponse(response: Response<T>)
 
-    @WorkerThread
-    protected abstract fun shouldFetch(): Boolean
+    @MainThread
+    protected abstract fun shouldFetch(data: T?): Boolean
 
     @MainThread
     protected abstract fun loadFromDb(): LiveData<T>

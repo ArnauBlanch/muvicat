@@ -8,5 +8,4 @@ interface MovieCache {
     fun updateMovies(movies: List<Movie>)
     fun clearMovies()
     fun isExpired(): Boolean
-    fun isCached(): Boolean
 }
