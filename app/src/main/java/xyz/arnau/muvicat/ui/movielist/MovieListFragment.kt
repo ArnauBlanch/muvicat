@@ -97,11 +97,11 @@ class MovieListFragment : Fragment(), Injectable {
             }*/
             Status.ERROR -> {
                 skeleton.hide()
-                if (data != null) {
+                if (data != null && !data.isEmpty()) {
                     updateMovieList(data)
                     skeleton.hide()
                     view?.let {
-                        Snackbar.make(it, getString(R.string.couldnt_update_data), 10000)
+                        Snackbar.make(it, getString(R.string.couldnt_update_data), 6000)
                             .show()
                     }
                 } else {
