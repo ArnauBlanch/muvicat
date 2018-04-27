@@ -16,7 +16,7 @@ import org.powermock.modules.junit4.rule.PowerMockRule
 
 
 @RunWith(RobolectricTestRunner::class)
-@Config(constants = BuildConfig::class, sdk = [16])
+@Config(constants = BuildConfig::class)
 @PowerMockIgnore("org.mockito.*", "org.robolectric.*", "android.*")
 @PrepareForTest(PreferencesHelper::class)
 class PreferencesHelperTest {
@@ -32,7 +32,8 @@ class PreferencesHelperTest {
     @Test
     fun getLastCacheTimeReturnsLastTime() {
         val lastTime = 500.toLong()
-        sharedPreferences.edit().putLong(PreferencesHelper.PREF_KEY_LAST_MOVIE_UPDATE, lastTime).apply()
+        sharedPreferences.edit().putLong(PreferencesHelper.PREF_KEY_LAST_MOVIE_UPDATE, lastTime)
+                .apply()
 
         assertEquals(lastTime, preferencesHelper.movieslastUpdateTime)
     }
@@ -44,7 +45,10 @@ class PreferencesHelperTest {
         PowerMockito.`when`(System.currentTimeMillis()).thenReturn(currentTime)
         preferencesHelper.moviesUpdated()
 
-        assertEquals(currentTime, sharedPreferences.getLong(PreferencesHelper.PREF_KEY_LAST_MOVIE_UPDATE, 0))
+        assertEquals(
+                currentTime,
+                sharedPreferences.getLong(PreferencesHelper.PREF_KEY_LAST_MOVIE_UPDATE, 0)
+        )
     }
 
     @Test
@@ -60,6 +64,9 @@ class PreferencesHelperTest {
         val eTag = "\"movies-etag\""
         preferencesHelper.moviesETag = eTag
 
-        assertEquals(eTag, sharedPreferences.getString(PreferencesHelper.PREF_KEY_MOVIES_ETAG, null))
+        assertEquals(
+                eTag,
+                sharedPreferences.getString(PreferencesHelper.PREF_KEY_MOVIES_ETAG, null)
+        )
     }
 }

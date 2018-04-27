@@ -6,7 +6,6 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'jacoco'
 apply plugin: 'io.fabric'
 
-
 android {
     signingConfigs {}
     compileSdkVersion 27
@@ -17,7 +16,6 @@ android {
         versionCode 4
         versionName "0.1-alpha3"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        multiDexEnabled true
 
         javaCompileOptions {
             annotationProcessorOptions {
@@ -36,7 +34,7 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             debuggable false
             jniDebuggable false
@@ -46,7 +44,8 @@ android {
             jniDebuggable false
             renderscriptDebuggable false
             renderscriptOptimLevel 3
-            minifyEnabled false
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             zipAlignEnabled true
         }
         debug {
@@ -54,6 +53,10 @@ android {
             jniDebuggable false
             applicationIdSuffix ".dev"
             testCoverageEnabled true
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            shrinkResources true
+            testProguardFile 'proguard-test.pro'
 
         }
         beta {
@@ -61,7 +64,8 @@ android {
             jniDebuggable false
             renderscriptDebuggable false
             renderscriptOptimLevel 3
-            minifyEnabled false
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             zipAlignEnabled true
         }
     }
@@ -90,24 +94,6 @@ android {
         targetCompatibility = '1.8'
     }
 }
-/*
-def build_param = "${build}"
-
-if (build_param != "debug") {
-    //exclude production build
-    android.variantFilter { variant ->
-        if (variant.buildType.name == 'debug') {
-            variant.setIgnore(true)
-        }
-    }
-} else {
-    //exclude all except production build
-    android.variantFilter { variant ->
-        if (variant.buildType.name != 'debug') {
-            variant.setIgnore(true)
-        }
-    }
-}*/
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
@@ -163,8 +149,8 @@ dependencies {
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support:support-annotations:27.1.1'
-    androidTestImplementation 'com.android.support.test:runner:1.0.2-beta1'
-    androidTestImplementation 'com.android.support.test:rules:1.0.2-beta1'
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test:rules:1.0.2'
     androidTestImplementation('com.android.support.test.espresso:espresso-core:3.0.1', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
@@ -189,6 +175,7 @@ dependencies {
 
     implementation 'com.ethanhua:skeleton:1.1.0'
     implementation 'io.supercharge:shimmerlayout:2.0.0'
+    implementation group: 'org.joda', name: 'joda-convert', version: '2.0.1', classifier: 'classic'
     implementation 'joda-time:joda-time:2.9.9'
 
     implementation 'com.crashlytics.sdk.android:crashlytics:2.9.1'
@@ -211,7 +198,6 @@ tasks.withType(Test) {
 }
 
 task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest', 'createDebugCoverageReport']) {
-
     reports {
         xml.enabled = true
         html.enabled = true
@@ -231,4 +217,5 @@ task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest', 'crea
             'jacoco/testDebugUnitTest.exec', 'outputs/code-coverage/connected/*coverage.ec'
     ])
 }
+
 apply plugin: 'com.google.gms.google-services'

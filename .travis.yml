@@ -41,7 +41,7 @@ before_script:
   - ./gradlew clean
 
 script:
-  - ./gradlew build connectedCheck jacocoTestReport -x lint -Pbuild=debug
+  - ./gradlew assembleDebug connectedCheck jacocoTestReport -x lint
 
 notifications:
   email: false
