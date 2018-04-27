@@ -24,18 +24,24 @@ class LiveDataCallAdapterFactoryTest {
     @Before
     fun setUp() {
         retrofit = Retrofit.Builder()
-                .baseUrl(server.url("/"))
-                .addCallAdapterFactory(factory)
-                .build()
+            .baseUrl(server.url("/"))
+            .addCallAdapterFactory(factory)
+            .build()
     }
 
     @Test
     fun responseType() {
         val bodyClass = object : TypeToken<LiveData<ApiResponse<String>>>() {}.type
-        assertEquals(object : TypeToken<String>() {}.type, factory.get(bodyClass, NO_ANNOTATIONS, retrofit!!)!!.responseType())
+        assertEquals(
+            object : TypeToken<String>() {}.type,
+            factory.get(bodyClass, NO_ANNOTATIONS, retrofit!!)!!.responseType()
+        )
 
         val bodyWildcard = object : TypeToken<LiveData<ApiResponse<out String>>>() {}.type
-        assertEquals(object : TypeToken<String>() {}.type, factory.get(bodyWildcard, NO_ANNOTATIONS, retrofit!!)!!.responseType())
+        assertEquals(
+            object : TypeToken<String>() {}.type,
+            factory.get(bodyWildcard, NO_ANNOTATIONS, retrofit!!)!!.responseType()
+        )
     }
 
     @Test

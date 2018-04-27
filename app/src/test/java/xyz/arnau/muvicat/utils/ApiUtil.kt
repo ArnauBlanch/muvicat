@@ -1,8 +1,7 @@
 package xyz.arnau.muvicat.utils
 
-import xyz.arnau.muvicat.remote.util.ApiResponse
-import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.MutableLiveData
 import xyz.arnau.muvicat.remote.model.Response
 import xyz.arnau.muvicat.remote.model.ResponseStatus
 

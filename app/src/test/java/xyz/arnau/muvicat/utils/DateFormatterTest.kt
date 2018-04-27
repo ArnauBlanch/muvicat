@@ -7,7 +7,6 @@ import org.junit.Test
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock
 import xyz.arnau.muvicat.R
-import java.util.*
 
 @Suppress("DEPRECATION")
 class DateFormatterTest {

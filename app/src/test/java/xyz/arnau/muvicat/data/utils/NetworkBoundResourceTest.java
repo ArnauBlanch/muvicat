@@ -25,7 +25,6 @@ import java.util.function.Function;
 
 import xyz.arnau.muvicat.AppExecutors;
 import xyz.arnau.muvicat.data.model.Resource;
-import xyz.arnau.muvicat.data.utils.NetworkBoundResource;
 import xyz.arnau.muvicat.remote.model.Response;
 import xyz.arnau.muvicat.remote.model.ResponseStatus;
 import xyz.arnau.muvicat.utils.ApiUtil;
@@ -41,33 +40,27 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 @SuppressWarnings("ALL")
 @RunWith(Parameterized.class)
 public class NetworkBoundResourceTest {
+    private final boolean useRealExecutors;
     @Rule
     public InstantTaskExecutorRule instantExecutorRule = new InstantTaskExecutorRule();
-
     private Function<Response<Foo>, Void> saveResponse;
-
     private Function<Void, Boolean> shouldFetch;
-
     private Function<Void, LiveData<Response<Foo>>> createCall;
-
     private MutableLiveData<Foo> dbData = new MutableLiveData<>();
-
     private NetworkBoundResource<Foo> networkBoundResource;
-
     private AtomicBoolean fetchedOnce = new AtomicBoolean(false);
     private CountingAppExecutors countingAppExecutors;
-    private final boolean useRealExecutors;
-
-    @Parameterized.Parameters
-    public static List<Boolean> param() {
-        return Arrays.asList(true, false);
-    }
 
     public NetworkBoundResourceTest(boolean useRealExecutors) {
         this.useRealExecutors = useRealExecutors;
         if (useRealExecutors) {
             countingAppExecutors = new CountingAppExecutors();
         }
+    }
+
+    @Parameterized.Parameters
+    public static List<Boolean> param() {
+        return Arrays.asList(true, false);
     }
 
     @Before

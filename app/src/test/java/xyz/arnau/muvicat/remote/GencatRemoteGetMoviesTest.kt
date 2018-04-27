@@ -43,12 +43,12 @@ class GencatServiceGetMoviesTest {
         mockServer = MockWebServer()
         mockServer.start()
         gencatService = Retrofit.Builder()
-                .baseUrl(mockServer.url("/").toString())
-                //.baseUrl("http://www.gencat.cat/llengua/cinema/")
-                .addCallAdapterFactory(LiveDataCallAdapterFactory())
-                .addConverterFactory(SimpleXmlConverterFactory.create())
-                .build()
-                .create(GencatService::class.java)
+            .baseUrl(mockServer.url("/").toString())
+            //.baseUrl("http://www.gencat.cat/llengua/cinema/")
+            .addCallAdapterFactory(LiveDataCallAdapterFactory())
+            .addConverterFactory(SimpleXmlConverterFactory.create())
+            .build()
+            .create(GencatService::class.java)
 
         entityMapper = GencatMovieListEntityMapper(GencatMovieEntityMapper())
         gencatRemote = GencatRemoteImpl(gencatService, entityMapper)
@@ -63,11 +63,11 @@ class GencatServiceGetMoviesTest {
     @Test
     fun testSuccesfulResponse() {
         mockServer.enqueue(
-                MockResponse()
-                        .addHeader("Content-Type", "application/xml")
-                        .addHeader("ETag", eTag)
-                        .setResponseCode(HTTP_OK)
-                        .setBody(xml)
+            MockResponse()
+                .addHeader("Content-Type", "application/xml")
+                .addHeader("ETag", eTag)
+                .setResponseCode(HTTP_OK)
+                .setBody(xml)
         )
 
         val result = gencatRemote.getMovies(null).getValueBlocking()
@@ -80,10 +80,10 @@ class GencatServiceGetMoviesTest {
     @Test
     fun testNotModifiedResponse() {
         mockServer.enqueue(
-                MockResponse()
-                        .addHeader("Content-Type", "application/xml")
-                        .setResponseCode(HTTP_NOT_MODIFIED)
-                        .setBody(xml)
+            MockResponse()
+                .addHeader("Content-Type", "application/xml")
+                .setResponseCode(HTTP_NOT_MODIFIED)
+                .setBody(xml)
         )
 
         val result = gencatRemote.getMovies(eTag).getValueBlocking()
@@ -96,10 +96,10 @@ class GencatServiceGetMoviesTest {
     @Test
     fun testErrorResponse() {
         mockServer.enqueue(
-                MockResponse()
-                        .addHeader("Content-Type", "application/xml")
-                        .setResponseCode(HTTP_BAD_REQUEST)
-                        .setBody("ERROR BODY")
+            MockResponse()
+                .addHeader("Content-Type", "application/xml")
+                .setResponseCode(HTTP_BAD_REQUEST)
+                .setBody("ERROR BODY")
         )
 
         val result = gencatRemote.getMovies(eTag).getValueBlocking()
