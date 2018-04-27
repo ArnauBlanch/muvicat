@@ -8,7 +8,6 @@ import junit.framework.TestCase.assertEquals
 import org.junit.After
 import org.junit.Test
 import org.junit.runner.RunWith
-import xyz.arnau.muvicat.R.string.movies
 import xyz.arnau.muvicat.cache.db.MuvicatDatabase
 import xyz.arnau.muvicat.data.model.Movie
 import xyz.arnau.muvicat.data.test.MovieFactory
@@ -55,6 +54,23 @@ class MovieDaoTest {
         muvicatDatabase.movieDao().clearMovies()
         val retrievedMovies = muvicatDatabase.movieDao().getMovies().getValueBlocking()
         assertEquals(true, retrievedMovies!!.isEmpty())
+    }
+
+
+    @Test
+    fun getMovieRetrievesMovie() {
+        val movie = MovieFactory.makeMovie()
+
+        muvicatDatabase.movieDao().insertMovies(listOf(movie))
+
+        val retrievedMovie = muvicatDatabase.movieDao().getMovie(movie.id).getValueBlocking()
+        assertEquals(movie, retrievedMovie)
+    }
+
+    @Test
+    fun getMovieThrowsExceptionIfItDoesntExist() {
+        val retrievedMovie = muvicatDatabase.movieDao().getMovie(123.toLong()).getValueBlocking()
+        assertEquals(null, retrievedMovie)
     }
 
     @Test
