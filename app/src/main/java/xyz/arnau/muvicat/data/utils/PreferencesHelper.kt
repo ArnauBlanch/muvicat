@@ -23,8 +23,8 @@ open class PreferencesHelper constructor(context: Context) {
     var movieslastUpdateTime: Long
         get() = bufferPref.getLong(PREF_KEY_LAST_MOVIE_UPDATE, 0)
         private set(lastCache) = bufferPref.edit().putLong(
-            PREF_KEY_LAST_MOVIE_UPDATE,
-            lastCache
+                PREF_KEY_LAST_MOVIE_UPDATE,
+                lastCache
         ).apply()
 
     var moviesETag: String?

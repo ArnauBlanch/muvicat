@@ -9,7 +9,7 @@ import javax.inject.Singleton
 @Singleton
 class MuvicatViewModelFactory
 @Inject constructor(
-    private val creators: Map<Class<out ViewModel>, @JvmSuppressWildcards Provider<ViewModel>>
+        private val creators: Map<Class<out ViewModel>, @JvmSuppressWildcards Provider<ViewModel>>
 ) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
@@ -22,6 +22,5 @@ class MuvicatViewModelFactory
         } catch (e: Exception) {
             throw RuntimeException(e)
         }
-
     }
 }
