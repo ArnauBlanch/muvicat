@@ -1,4 +1,4 @@
-package xyz.arnau.muvicat.ui.movielist
+package xyz.arnau.muvicat.ui.movie
 
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
@@ -17,7 +17,7 @@ import com.ethanhua.skeleton.RecyclerViewSkeletonScreen
 import com.ethanhua.skeleton.Skeleton
 import kotlinx.android.synthetic.main.movie_fragment.*
 import kotlinx.android.synthetic.main.movie_grid.*
-import kotlinx.android.synthetic.main.movie_toolbar.*
+import kotlinx.android.synthetic.main.movie_list_toolbar.*
 import timber.log.Timber
 import xyz.arnau.muvicat.R
 import xyz.arnau.muvicat.data.model.Movie
@@ -35,15 +35,10 @@ class MovieListFragment : Fragment(), Injectable {
     @Inject
     lateinit var movieListViewModel: MovieListViewModel
 
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
-
     private lateinit var skeleton: RecyclerViewSkeletonScreen
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        movieListViewModel =
-                ViewModelProviders.of(this, viewModelFactory).get(MovieListViewModel::class.java)
         setupRecyclerView()
 
         moviesToolbarCollapsing.setExpandedTitleTypeface(

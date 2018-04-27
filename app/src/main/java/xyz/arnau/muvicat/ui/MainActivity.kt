@@ -8,7 +8,7 @@ import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
 import xyz.arnau.muvicat.R
-import xyz.arnau.muvicat.ui.movielist.MovieListFragment
+import xyz.arnau.muvicat.ui.movie.MovieListFragment
 import javax.inject.Inject
 
 

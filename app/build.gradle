@@ -11,7 +11,7 @@ android {
     compileSdkVersion 27
     defaultConfig {
         applicationId "xyz.arnau.muvicat"
-        minSdkVersion 16
+        minSdkVersion 21
         targetSdkVersion 27
         versionCode 4
         versionName "0.1-alpha3"
@@ -52,7 +52,6 @@ android {
             jniDebuggable false
             applicationIdSuffix ".dev"
             testCoverageEnabled true
-            minifyEnabled false
         }
         beta {
             debuggable false
