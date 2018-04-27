@@ -10,6 +10,9 @@ abstract class MovieDao {
     @Query("SELECT * FROM movies ORDER BY priority DESC")
     abstract fun getMovies(): LiveData<List<Movie>>
 
+    @Query("SELECT * FROM movies WHERE id = :movieId")
+    abstract fun getMovie(movieId: Long): LiveData<Movie>
+
     @Query("DELETE FROM movies")
     abstract fun clearMovies()
 
