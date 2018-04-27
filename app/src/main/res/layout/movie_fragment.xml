@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/movieFragmentLayout"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <include layout="@layout/movie_toolbar"/>
+    <include layout="@layout/movie_list_toolbar"/>
     <include layout="@layout/movie_grid"/>
     <android.support.constraint.ConstraintLayout
         android:id="@+id/errorMessage"

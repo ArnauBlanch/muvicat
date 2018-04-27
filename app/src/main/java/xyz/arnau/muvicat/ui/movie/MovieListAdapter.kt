@@ -1,5 +1,7 @@
-package xyz.arnau.muvicat.ui.movielist
+package xyz.arnau.muvicat.ui.movie
 
+import android.content.Context
+import android.support.v4.content.ContextCompat.startActivity
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -16,6 +18,9 @@ import javax.inject.Inject
 class MovieListAdapter @Inject constructor() : RecyclerView.Adapter<MovieListAdapter.ViewHolder>() {
     @Inject
     lateinit var dateFormatter: DateFormatter
+
+    @Inject
+    lateinit var context: Context
 
     var movies: List<Movie> = arrayListOf()
 
@@ -36,7 +41,14 @@ class MovieListAdapter @Inject constructor() : RecyclerView.Adapter<MovieListAda
             .centerCrop()
             .into(holder.posterImage)
 
-        holder.itemView.setOnClickListener { Timber.d("You selected \"${movie.title}\"") }
+        holder.itemView.setOnClickListener {
+            context.startActivity(
+                MovieActivity.createIntent(
+                    context,
+                    movie.id
+                )
+            )
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

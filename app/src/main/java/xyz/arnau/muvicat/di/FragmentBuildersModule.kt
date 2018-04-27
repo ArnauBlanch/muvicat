@@ -2,7 +2,7 @@ package xyz.arnau.muvicat.di
 
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
-import xyz.arnau.muvicat.ui.movielist.MovieListFragment
+import xyz.arnau.muvicat.ui.movie.MovieListFragment
 
 @Suppress("unused")
 @Module
