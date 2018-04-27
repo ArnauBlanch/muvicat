@@ -4,3 +4,4 @@ ignore:
   - "*Model.kt"
   - "**/di/**"
   - "**/ui/**"
+  - "*GlideModule.kt"
