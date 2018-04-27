@@ -2,17 +2,17 @@ package xyz.arnau.muvicat.data.utils
 
 import android.content.Context
 import org.junit.Assert.assertEquals
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.powermock.api.mockito.PowerMockito
 import org.powermock.core.classloader.annotations.PowerMockIgnore
 import org.powermock.core.classloader.annotations.PrepareForTest
+import org.powermock.modules.junit4.rule.PowerMockRule
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
 import org.robolectric.annotation.Config
 import xyz.arnau.muvicat.BuildConfig
-import org.junit.Rule
-import org.powermock.modules.junit4.rule.PowerMockRule
 
 
 @RunWith(RobolectricTestRunner::class)
@@ -25,15 +25,15 @@ class PreferencesHelperTest {
 
     private var preferencesHelper = PreferencesHelper(RuntimeEnvironment.application)
     private val sharedPreferences = RuntimeEnvironment.application.getSharedPreferences(
-            PreferencesHelper.PREF_BUFFER_PACKAGE_NAME,
-            Context.MODE_PRIVATE
+        PreferencesHelper.PREF_BUFFER_PACKAGE_NAME,
+        Context.MODE_PRIVATE
     )
 
     @Test
     fun getLastCacheTimeReturnsLastTime() {
         val lastTime = 500.toLong()
         sharedPreferences.edit().putLong(PreferencesHelper.PREF_KEY_LAST_MOVIE_UPDATE, lastTime)
-                .apply()
+            .apply()
 
         assertEquals(lastTime, preferencesHelper.movieslastUpdateTime)
     }
@@ -46,8 +46,8 @@ class PreferencesHelperTest {
         preferencesHelper.moviesUpdated()
 
         assertEquals(
-                currentTime,
-                sharedPreferences.getLong(PreferencesHelper.PREF_KEY_LAST_MOVIE_UPDATE, 0)
+            currentTime,
+            sharedPreferences.getLong(PreferencesHelper.PREF_KEY_LAST_MOVIE_UPDATE, 0)
         )
     }
 
@@ -65,8 +65,8 @@ class PreferencesHelperTest {
         preferencesHelper.moviesETag = eTag
 
         assertEquals(
-                eTag,
-                sharedPreferences.getString(PreferencesHelper.PREF_KEY_MOVIES_ETAG, null)
+            eTag,
+            sharedPreferences.getString(PreferencesHelper.PREF_KEY_MOVIES_ETAG, null)
         )
     }
 }

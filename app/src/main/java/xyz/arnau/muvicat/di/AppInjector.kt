@@ -2,7 +2,6 @@ package xyz.arnau.muvicat.di
 
 import android.app.Activity
 import android.app.Application
-import android.os.Build
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentActivity

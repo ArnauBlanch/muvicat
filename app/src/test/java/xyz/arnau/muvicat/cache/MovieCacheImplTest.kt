@@ -43,6 +43,17 @@ class MovieCacheImplTest {
     }
 
     @Test
+    fun getMoviesReturnsMovie() {
+        val movie = MovieFactory.makeMovie()
+        val movieLiveData = MutableLiveData<Movie>()
+        movieLiveData.value = movie
+        `when`(movieDao.getMovie(movie.id)).thenReturn(movieLiveData)
+        val movieFromCache = movieCacheImpl.getMovie(movie.id)
+        verify(movieDao).getMovie(movie.id)
+        assertEquals(movie, movieFromCache.value)
+    }
+
+    @Test
     fun updateMoviesUpdateData() {
         val movies = MovieFactory.makeMovieList(5)
         movieCacheImpl.updateMovies(movies)
@@ -54,7 +65,7 @@ class MovieCacheImplTest {
     fun isExpiredReturnsTrueIfExpired() {
         val currentTime = System.currentTimeMillis()
         `when`(preferencesHelper.movieslastUpdateTime)
-                .thenReturn(currentTime - (MovieCacheImpl.EXPIRATION_TIME + 500))
+            .thenReturn(currentTime - (MovieCacheImpl.EXPIRATION_TIME + 500))
         assertEquals(true, movieCacheImpl.isExpired())
     }
 
@@ -62,7 +73,7 @@ class MovieCacheImplTest {
     fun isExpiredReturnsFalseIfNotExpired() {
         val currentTime = System.currentTimeMillis()
         `when`(preferencesHelper.movieslastUpdateTime)
-                .thenReturn(currentTime - 5000)
+            .thenReturn(currentTime - 5000)
         assertEquals(false, movieCacheImpl.isExpired())
     }
 

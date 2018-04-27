@@ -105,9 +105,11 @@ class ApiResponseTest {
     }
 
     companion object {
-        fun mockResponse(code: Int, body: String? = null, etag: String? = null,
-                         errorBody: String? = null, message: String? = null,
-                         errorBodyException: IOException? = null): Response<*> {
+        fun mockResponse(
+            code: Int, body: String? = null, etag: String? = null,
+            errorBody: String? = null, message: String? = null,
+            errorBodyException: IOException? = null
+        ): Response<*> {
             val response: Response<*> = mock(Response::class.java)
             `when`(response.code()).thenReturn(code)
             if (code in 200..299) {
