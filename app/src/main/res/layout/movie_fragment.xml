@@ -5,7 +5,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <include layout="@layout/movie_list_toolbar"/>
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/nestedScrollView"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:scrollbars="vertical"
+        android:fadeScrollbars="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
     <include layout="@layout/movie_grid"/>
+    </android.support.v4.widget.NestedScrollView>
     <android.support.constraint.ConstraintLayout
         android:id="@+id/errorMessage"
         android:visibility="gone"

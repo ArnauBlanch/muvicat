@@ -15,8 +15,8 @@
             android:id="@+id/movieInfoToolbarCollapsing"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:collapsedTitleTextAppearance="@style/CollapsingToolbarLayoutCollapsedTextStyleMovieInfo"
             app:collapsedTitleGravity="left"
+            app:collapsedTitleTextAppearance="@style/CollapsingToolbarLayoutCollapsedTextStyleMovieInfo"
             app:contentScrim="@color/colorPrimary"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             app:statusBarScrim="@color/colorAccent">
@@ -27,10 +27,10 @@
                 android:layout_height="wrap_content">
 
                 <LinearLayout
-                    android:orientation="horizontal"
-                    android:translationZ="10dp"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:translationZ="10dp">
 
                     <com.santalu.aspectratioimageview.AspectRatioImageView
                         android:id="@+id/moviePoster"
@@ -43,30 +43,58 @@
                         android:background="@android:color/transparent"
                         app:ari_aspect="width"
                         app:ari_ratio="0.7" />
+
                     <LinearLayout
-                        android:orientation="vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
                         android:layout_gravity="bottom"
                         android:layout_margin="15dp"
                         android:layout_marginBottom="20dp"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:orientation="vertical">
 
-                    <TextView
-                        android:id="@+id/movieTitle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/nunito_sans_extrabold"
-                        android:lineSpacingMultiplier="0.8"
-                        android:textSize="24sp"
-                        android:layout_marginBottom="5dp"
-                        android:textColor="@android:color/white" />
                         <TextView
-                            android:id="@+id/movieAgeRating"
+                            android:id="@+id/movieTitle"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textSize="13sp"
-                            android:fontFamily="@font/nunito_sans_semibold"
-                            android:textColor="@color/skeleton_light" />
+                            android:layout_marginBottom="5dp"
+                            android:fontFamily="@font/nunito_sans_extrabold"
+                            android:lineSpacingMultiplier="0.8"
+                            android:textColor="@android:color/white"
+                            android:textSize="24sp" />
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/movieYear"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:visibility="gone"
+                                android:textColor="@color/skeleton_light"
+                                android:textSize="13sp" />
+
+                            <TextView
+                                android:id="@+id/movieYearAgeRatingSeparator"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="5dp"
+                                android:layout_marginRight="5dp"
+                                android:text="•"
+                                android:visibility="gone"
+                                android:textColor="@color/skeleton_light"
+                                android:textSize="13sp" />
+
+                            <TextView
+                                android:id="@+id/movieAgeRating"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/nunito_sans_semibold"
+                                android:textColor="@color/skeleton_light"
+                                android:visibility="gone"
+                                android:textSize="13sp" />
+                        </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
 
@@ -102,11 +130,11 @@
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/movieInfoToolbar"
-                app:contentInsetStartWithNavigation="0dp"
-                app:contentInsetEnd="15dp"
                 android:layout_width="match_parent"
                 android:layout_height="?android:attr/actionBarSize"
                 android:backgroundTint="@android:color/holo_red_dark"
+                app:contentInsetEnd="15dp"
+                app:contentInsetStartWithNavigation="0dp"
                 app:layout_collapseMode="pin"
                 app:title="test"
                 app:titleMarginStart="0dp" />
@@ -115,18 +143,154 @@
     </android.support.design.widget.AppBarLayout>
 
     <android.support.v4.widget.NestedScrollView
+        android:id="@+id/nestedScrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fitsSystemWindows="true"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="800dp"
-            android:layout_margin="15dp"
-            android:text="Lorem ipsum dolor sit amet, pellentesque diam habitasse fugiat, aliquam nullam sem. Tortor donec tincidunt. Lacinia dolor vel in pede nascetur luctus, phasellus justo nulla sed. Tincidunt commodo urna dictum, diam nam phasellus, vitae dapibus. Tellus quis sed vivamus magna leo nunc, lorem sit mauris euismod accumsan nonummy, in libero inceptos massa proident, elit mi neque ridiculus ut etiam.
-Vitae wisi class et mauris integer. Molestie non tristique pharetra hendrerit, cursus consequat purus ut justo. Eros massa nonummy dapibus, amet rutrum nulla nunc non erat lacinia, eget libero enim tempus nullam mollis ligula, feugiat ipsum maecenas felis magna rutrum nisl, felis penatibus et nec aliquam velit. Justo ante purus. Semper curabitur sed. Fames ut euismod fringilla justo, proin tristique mauris, magnis vehicula vel eleifend nec placerat nam, ac in amet vitae, tempor sodales. Accumsan in nibh ullamcorper, feugiat amet odio id tempus hymenaeos. Ullamcorper nulla vestibulum consequat, integer viverra lorem auctor eu, mi pellentesque ante ad per in id. Quis curabitur non, fusce lorem quisque a. Et laoreet pellentesque neque eu, fringilla tempor sollicitudin malesuada quis.
-Nulla varius volutpat sit pede id gravida, vivamus non vel id, at veritatis, nec erat enim elit non, ut ullamcorper ipsum quis commodo at iaculis. Augue urna rutrum elit ante, vel non wisi. Dolor aliquet, ornare luctus sit diam magna et, eros non quis at pellentesque mi, ligula urna pede dictumst. Imperdiet non condimentum tempus, ut donec libero posuere eleifend adipiscing, cursus scelerisque dolor a. Viverra erat auctor ut sit sem risus, dui erat. Est non condimentum montes non rhoncus, et eu in wisi odio dis vel. Dictum rerum auctor elit sit nunc, orci imperdiet elit nibh nisl eget dapibus. Vel purus sit mattis turpis quis, eros natoque libero elementum orci, rhoncus curabitur tincidunt aptent bibendum amet, elit semper et, pharetra pede risus sit. Et scelerisque blandit et donec, elit duis ut suscipit etiam. Tristique ridiculus tincidunt leo, vel convallis consequat, dui diam, natoque quam lacus viverra, porttitor mattis orci et et.
-Class lacus sagittis, ut dictumst sit amet sed, congue ante arcu varius in, pellentesque sapien nulla quis suspendisse velit, dictum velit varius. Enim vel, mi vel purus placerat. Bibendum vitae mauris egestas sit et, tempor erat, massa aenean amet leo bibendum. Suspendisse faucibus massa volutpat integer, nulla eget eget tincidunt id vulputate enim. Dui nibh nulla arcu, feugiat ornare lorem morbi." />
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/moviePlot"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:textSize="16sp"
+                android:visibility="gone"
+                android:lineSpacingMultiplier="1.2" />
+
+            <LinearLayout
+                android:id="@+id/movieOriginalTitleLayout"
+                android:orientation="vertical"
+                android:visibility="gone"
+                android:layout_marginBottom="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="2dp"
+                    android:fontFamily="@font/nunito_sans_extrabold"
+                    android:text="@string/original_title"
+                    android:textColor="@android:color/black"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:id="@+id/movieOriginalTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/nunito_sans_italic"
+                    android:textSize="15sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/movieDirectionLayout"
+                android:orientation="vertical"
+                android:visibility="gone"
+                android:layout_marginBottom="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="2dp"
+                    android:fontFamily="@font/nunito_sans_extrabold"
+                    android:text="@string/direction"
+                    android:textColor="@android:color/black"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:id="@+id/movieDirection"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="15sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:weightSum="2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <LinearLayout
+                    android:id="@+id/movieReleaseDateLayout"
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                    android:layout_weight="1"
+                    android:layout_marginBottom="10dp"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="2dp"
+                        android:fontFamily="@font/nunito_sans_extrabold"
+                        android:text="@string/release_date"
+                        android:textColor="@android:color/black"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        android:id="@+id/movieReleaseDate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="15sp" />
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/movieOriginalLanguageLayout"
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                    android:layout_weight="1"
+                    android:layout_marginBottom="10dp"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="2dp"
+                        android:fontFamily="@font/nunito_sans_extrabold"
+                        android:text="@string/original_language"
+                        android:textColor="@android:color/black"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        android:id="@+id/movieOriginalLanguage"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="15sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/movieCastLayout"
+                android:orientation="vertical"
+                android:visibility="gone"
+                android:layout_marginBottom="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="2dp"
+                    android:fontFamily="@font/nunito_sans_extrabold"
+                    android:text="@string/cast"
+                    android:textColor="@android:color/black"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:id="@+id/movieCast"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="15sp" />
+            </LinearLayout>
+        </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 </android.support.design.widget.CoordinatorLayout>
