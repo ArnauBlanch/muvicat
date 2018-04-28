@@ -2,6 +2,7 @@ package xyz.arnau.muvicat
 
 import android.app.Activity
 import android.support.multidex.MultiDexApplication
+import com.squareup.leakcanary.LeakCanary
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasActivityInjector
@@ -15,6 +16,13 @@ open class MuvicatApplication : MultiDexApplication(), HasActivityInjector {
 
     override fun onCreate() {
         super.onCreate()
+        if (LeakCanary.isInAnalyzerProcess(this)) {
+            // This process is dedicated to LeakCanary for heap analysis.
+            // You should not init your app in this process.
+            return
+        }
+        LeakCanary.install(this)
+
         setupTimber()
         AppInjector.init(this)
     }

@@ -18,8 +18,7 @@
             app:collapsedTitleGravity="left"
             app:collapsedTitleTextAppearance="@style/CollapsingToolbarLayoutCollapsedTextStyleMovieInfo"
             app:contentScrim="@color/colorPrimary"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed"
-            app:statusBarScrim="@color/colorAccent">
+            app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
             <FrameLayout
                 android:id="@+id/toolbar_view"
@@ -132,11 +131,9 @@
                 android:id="@+id/movieInfoToolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?android:attr/actionBarSize"
-                android:backgroundTint="@android:color/holo_red_dark"
                 app:contentInsetEnd="15dp"
                 app:contentInsetStartWithNavigation="0dp"
                 app:layout_collapseMode="pin"
-                app:title="test"
                 app:titleMarginStart="0dp" />
 
         </android.support.design.widget.CollapsingToolbarLayout>
