@@ -54,20 +54,21 @@ class MovieListFragment : Fragment(), Injectable {
             )
         )
 
+        moviesToolbar.setOnClickListener {
+            nestedScrollView.scrollTo(0, 0)
+            moviesToolbarLayout.setExpanded(true)
+        }
+
 
         skeleton = Skeleton.bind(moviesRecyclerView)
             .adapter(moviesAdapter)
-            .count(8)
+            .count(6)
             .color(R.color.skeleton_shimmer)
             .load(R.layout.movie_card_skeleton)
             .show()
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         Timber.i("HELLO")
         return inflater.inflate(R.layout.movie_fragment, container, false)
     }
@@ -116,12 +117,5 @@ class MovieListFragment : Fragment(), Injectable {
     private fun setupRecyclerView() {
         moviesRecyclerView.layoutManager = GridLayoutManager(context, 2)
         moviesRecyclerView.adapter = moviesAdapter
-        moviesRecyclerView.addOnItemTouchListener(object :
-            RecyclerView.SimpleOnItemTouchListener() {
-            override fun onTouchEvent(rv: RecyclerView?, e: MotionEvent?) {
-
-            }
-
-        })
     }
 }
