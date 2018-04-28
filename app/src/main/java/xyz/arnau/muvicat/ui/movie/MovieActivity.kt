@@ -1,6 +1,5 @@
 package xyz.arnau.muvicat.ui.movie
 
-import android.annotation.SuppressLint
 import android.arch.lifecycle.Observer
 import android.content.Context
 import android.content.Intent
@@ -12,8 +11,6 @@ import android.support.v4.content.res.ResourcesCompat
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import dagger.android.AndroidInjection
-import kotlinx.android.synthetic.main.movie_fragment.*
-import kotlinx.android.synthetic.main.movie_grid.*
 import kotlinx.android.synthetic.main.movie_info.*
 import timber.log.Timber
 import xyz.arnau.muvicat.GlideApp

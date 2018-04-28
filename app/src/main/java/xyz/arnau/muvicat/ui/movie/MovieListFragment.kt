@@ -1,17 +1,13 @@
 package xyz.arnau.muvicat.ui.movie
 
 import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProvider
-import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.os.Parcelable
 import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v4.content.res.ResourcesCompat
 import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import com.ethanhua.skeleton.RecyclerViewSkeletonScreen
@@ -19,7 +15,6 @@ import com.ethanhua.skeleton.Skeleton
 import kotlinx.android.synthetic.main.movie_fragment.*
 import kotlinx.android.synthetic.main.movie_grid.*
 import kotlinx.android.synthetic.main.movie_list_toolbar.*
-import timber.log.Timber
 import xyz.arnau.muvicat.R
 import xyz.arnau.muvicat.data.model.Movie
 import xyz.arnau.muvicat.data.model.Resource
@@ -71,7 +66,6 @@ class MovieListFragment : Fragment(), Injectable {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        Timber.i("HELLO")
         return inflater.inflate(R.layout.movie_fragment, container, false)
     }
 
@@ -123,6 +117,7 @@ class MovieListFragment : Fragment(), Injectable {
         moviesRecyclerView.layoutManager = GridLayoutManager(context, 2)
         moviesRecyclerView.layoutManager.onSaveInstanceState()
         moviesRecyclerView.adapter = moviesAdapter
+        moviesRecyclerView.isEnabled = false
     }
 
     private val BUNDLE_RECYCLER_LAYOUT: String = "movielistfragment.recyclerview.layout"
