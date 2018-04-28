@@ -52,7 +52,8 @@ class GencatRemoteImplTest {
         `when`(gencatService.getMovies(eTag)).thenReturn(liveData)
         val movieResponseWithNullIds = movieResponse.copy()
         movieResponseWithNullIds.moviesList!![0].id = null
-        val response = Response.success(movieResponseWithNullIds, Headers.of(mapOf("ETag" to "movies-etag2")))
+        val response =
+            Response.success(movieResponseWithNullIds, Headers.of(mapOf("ETag" to "movies-etag2")))
         liveData.postValue(ApiResponse<GencatMovieResponse>(response))
 
         val result = gencatRemote.getMovies(eTag).getValueBlocking()
@@ -64,36 +65,38 @@ class GencatRemoteImplTest {
     }
 
 
-    private val movieResponse = GencatMovieResponse(listOf(
+    private val movieResponse = GencatMovieResponse(
+        listOf(
             GencatMovie(
-                    id = 31347,
-                    priority = 100,
-                    title = "Carinyo, jo soc tu",
-                    year = "2017",
-                    posterUrl = "carinyojosoctu.jpg",
-                    originalTitle = "L'un dans l'autre",
-                    direction = "Bruno Chiche",
-                    cast = "Stéphane De Groodt,  Louise Bourgoin,  Aure Atika,  Ginnie Watson",
-                    plot = "Dues parelles comparteixen amistat però tot canvia quan la Pénélope i el Pierre es converteixen en amants. Després d’una darrera nit junts, es desperten cadascun en el cos de l’altre.",
-                    releaseDate = "13/04/2018",
-                    originalLanguage = "francès",
-                    ageRating = "A partir de 12 anys",
-                    trailerUrl = "sbzncDh0a2s"
+                id = 31347,
+                priority = 100,
+                title = "Carinyo, jo soc tu",
+                year = "2017",
+                posterUrl = "carinyojosoctu.jpg",
+                originalTitle = "L'un dans l'autre",
+                direction = "Bruno Chiche",
+                cast = "Stéphane De Groodt,  Louise Bourgoin,  Aure Atika,  Ginnie Watson",
+                plot = "Dues parelles comparteixen amistat però tot canvia quan la Pénélope i el Pierre es converteixen en amants. Després d’una darrera nit junts, es desperten cadascun en el cos de l’altre.",
+                releaseDate = "13/04/2018",
+                originalLanguage = "francès",
+                ageRating = "A partir de 12 anys",
+                trailerUrl = "sbzncDh0a2s"
             ),
             GencatMovie(
-                    id = 31377,
-                    priority = 100,
-                    title = "Leo da Vinci, missió Mona Lisa",
-                    year = "2018",
-                    posterUrl = "leodavinci2.jpg",
-                    originalTitle = "Leo da Vinci: Missione Monna Lisa",
-                    direction = "Sergio Manfio",
-                    cast = "--",
-                    plot = "El jove Leo da Vinci té moltes idees al cap. Quan s’enamora de la Mona Lisa haurà d’aguditzar encara més el seu enginy. Junts viuran aventures emocionants i cercaran un tresor pirata.",
-                    releaseDate = "13/04/2018",
-                    originalLanguage = "anglès",
-                    ageRating = "Apta per a tots els públics",
-                    trailerUrl = "FQGe3jZEFBk"
+                id = 31377,
+                priority = 100,
+                title = "Leo da Vinci, missió Mona Lisa",
+                year = "2018",
+                posterUrl = "leodavinci2.jpg",
+                originalTitle = "Leo da Vinci: Missione Monna Lisa",
+                direction = "Sergio Manfio",
+                cast = "--",
+                plot = "El jove Leo da Vinci té moltes idees al cap. Quan s’enamora de la Mona Lisa haurà d’aguditzar encara més el seu enginy. Junts viuran aventures emocionants i cercaran un tresor pirata.",
+                releaseDate = "13/04/2018",
+                originalLanguage = "anglès",
+                ageRating = "Apta per a tots els públics",
+                trailerUrl = "FQGe3jZEFBk"
             )
-    ))
+        )
+    )
 }

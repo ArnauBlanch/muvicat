@@ -4,12 +4,11 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import com.google.firebase.analytics.FirebaseAnalytics
-import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
 import xyz.arnau.muvicat.R
-import xyz.arnau.muvicat.ui.movielist.MovieListFragment
+import xyz.arnau.muvicat.ui.movie.MovieListFragment
 import javax.inject.Inject
 
 

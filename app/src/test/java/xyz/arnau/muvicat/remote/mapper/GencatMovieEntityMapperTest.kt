@@ -76,7 +76,7 @@ class GencatMovieEntityMapperTest {
     }
 
     private fun assertMovieEquality(
-            movie: Movie, movieModel: GencatMovie, year: Int?, releaseDate: Date?
+        movie: Movie, movieModel: GencatMovie, year: Int?, releaseDate: Date?
     ) {
         assertEquals(movieModel.id?.toLong(), movie.id)
         assertEquals(movieModel.title, movie.title)

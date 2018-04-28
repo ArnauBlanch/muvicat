@@ -8,7 +8,7 @@ import xyz.arnau.muvicat.MuvicatApplication
 import javax.inject.Singleton
 
 @Singleton
-@Component(modules = [AndroidInjectionModule::class, AppModule::class, MainActivityModule::class])
+@Component(modules = [AndroidInjectionModule::class, AppModule::class, ActivitiesModule::class])
 interface AppComponent {
     @Component.Builder
     interface Builder {

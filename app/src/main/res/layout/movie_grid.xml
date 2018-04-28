@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/moviesRecyclerView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:clipToPadding="false"
-    android:fadeScrollbars="true"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    android:scrollbars="vertical" />
+    android:nestedScrollingEnabled="false"
+    android:clipToPadding="false" />
