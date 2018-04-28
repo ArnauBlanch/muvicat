@@ -1,7 +1,9 @@
 package xyz.arnau.muvicat
 
 import android.app.Activity
+import android.provider.Settings
 import android.support.multidex.MultiDexApplication
+import com.google.firebase.analytics.FirebaseAnalytics
 //import com.squareup.leakcanary.LeakCanary
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
@@ -25,6 +27,12 @@ open class MuvicatApplication : MultiDexApplication(), HasActivityInjector {
         */
         setupTimber()
         AppInjector.init(this)
+        val testLabSetting =
+            Settings.System.getString(contentResolver, "firebase.test.lab")
+        if ("true" == testLabSetting) {
+            // Do something when running in Test Lab
+            FirebaseAnalytics.getInstance(this).setAnalyticsCollectionEnabled(false)
+        }
     }
 
     private fun setupTimber() {
