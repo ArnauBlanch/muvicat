@@ -1,5 +1,7 @@
 /build
 /alpha
+/beta
+/release
 /src/alpha/google-services.json
 /src/beta/google-services.json
 /src/main/google-services.json
