@@ -4,6 +4,7 @@ import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
+import android.os.Parcelable
 import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v4.content.res.ResourcesCompat
@@ -54,8 +55,9 @@ class MovieListFragment : Fragment(), Injectable {
             )
         )
 
+
         moviesToolbar.setOnClickListener {
-            nestedScrollView.scrollTo(0, 0)
+            moviesRecyclerView.scrollToPosition(0)
             moviesToolbarLayout.setExpanded(true)
         }
 
@@ -81,11 +83,14 @@ class MovieListFragment : Fragment(), Injectable {
             })
     }
 
+    private var mSavedRecyclerLayoutState: Parcelable? = null
+
     private fun handleDataState(status: Status, data: List<Movie>?, message: String?) {
         when (status) {
             Status.SUCCESS -> data?.let {
                 updateMovieList(it)
                 skeleton.hide()
+                moviesRecyclerView.layoutManager.onRestoreInstanceState(mSavedRecyclerLayoutState)
             }
         /*Status.LOADING -> if (data != null && !data.isEmpty()) {
                 updateMovieList(data)
@@ -116,6 +121,34 @@ class MovieListFragment : Fragment(), Injectable {
 
     private fun setupRecyclerView() {
         moviesRecyclerView.layoutManager = GridLayoutManager(context, 2)
+        moviesRecyclerView.layoutManager.onSaveInstanceState()
         moviesRecyclerView.adapter = moviesAdapter
+    }
+
+    private val BUNDLE_RECYCLER_LAYOUT: String = "movielistfragment.recyclerview.layout"
+
+    override fun onResume() {
+        super.onResume()
+
+        if (mSavedRecyclerLayoutState != null) {
+            moviesRecyclerView.layoutManager.onRestoreInstanceState(mSavedRecyclerLayoutState)
+        }
+    }
+
+
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+
+        if (savedInstanceState != null) {
+            val savedRecyclerLayoutState: Parcelable = savedInstanceState.getParcelable(BUNDLE_RECYCLER_LAYOUT)
+            moviesRecyclerView.layoutManager.onRestoreInstanceState(savedRecyclerLayoutState)
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+
+        mSavedRecyclerLayoutState = moviesRecyclerView.layoutManager.onSaveInstanceState()
+        outState.putParcelable(BUNDLE_RECYCLER_LAYOUT, mSavedRecyclerLayoutState)
     }
 }

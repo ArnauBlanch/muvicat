@@ -60,13 +60,13 @@ class MovieActivity : AppCompatActivity() {
                     R.font.nunito_sans_extrabold
                 )
             )
+        movieInfoToolbar.setNavigationOnClickListener { onBackPressed() }
 
 
         movieInfoToolbarLayout.addOnOffsetChangedListener(object :
             AppBarLayout.OnOffsetChangedListener {
             var isShown = true
             var scrollRange = -1
-            @SuppressLint("PrivateResource")
             override fun onOffsetChanged(appBarLayout: AppBarLayout?, verticalOffset: Int) {
                 val backArrow =
                     ResourcesCompat.getDrawable(resources, R.drawable.arrow_back, null)
