@@ -1,0 +1,7 @@
+ignore:
+  - "**/model/**"
+  - "**/constants/**"
+  - "*Model.kt"
+  - "**/di/**"
+  - "**/ui/**"
+  - "*GlideModule.kt"
