@@ -3,7 +3,6 @@ package xyz.arnau.muvicat.viewmodel.movie
 import android.arch.core.executor.testing.InstantTaskExecutorRule
 import android.arch.lifecycle.MutableLiveData
 import org.junit.Assert.assertEquals
-import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -18,28 +17,25 @@ import xyz.arnau.muvicat.data.test.MovieFactory
 import xyz.arnau.muvicat.utils.getValueBlocking
 
 @RunWith(JUnit4::class)
-class MovieListViewModelTest {
+class MovieViewModelTest {
     @get:Rule
     val rule = InstantTaskExecutorRule()
 
     private val movieRepository = mock(MovieRepository::class.java)
-    private lateinit var movieListViewModel: MovieListViewModel
-    private val moviesLiveData = MutableLiveData<Resource<List<Movie>>>()
-
-    @Before
-    fun setUp() {
-        `when`(movieRepository.getMovies()).thenReturn(moviesLiveData)
-        movieListViewModel = MovieListViewModel(movieRepository)
-    }
+    private val movieViewModel = MovieViewModel(movieRepository)
 
     @Test
-    fun getMoviesReturnsLiveData() {
-        val movies = MovieFactory.makeMovieList(5)
-        moviesLiveData.postValue(Resource.success(movies))
+    fun getMovieReturnsLiveData() {
+        val movie = MovieFactory.makeMovie()
+        movieViewModel.setId(movie.id)
 
-        val result = movieListViewModel.movies.getValueBlocking()
+        val movieLiveData = MutableLiveData<Resource<Movie>>()
+        `when`(movieRepository.getMovie(movie.id)).thenReturn(movieLiveData)
+        movieLiveData.postValue(Resource.success(movie))
+
+        val result = movieViewModel.movie.getValueBlocking()
         assertEquals(Status.SUCCESS, result!!.status)
         assertEquals(null, result.message)
-        assertEquals(movies, result.data)
+        assertEquals(movie, result.data)
     }
 }

@@ -11,10 +11,10 @@ android {
     compileSdkVersion 27
     defaultConfig {
         applicationId "xyz.arnau.muvicat"
-        minSdkVersion 16
+        minSdkVersion 21
         targetSdkVersion 27
-        versionCode 4
-        versionName "0.1-alpha3"
+        versionCode 5
+        versionName "0.1-alpha4"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
 
@@ -52,7 +52,6 @@ android {
             jniDebuggable false
             applicationIdSuffix ".dev"
             testCoverageEnabled true
-            minifyEnabled false
         }
         beta {
             debuggable false
@@ -200,7 +199,7 @@ task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest', 'crea
 
     def fileFilter = ['**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*',
                       '**/*Test*.*', 'android/**/*.*', '**/model/**', '**/constants/**',
-                      '**/**_Impl**', '**/*_Factory.*', '**/di/**', '**/ui/**']
+                      '**/**_Impl**', '**/*_Factory.*', '**/di/**', '**/ui/**', "**/*GlideModule"]
     def javaClasses = fileTree(dir: "$project.buildDir/intermediates/classes/debug", excludes: fileFilter)
     def kotlinClasses = fileTree(dir: "$project.buildDir/tmp/kotlin-classes/debug", excludes: fileFilter)
     def javaSrc = "$project.projectDir/src/main/java"

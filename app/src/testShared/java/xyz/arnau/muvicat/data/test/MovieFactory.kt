@@ -9,18 +9,18 @@ import xyz.arnau.muvicat.utils.DataFactory.Factory.randomString
 class MovieFactory {
     companion object Factory {
         fun makeMovie() =
-                Movie(
-                        randomLong(), randomString(), randomString(), randomInt(),
-                        randomString(), randomString(), randomString(), randomDate(), randomString(),
-                        randomInt(), randomString(), randomString(), randomString()
-                )
+            Movie(
+                randomLong(), randomString(), randomString(), randomInt(),
+                randomString(), randomString(), randomString(), randomDate(), randomString(),
+                randomInt(), randomString(), randomString(), randomString()
+            )
 
         private fun makeMovieWithNullValues() =
-                Movie(
-                        randomLong(), null, null, null, null,
-                        null, null, null, null, null,
-                        null, null, null
-                )
+            Movie(
+                randomLong(), null, null, null, null,
+                null, null, null, null, null,
+                null, null, null
+            )
 
         fun makeMovieList(count: Int): List<Movie> {
             val movies = mutableListOf<Movie>()

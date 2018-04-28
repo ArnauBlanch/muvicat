@@ -34,4 +34,8 @@ class DateFormatter @Inject constructor(private val context: Context) {
             else -> null
         }
     }
+
+    fun longDate(d: Date): String {
+        return LocalDate(d).toString("d MMMM 'de' YYYY", Locale("ca"))
+    }
 }

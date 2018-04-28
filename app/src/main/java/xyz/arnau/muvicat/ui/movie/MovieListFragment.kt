@@ -1,4 +1,4 @@
-package xyz.arnau.muvicat.ui.movielist
+package xyz.arnau.muvicat.ui.movie
 
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
@@ -17,7 +17,7 @@ import com.ethanhua.skeleton.RecyclerViewSkeletonScreen
 import com.ethanhua.skeleton.Skeleton
 import kotlinx.android.synthetic.main.movie_fragment.*
 import kotlinx.android.synthetic.main.movie_grid.*
-import kotlinx.android.synthetic.main.movie_toolbar.*
+import kotlinx.android.synthetic.main.movie_list_toolbar.*
 import timber.log.Timber
 import xyz.arnau.muvicat.R
 import xyz.arnau.muvicat.data.model.Movie
@@ -35,15 +35,10 @@ class MovieListFragment : Fragment(), Injectable {
     @Inject
     lateinit var movieListViewModel: MovieListViewModel
 
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
-
     private lateinit var skeleton: RecyclerViewSkeletonScreen
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        movieListViewModel =
-                ViewModelProviders.of(this, viewModelFactory).get(MovieListViewModel::class.java)
         setupRecyclerView()
 
         moviesToolbarCollapsing.setExpandedTitleTypeface(
@@ -59,20 +54,21 @@ class MovieListFragment : Fragment(), Injectable {
             )
         )
 
+        moviesToolbar.setOnClickListener {
+            nestedScrollView.scrollTo(0, 0)
+            moviesToolbarLayout.setExpanded(true)
+        }
+
 
         skeleton = Skeleton.bind(moviesRecyclerView)
             .adapter(moviesAdapter)
-            .count(8)
+            .count(6)
             .color(R.color.skeleton_shimmer)
             .load(R.layout.movie_card_skeleton)
             .show()
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         Timber.i("HELLO")
         return inflater.inflate(R.layout.movie_fragment, container, false)
     }
@@ -121,12 +117,5 @@ class MovieListFragment : Fragment(), Injectable {
     private fun setupRecyclerView() {
         moviesRecyclerView.layoutManager = GridLayoutManager(context, 2)
         moviesRecyclerView.adapter = moviesAdapter
-        moviesRecyclerView.addOnItemTouchListener(object :
-            RecyclerView.SimpleOnItemTouchListener() {
-            override fun onTouchEvent(rv: RecyclerView?, e: MotionEvent?) {
-
-            }
-
-        })
     }
 }

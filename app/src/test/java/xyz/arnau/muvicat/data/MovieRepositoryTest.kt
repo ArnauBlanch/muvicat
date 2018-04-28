@@ -3,6 +3,7 @@ package xyz.arnau.muvicat.data
 import android.arch.core.executor.testing.InstantTaskExecutorRule
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Observer
+import org.junit.Assert.assertEquals
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -13,6 +14,7 @@ import org.mockito.Mockito.*
 import xyz.arnau.muvicat.AppExecutors
 import xyz.arnau.muvicat.data.model.Movie
 import xyz.arnau.muvicat.data.model.Resource
+import xyz.arnau.muvicat.data.model.Status
 import xyz.arnau.muvicat.data.repository.GencatRemote
 import xyz.arnau.muvicat.data.repository.MovieCache
 import xyz.arnau.muvicat.data.test.MovieFactory
@@ -20,6 +22,7 @@ import xyz.arnau.muvicat.data.utils.PreferencesHelper
 import xyz.arnau.muvicat.remote.model.Response
 import xyz.arnau.muvicat.remote.model.ResponseStatus
 import xyz.arnau.muvicat.utils.InstantAppExecutors
+import xyz.arnau.muvicat.utils.getValueBlocking
 
 @RunWith(JUnit4::class)
 class MovieRepositoryTest {
@@ -32,7 +35,7 @@ class MovieRepositoryTest {
     private val preferencesHelper: PreferencesHelper = mock(PreferencesHelper::class.java)
 
     private val movieRepository =
-            MovieRepository(movieCache, gencatRemote, appExecutors, preferencesHelper)
+        MovieRepository(movieCache, gencatRemote, appExecutors, preferencesHelper)
 
     @Test
     fun getMoviesWhenMoviesAreCachedAndNotExpired() {
@@ -61,7 +64,7 @@ class MovieRepositoryTest {
         val remoteMovieLiveData = MutableLiveData<Response<List<Movie>>>()
         val remoteMovies = MovieFactory.makeMovieList(3)
         `when`(gencatRemote.getMovies("movie-etag"))
-                .thenReturn(remoteMovieLiveData)
+            .thenReturn(remoteMovieLiveData)
 
 
         val movies = movieRepository.getMovies()
@@ -71,8 +74,12 @@ class MovieRepositoryTest {
         movies.observeForever(observer as Observer<Resource<List<Movie>>>)
         dbMovieLiveData.postValue(dbMovies)
         verify(observer).onChanged(Resource.loading(dbMovies))
-        remoteMovieLiveData.postValue(Response(remoteMovies, null,
-                ResponseStatus.SUCCESSFUL, "movie-etag2"))
+        remoteMovieLiveData.postValue(
+            Response(
+                remoteMovies, null,
+                ResponseStatus.SUCCESSFUL, "movie-etag2"
+            )
+        )
         dbMovieLiveData.postValue(remoteMovies)
         verify(observer).onChanged(Resource.success(remoteMovies))
         verify(preferencesHelper).moviesETag = "movie-etag2"
@@ -89,7 +96,7 @@ class MovieRepositoryTest {
         `when`(preferencesHelper.moviesETag).thenReturn("movie-etag")
         val remoteMovieLiveData = MutableLiveData<Response<List<Movie>>>()
         `when`(gencatRemote.getMovies("movie-etag"))
-                .thenReturn(remoteMovieLiveData)
+            .thenReturn(remoteMovieLiveData)
 
 
         val movies = movieRepository.getMovies()
@@ -99,8 +106,12 @@ class MovieRepositoryTest {
         movies.observeForever(observer as Observer<Resource<List<Movie>>>)
         dbMovieLiveData.postValue(dbMovies)
         verify(observer).onChanged(Resource.loading(dbMovies))
-        remoteMovieLiveData.postValue(Response(null, null,
-                ResponseStatus.NOT_MODIFIED, null))
+        remoteMovieLiveData.postValue(
+            Response(
+                null, null,
+                ResponseStatus.NOT_MODIFIED, null
+            )
+        )
         verify(observer).onChanged(Resource.success(dbMovies))
         verify(preferencesHelper).moviesUpdated()
         verify(movieCache, never()).updateMovies(Mockito.anyList())
@@ -115,7 +126,7 @@ class MovieRepositoryTest {
         val remoteMovieLiveData = MutableLiveData<Response<List<Movie>>>()
         val remoteMovies = MovieFactory.makeMovieList(3)
         `when`(gencatRemote.getMovies("movie-etag"))
-                .thenReturn(remoteMovieLiveData)
+            .thenReturn(remoteMovieLiveData)
 
 
         val movies = movieRepository.getMovies()
@@ -125,8 +136,12 @@ class MovieRepositoryTest {
         movies.observeForever(observer as Observer<Resource<List<Movie>>>)
         dbMovieLiveData.postValue(dbMovies)
         verify(observer).onChanged(Resource.loading(dbMovies))
-        remoteMovieLiveData.postValue(Response(remoteMovies, null,
-                ResponseStatus.SUCCESSFUL, "movie-etag2"))
+        remoteMovieLiveData.postValue(
+            Response(
+                remoteMovies, null,
+                ResponseStatus.SUCCESSFUL, "movie-etag2"
+            )
+        )
         dbMovieLiveData.postValue(remoteMovies)
         verify(observer).onChanged(Resource.success(remoteMovies))
         verify(preferencesHelper).moviesETag = "movie-etag2"
@@ -142,7 +157,7 @@ class MovieRepositoryTest {
         `when`(preferencesHelper.moviesETag).thenReturn("movie-etag")
         val remoteMovieLiveData = MutableLiveData<Response<List<Movie>>>()
         `when`(gencatRemote.getMovies("movie-etag"))
-                .thenReturn(remoteMovieLiveData)
+            .thenReturn(remoteMovieLiveData)
 
 
         val movies = movieRepository.getMovies()
@@ -151,12 +166,39 @@ class MovieRepositoryTest {
         @Suppress("UNCHECKED_CAST")
         movies.observeForever(observer as Observer<Resource<List<Movie>>>)
         verify(observer).onChanged(Resource.loading(null))
-        remoteMovieLiveData.postValue(Response(null, null,
-                ResponseStatus.SUCCESSFUL, "movie-etag2"))
+        remoteMovieLiveData.postValue(
+            Response(
+                null, null,
+                ResponseStatus.SUCCESSFUL, "movie-etag2"
+            )
+        )
         dbMovieLiveData.postValue(dbMovies)
         verify(observer).onChanged(Resource.success(dbMovies))
         verify(preferencesHelper).moviesETag = "movie-etag2"
         verify(preferencesHelper, never()).moviesUpdated()
         verify(movieCache, never()).updateMovies(Mockito.anyList())
+    }
+
+    @Test
+    fun getMovieReturnsMovieLiveDataWithSuccessIfExists() {
+        val movie = MovieFactory.makeMovie()
+        val movieLiveData = MutableLiveData<Movie>()
+        `when`(movieCache.getMovie(movie.id)).thenReturn(movieLiveData)
+        movieLiveData.postValue(movie)
+
+        val res = movieRepository.getMovie(movie.id).getValueBlocking()
+        assertEquals(Status.SUCCESS, res?.status)
+        assertEquals(movie, res?.data)
+    }
+
+    @Test
+    fun getMovieReturnsMovieLiveDataWithErrorIfDoesNotExist() {
+        val movieLiveData = MutableLiveData<Movie>()
+        `when`(movieCache.getMovie(100.toLong())).thenReturn(movieLiveData)
+        movieLiveData.postValue(null)
+
+        val res = movieRepository.getMovie(100.toLong()).getValueBlocking()
+        assertEquals(Status.ERROR, res?.status)
+        assertEquals(null, res?.data)
     }
 }

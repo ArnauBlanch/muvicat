@@ -22,6 +22,10 @@ class MovieCacheImpl @Inject constructor(
         return movieDao.getMovies()
     }
 
+    override fun getMovie(movieId: Long): LiveData<Movie> {
+        return movieDao.getMovie(movieId)
+    }
+
     override fun isExpired(): Boolean {
         val currentTime = System.currentTimeMillis()
         val lastUpdateTime = preferencesHelper.movieslastUpdateTime
