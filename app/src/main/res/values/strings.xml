@@ -12,4 +12,5 @@
     <string name="release_date">Data d\'estrena</string>
     <string name="direction">Direcció</string>
     <string name="original_language">Idioma original</string>
+    <string name="cinemas">Sales</string>
 </resources>

@@ -12,6 +12,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.ethanhua.skeleton.RecyclerViewSkeletonScreen
 import com.ethanhua.skeleton.Skeleton
+import dagger.Provides
 import kotlinx.android.synthetic.main.movie_fragment.*
 import kotlinx.android.synthetic.main.movie_grid.*
 import kotlinx.android.synthetic.main.movie_list_toolbar.*
@@ -130,13 +131,17 @@ class MovieListFragment : Fragment(), Injectable {
         }
     }
 
+    override fun onPause() {
+        super.onPause()
+        mSavedRecyclerLayoutState = moviesRecyclerView.layoutManager.onSaveInstanceState()
+    }
+
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
         super.onViewStateRestored(savedInstanceState)
 
-        if (savedInstanceState != null) {
-            val savedRecyclerLayoutState: Parcelable = savedInstanceState.getParcelable(BUNDLE_RECYCLER_LAYOUT)
-            moviesRecyclerView.layoutManager.onRestoreInstanceState(savedRecyclerLayoutState)
+        if (mSavedRecyclerLayoutState != null) {
+            moviesRecyclerView.layoutManager.onRestoreInstanceState(mSavedRecyclerLayoutState)
         }
     }
 
@@ -144,6 +149,5 @@ class MovieListFragment : Fragment(), Injectable {
         super.onSaveInstanceState(outState)
 
         mSavedRecyclerLayoutState = moviesRecyclerView.layoutManager.onSaveInstanceState()
-        outState.putParcelable(BUNDLE_RECYCLER_LAYOUT, mSavedRecyclerLayoutState)
     }
 }
