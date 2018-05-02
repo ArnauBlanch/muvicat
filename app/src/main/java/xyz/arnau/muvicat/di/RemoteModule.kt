@@ -10,6 +10,8 @@ import retrofit2.Retrofit
 import retrofit2.converter.simplexml.SimpleXmlConverterFactory
 import xyz.arnau.muvicat.data.repository.GencatRemote
 import xyz.arnau.muvicat.remote.GencatRemoteImpl
+import xyz.arnau.muvicat.remote.mapper.GencatCinemaEntityMapper
+import xyz.arnau.muvicat.remote.mapper.GencatCinemaListEntityMapper
 import xyz.arnau.muvicat.remote.mapper.GencatMovieEntityMapper
 import xyz.arnau.muvicat.remote.mapper.GencatMovieListEntityMapper
 import xyz.arnau.muvicat.remote.service.GencatService
@@ -57,7 +59,8 @@ class RemoteModule {
     fun provideGencatRemote(gencatService: GencatService): GencatRemote {
         return GencatRemoteImpl(
             gencatService,
-            GencatMovieListEntityMapper(GencatMovieEntityMapper())
+            GencatMovieListEntityMapper(GencatMovieEntityMapper()),
+            GencatCinemaListEntityMapper(GencatCinemaEntityMapper())
         )
     }
 

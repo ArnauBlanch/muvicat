@@ -26,7 +26,7 @@ class MovieFactory {
 
         fun makeGencatMovieModelWithUnknownValues(): GencatMovie =
             GencatMovie(
-                null,
+                randomInt(),
                 "--",
                 "--",
                 "--",
@@ -56,6 +56,23 @@ class MovieFactory {
                 "",
                 "",
                 ""
+            )
+
+        fun makeGencatMovieModelWithNullId(): GencatMovie =
+            GencatMovie(
+                null,
+                randomString(),
+                randomString(),
+                randomInt().toString(),
+                randomString(),
+                randomString(),
+                randomString(),
+                "01/01/2000",
+                randomString(),
+                randomInt(),
+                randomString(),
+                randomString(),
+                randomString()
             )
 
         fun makeGencatMovieResponse(count: Int): GencatMovieResponse {
