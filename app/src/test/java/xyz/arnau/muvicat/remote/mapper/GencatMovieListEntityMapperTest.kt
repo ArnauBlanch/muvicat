@@ -40,7 +40,6 @@ class GencatMovieListEntityMapperTest {
 
     @Test
     fun mapFromRemoteWithNullResponse() {
-
         val mappedResponse = movieListEntityMapper.mapFromRemote(null)
         assertEquals(null, mappedResponse)
     }
