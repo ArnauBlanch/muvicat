@@ -6,6 +6,7 @@ import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
 import xyz.arnau.muvicat.viewmodel.MuvicatViewModelFactory
+import xyz.arnau.muvicat.viewmodel.cinema.CinemaListViewModel
 import xyz.arnau.muvicat.viewmodel.movie.MovieListViewModel
 import xyz.arnau.muvicat.viewmodel.movie.MovieViewModel
 
@@ -21,6 +22,11 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(MovieViewModel::class)
     abstract fun bindMovieViewModel(movieViewModel: MovieViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(CinemaListViewModel::class)
+    abstract fun bindCinemaListViewModel(cinemaListViewModel: CinemaListViewModel): ViewModel
 
     @Binds
     abstract fun bindViewModelFactory(factory: MuvicatViewModelFactory): ViewModelProvider.Factory

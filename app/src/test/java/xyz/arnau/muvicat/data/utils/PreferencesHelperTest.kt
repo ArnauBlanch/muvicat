@@ -30,12 +30,21 @@ class PreferencesHelperTest {
     )
 
     @Test
-    fun getLastCacheTimeReturnsLastTime() {
+    fun getLastMovieCacheTimeReturnsLastTime() {
         val lastTime = 500.toLong()
         sharedPreferences.edit().putLong(PreferencesHelper.PREF_KEY_LAST_MOVIE_UPDATE, lastTime)
             .apply()
 
         assertEquals(lastTime, preferencesHelper.movieslastUpdateTime)
+    }
+
+    @Test
+    fun getLastCinemaCacheTimeReturnsLastTime() {
+        val lastTime = 500.toLong()
+        sharedPreferences.edit().putLong(PreferencesHelper.PREF_KEY_LAST_CINEMA_UPDATE, lastTime)
+            .apply()
+
+        assertEquals(lastTime, preferencesHelper.cinemaslastUpdateTime)
     }
 
     @Test
@@ -52,11 +61,32 @@ class PreferencesHelperTest {
     }
 
     @Test
+    fun cinemasUpdatedUpdatesLastCinemaUpdateTime() {
+        val currentTime = 1000.toLong()
+        PowerMockito.mockStatic(System::class.java)
+        PowerMockito.`when`(System.currentTimeMillis()).thenReturn(currentTime)
+        preferencesHelper.cinemasUpdated()
+
+        assertEquals(
+            currentTime,
+            sharedPreferences.getLong(PreferencesHelper.PREF_KEY_LAST_CINEMA_UPDATE, 0)
+        )
+    }
+
+    @Test
     fun getMoviesETagReturnETag() {
         val eTag = "\"movies-etag\""
         sharedPreferences.edit().putString(PreferencesHelper.PREF_KEY_MOVIES_ETAG, eTag).apply()
 
         assertEquals(eTag, preferencesHelper.moviesETag)
+    }
+
+    @Test
+    fun getCinemasETagReturnETag() {
+        val eTag = "\"cinemas-etag\""
+        sharedPreferences.edit().putString(PreferencesHelper.PREF_KEY_CINEMAS_ETAG, eTag).apply()
+
+        assertEquals(eTag, preferencesHelper.cinemasETag)
     }
 
     @Test
@@ -67,6 +97,17 @@ class PreferencesHelperTest {
         assertEquals(
             eTag,
             sharedPreferences.getString(PreferencesHelper.PREF_KEY_MOVIES_ETAG, null)
+        )
+    }
+
+    @Test
+    fun setCinemasETagSavesETag() {
+        val eTag = "\"cinemas-etag\""
+        preferencesHelper.cinemasETag = eTag
+
+        assertEquals(
+            eTag,
+            sharedPreferences.getString(PreferencesHelper.PREF_KEY_CINEMAS_ETAG, null)
         )
     }
 }

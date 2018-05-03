@@ -40,11 +40,19 @@ class GencatMovieEntityMapperTest {
     }
 
     @Test
+    fun mapFromRemoteReturnsNullIfNullId() {
+        val movieModel = MovieFactory.makeGencatMovieModelWithNullId()
+        val movieEntity = movieEntityMapper.mapFromRemote(movieModel)
+
+        assertEquals(null, movieEntity)
+    }
+
+    @Test
     fun mapFromRemoteMapsDataAndSetsNullIfUnknown() {
         val movieModel = MovieFactory.makeGencatMovieModelWithUnknownValues()
         val movieEntity = movieEntityMapper.mapFromRemote(movieModel)
 
-        assertEquals(null, movieEntity)
+        assertMovieEquality(movieEntity!!, movieModel, null, null)
     }
 
     @Test

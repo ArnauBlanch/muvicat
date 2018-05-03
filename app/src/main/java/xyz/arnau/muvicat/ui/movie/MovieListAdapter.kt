@@ -27,12 +27,13 @@ class MovieListAdapter @Inject constructor() : RecyclerView.Adapter<MovieListAda
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val movie = movies[position]
         holder.titleText.text = movie.title
-        if (movie.releaseDate != null) {
-            val dateString = dateFormatter.shortDate(movie.releaseDate)
-            dateString?.let {
-                holder.releaseDate.text = dateString
-                holder.releaseDate.visibility = View.VISIBLE
-            }
+        val dateString = dateFormatter.shortDate(movie.releaseDate)
+        if (dateString != null) {
+            holder.releaseDate.text = dateString
+            holder.releaseDate.visibility = View.VISIBLE
+        } else {
+            holder.releaseDate.text = ""
+            holder.releaseDate.visibility = View.GONE
         }
 
         GlideApp.with(holder.itemView.context)
