@@ -13,4 +13,5 @@
     <string name="direction">Direcció</string>
     <string name="original_language">Idioma original</string>
     <string name="cinemas">Sales</string>
+    <string name="sala">Sala</string>
 </resources>

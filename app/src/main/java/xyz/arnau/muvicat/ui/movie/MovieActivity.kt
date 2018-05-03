@@ -66,7 +66,7 @@ class MovieActivity : AppCompatActivity() {
             var scrollRange = -1
             override fun onOffsetChanged(appBarLayout: AppBarLayout?, verticalOffset: Int) {
                 val backArrow =
-                    ResourcesCompat.getDrawable(resources, R.drawable.arrow_back, null)
+                    ResourcesCompat.getDrawable(resources, R.drawable.ic_chevron_left_black, null)
                 if (verticalOffset < -300) {
                     backArrow?.setColorFilter(Color.parseColor("#AF0000"), PorterDuff.Mode.SRC_ATOP)
                     supportActionBar!!.setHomeAsUpIndicator(backArrow)
