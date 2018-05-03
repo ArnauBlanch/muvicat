@@ -125,7 +125,8 @@ class GencatServiceTest {
                 .setResponseCode(HTTP_OK)
                 .setBody(GencatRemoteSampleCinemaData.xml)
         )
-        val response = gencatService.getCinemas(GencatRemoteSampleCinemaData.eTag).getValueBlocking()
+        val response =
+            gencatService.getCinemas(GencatRemoteSampleCinemaData.eTag).getValueBlocking()
 
         val request = mockServer.takeRequest()
         assertEquals("/cinemes.xml", request.path)
@@ -146,7 +147,8 @@ class GencatServiceTest {
                 .setResponseCode(HTTP_NOT_MODIFIED)
                 .setBody(GencatRemoteSampleCinemaData.xml)
         )
-        val response = gencatService.getCinemas(GencatRemoteSampleCinemaData.eTag).getValueBlocking()
+        val response =
+            gencatService.getCinemas(GencatRemoteSampleCinemaData.eTag).getValueBlocking()
 
         val request = mockServer.takeRequest()
         assertEquals("/cinemes.xml", request.path)
@@ -167,7 +169,8 @@ class GencatServiceTest {
                 .setResponseCode(HTTP_BAD_REQUEST)
                 .setBody("ERROR BODY")
         )
-        val response = gencatService.getCinemas(GencatRemoteSampleCinemaData.eTag).getValueBlocking()
+        val response =
+            gencatService.getCinemas(GencatRemoteSampleCinemaData.eTag).getValueBlocking()
 
         val request = mockServer.takeRequest()
         assertEquals("/cinemes.xml", request.path)

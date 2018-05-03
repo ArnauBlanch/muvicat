@@ -1,5 +1,6 @@
 package xyz.arnau.muvicat.ui.movie
 
+import android.app.Activity
 import android.arch.lifecycle.Observer
 import android.content.Context
 import android.content.Intent
@@ -10,6 +11,7 @@ import android.support.design.widget.AppBarLayout
 import android.support.v4.content.res.ResourcesCompat
 import android.support.v7.app.AppCompatActivity
 import android.view.View
+import com.google.firebase.analytics.FirebaseAnalytics
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.movie_info.*
 import timber.log.Timber
@@ -92,6 +94,7 @@ class MovieActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
+
         movieViewModel.movie.observe(this,
             Observer<Resource<Movie>> {
                 if (it != null) handleDataState(it)
@@ -101,7 +104,6 @@ class MovieActivity : AppCompatActivity() {
     private fun handleDataState(movieRes: Resource<Movie>) {
         when (movieRes.status) {
             Status.SUCCESS -> {
-                Timber.i(movieRes.data.toString())
                 val movie = movieRes.data
                 if (movie != null) {
                     setupToolbar(movie)
@@ -166,7 +168,8 @@ class MovieActivity : AppCompatActivity() {
         private const val MOVIE_ID = "movie_id"
 
         fun createIntent(context: Context, movieId: Long): Intent {
-            return Intent(context, MovieActivity::class.java).putExtra(MOVIE_ID, movieId).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            return Intent(context, MovieActivity::class.java).putExtra(MOVIE_ID, movieId)
+                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         }
     }
 }

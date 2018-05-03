@@ -20,13 +20,12 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
 
     private lateinit var firebaseAnalytics: FirebaseAnalytics
 
-    private val viewPagerAdapter = ViewPagerAdapter(listOf(
-        MovieListFragment(),
-        CinemaListFragment()
-    ), supportFragmentManager)
-
-    private val FRAG_MOVIES = 0
-    private val FRAG_CINEMAS = 1
+    private val viewPagerAdapter = ViewPagerAdapter(
+        listOf(
+            MovieListFragment(),
+            CinemaListFragment()
+        ), supportFragmentManager
+    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,17 +42,24 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
         bottomNavigation.setOnNavigationItemSelectedListener {
             when (it.itemId) {
                 R.id.action_movies -> {
-                    fragmentsViewPager.setCurrentItem(FRAG_MOVIES, false)
+                    fragmentsViewPager.setCurrentItem(MovieListFragment.FRAG_ID, false)
+                    FirebaseAnalytics.getInstance(this)
+                            .setCurrentScreen(this, "Movie list", "Movie list")
                     true
                 }
                 R.id.action_cinemas -> {
-                    fragmentsViewPager.setCurrentItem(FRAG_CINEMAS, false)
+                    fragmentsViewPager.setCurrentItem(CinemaListFragment.FRAG_ID, false)
+                    FirebaseAnalytics.getInstance(this)
+                        .setCurrentScreen(this, "Cinema list", "Cinema list")
                     true
                 }
                 else -> false
             }
         }
     }
+
+    fun isSelectedFragment(fragment: Int): Boolean =
+        fragment == fragmentsViewPager.currentItem
 
     override fun supportFragmentInjector(): AndroidInjector<Fragment> {
         return dispatchingAndroidInjector

@@ -1,5 +1,6 @@
 package xyz.arnau.muvicat.ui.movie
 
+import android.app.Activity
 import android.arch.lifecycle.Observer
 import android.os.Bundle
 import android.os.Parcelable
@@ -12,6 +13,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.ethanhua.skeleton.RecyclerViewSkeletonScreen
 import com.ethanhua.skeleton.Skeleton
+import com.google.firebase.analytics.FirebaseAnalytics
 import kotlinx.android.synthetic.main.error_layout.*
 import kotlinx.android.synthetic.main.movie_grid.*
 import kotlinx.android.synthetic.main.movie_list_toolbar.*
@@ -20,6 +22,7 @@ import xyz.arnau.muvicat.data.model.Movie
 import xyz.arnau.muvicat.data.model.Resource
 import xyz.arnau.muvicat.data.model.Status
 import xyz.arnau.muvicat.di.Injectable
+import xyz.arnau.muvicat.ui.MainActivity
 import xyz.arnau.muvicat.viewmodel.movie.MovieListViewModel
 import javax.inject.Inject
 
@@ -60,6 +63,10 @@ class MovieListFragment : Fragment(), Injectable {
 
     override fun onResume() {
         super.onResume()
+        if ((activity as MainActivity).isSelectedFragment(FRAG_ID)) context?.let {
+            FirebaseAnalytics.getInstance(it)
+                .setCurrentScreen(activity as Activity, "Movie list", "Movie list")
+        }
 
         if (mSavedRecyclerLayoutState != null) {
             moviesRecyclerView.layoutManager.onRestoreInstanceState(mSavedRecyclerLayoutState)
@@ -142,5 +149,9 @@ class MovieListFragment : Fragment(), Injectable {
     private fun updateMovieList(data: List<Movie>) {
         moviesAdapter.movies = data
         moviesAdapter.notifyDataSetChanged()
+    }
+
+    companion object {
+        const val FRAG_ID = 0
     }
 }

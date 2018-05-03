@@ -3,6 +3,7 @@ package xyz.arnau.muvicat.di
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 import xyz.arnau.muvicat.ui.MainActivity
+import xyz.arnau.muvicat.ui.cinema.CinemaActivity
 import xyz.arnau.muvicat.ui.movie.MovieActivity
 
 @Suppress("unused")
@@ -13,4 +14,7 @@ abstract class ActivitiesModule {
 
     @ContributesAndroidInjector()
     abstract fun contributeMovieActivity(): MovieActivity
+
+    @ContributesAndroidInjector()
+    abstract fun contributeCinemaActivity(): CinemaActivity
 }

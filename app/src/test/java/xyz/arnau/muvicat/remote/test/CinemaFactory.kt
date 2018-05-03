@@ -2,22 +2,20 @@ package xyz.arnau.muvicat.remote.test
 
 import xyz.arnau.muvicat.remote.model.GencatCinema
 import xyz.arnau.muvicat.remote.model.GencatCinemaResponse
-import xyz.arnau.muvicat.remote.model.GencatMovie
-import xyz.arnau.muvicat.remote.model.GencatMovieResponse
 import xyz.arnau.muvicat.utils.DataFactory.Factory.randomInt
 import xyz.arnau.muvicat.utils.DataFactory.Factory.randomString
 
 class CinemaFactory {
     companion object Factory {
         fun makeGencatCinemaModelWithoutPostalCode(): GencatCinema =
-                GencatCinema(
-                    id = randomInt(),
-                    name = randomString(),
-                    address = "test address",
-                    town = randomString(),
-                    region = randomString(),
-                    province = randomString()
-                )
+            GencatCinema(
+                id = randomInt(),
+                name = randomString(),
+                address = "test address",
+                town = randomString(),
+                region = randomString(),
+                province = randomString()
+            )
 
         fun makeGencatCinemaModelWithPostalCode(postalCode: Int): GencatCinema =
             GencatCinema(

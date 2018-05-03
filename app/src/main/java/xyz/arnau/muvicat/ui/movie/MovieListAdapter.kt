@@ -1,14 +1,12 @@
 package xyz.arnau.muvicat.ui.movie
 
 import android.content.Context
-import android.support.v4.content.ContextCompat.startActivity
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import timber.log.Timber
 import xyz.arnau.muvicat.GlideApp
 import xyz.arnau.muvicat.R
 import xyz.arnau.muvicat.data.model.Movie

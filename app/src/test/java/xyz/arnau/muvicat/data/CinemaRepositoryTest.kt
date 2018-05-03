@@ -3,6 +3,7 @@ package xyz.arnau.muvicat.data
 import android.arch.core.executor.testing.InstantTaskExecutorRule
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Observer
+import org.junit.Assert.assertEquals
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -13,6 +14,7 @@ import org.mockito.Mockito.*
 import xyz.arnau.muvicat.AppExecutors
 import xyz.arnau.muvicat.data.model.Cinema
 import xyz.arnau.muvicat.data.model.Resource
+import xyz.arnau.muvicat.data.model.Status
 import xyz.arnau.muvicat.data.repository.CinemaCache
 import xyz.arnau.muvicat.data.repository.GencatRemote
 import xyz.arnau.muvicat.data.test.CinemaFactory
@@ -20,6 +22,7 @@ import xyz.arnau.muvicat.data.utils.PreferencesHelper
 import xyz.arnau.muvicat.remote.model.Response
 import xyz.arnau.muvicat.remote.model.ResponseStatus
 import xyz.arnau.muvicat.utils.InstantAppExecutors
+import xyz.arnau.muvicat.utils.getValueBlocking
 
 @RunWith(JUnit4::class)
 class CinemaRepositoryTest {
@@ -174,5 +177,28 @@ class CinemaRepositoryTest {
         verify(preferencesHelper).cinemasETag = "cinema-etag2"
         verify(preferencesHelper, never()).cinemasUpdated()
         verify(cinemaCache, never()).updateCinemas(Mockito.anyList())
+    }
+
+    @Test
+    fun getCinemaReturnsCinemaLiveDataWithSuccessIfExists() {
+        val cinema = CinemaFactory.makeCinema()
+        val cinemaLiveData = MutableLiveData<Cinema>()
+        `when`(cinemaCache.getCinema(cinema.id)).thenReturn(cinemaLiveData)
+        cinemaLiveData.postValue(cinema)
+
+        val res = cinemaRepository.getCinema(cinema.id).getValueBlocking()
+        assertEquals(Status.SUCCESS, res?.status)
+        assertEquals(cinema, res?.data)
+    }
+
+    @Test
+    fun getCinemaReturnsCinemaLiveDataWithErrorIfDoesNotExist() {
+        val cinemaLiveData = MutableLiveData<Cinema>()
+        `when`(cinemaCache.getCinema(100.toLong())).thenReturn(cinemaLiveData)
+        cinemaLiveData.postValue(null)
+
+        val res = cinemaRepository.getCinema(100.toLong()).getValueBlocking()
+        assertEquals(Status.ERROR, res?.status)
+        assertEquals(null, res?.data)
     }
 }
