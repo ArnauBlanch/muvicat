@@ -1,5 +1,6 @@
 package xyz.arnau.muvicat.ui.cinema
 
+import android.app.Activity
 import android.arch.lifecycle.Observer
 import android.os.Bundle
 import android.os.Parcelable
@@ -12,6 +13,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.ethanhua.skeleton.RecyclerViewSkeletonScreen
 import com.ethanhua.skeleton.Skeleton
+import com.google.firebase.analytics.FirebaseAnalytics
 import kotlinx.android.synthetic.main.cinema_list.*
 import kotlinx.android.synthetic.main.cinema_list_toolbar.*
 import kotlinx.android.synthetic.main.error_layout.*
@@ -20,12 +22,14 @@ import xyz.arnau.muvicat.data.model.Cinema
 import xyz.arnau.muvicat.data.model.Resource
 import xyz.arnau.muvicat.data.model.Status
 import xyz.arnau.muvicat.di.Injectable
+import xyz.arnau.muvicat.ui.MainActivity
+import xyz.arnau.muvicat.ui.SimpleDividerItemDecoration
+import xyz.arnau.muvicat.ui.movie.MovieListFragment
 import xyz.arnau.muvicat.viewmodel.cinema.CinemaListViewModel
 import javax.inject.Inject
-import xyz.arnau.muvicat.ui.SimpleDividerItemDecoration
 
 
-class CinemaListFragment: Fragment(), Injectable {
+class CinemaListFragment : Fragment(), Injectable {
     @Inject
     lateinit var cinemasAdapter: CinemaListAdapter
 
@@ -43,7 +47,11 @@ class CinemaListFragment: Fragment(), Injectable {
         setupSkeletonScreen()
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         return inflater.inflate(R.layout.cinema_fragment, container, false)
     }
 
@@ -57,6 +65,11 @@ class CinemaListFragment: Fragment(), Injectable {
 
     override fun onResume() {
         super.onResume()
+        if ((activity as MainActivity).isSelectedFragment(FRAG_ID)) context?.let {
+            FirebaseAnalytics.getInstance(it)
+                .setCurrentScreen(activity as Activity, "Cinema list", "Cinema list")
+            FirebaseAnalytics.getInstance(it)
+        }
         if (mSavedRecyclerViewState != null)
             cinemasRecyclerView.layoutManager.onRestoreInstanceState(mSavedRecyclerViewState)
     }
@@ -132,5 +145,9 @@ class CinemaListFragment: Fragment(), Injectable {
         cinemasRecyclerView.adapter = cinemasAdapter
         cinemasRecyclerView.isEnabled = false
         cinemasRecyclerView.addItemDecoration(SimpleDividerItemDecoration(context!!))
+    }
+
+    companion object {
+        const val FRAG_ID = 1
     }
 }

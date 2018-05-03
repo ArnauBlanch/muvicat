@@ -37,6 +37,17 @@ class CinemaCacheImplTest {
     }
 
     @Test
+    fun getCinemaReturnsCinema() {
+        val cinema = CinemaFactory.makeCinema()
+        val cinemaLiveData = MutableLiveData<Cinema>()
+        cinemaLiveData.value = cinema
+        `when`(cinemaDao.getCinema(cinema.id)).thenReturn(cinemaLiveData)
+        val cinemaFromCache = cinemaCacheImpl.getCinema(cinema.id)
+        verify(cinemaDao).getCinema(cinema.id)
+        assertEquals(cinema, cinemaFromCache.value)
+    }
+
+    @Test
     fun updateCinemasUpdateData() {
         val cinemas = CinemaFactory.makeCinemaList(5)
         cinemaCacheImpl.updateCinemas(cinemas)

@@ -3,7 +3,7 @@ package xyz.arnau.muvicat.remote.mapper
 import xyz.arnau.muvicat.data.model.Cinema
 import xyz.arnau.muvicat.remote.model.GencatCinema
 
-class GencatCinemaEntityMapper: EntityMapper<GencatCinema, Cinema> {
+class GencatCinemaEntityMapper : EntityMapper<GencatCinema, Cinema> {
     override fun mapFromRemote(type: GencatCinema): Cinema? {
         if (type.id == null) return null
         checkNullValues(type)

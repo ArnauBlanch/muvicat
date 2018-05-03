@@ -1,6 +1,8 @@
 package xyz.arnau.muvicat.data
 
 import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.MutableLiveData
+import android.arch.lifecycle.Transformations
 import xyz.arnau.muvicat.AppExecutors
 import xyz.arnau.muvicat.data.model.Cinema
 import xyz.arnau.muvicat.data.model.Resource
@@ -49,4 +51,16 @@ class CinemaRepository @Inject constructor(
             }
 
         }.asLiveData()
+
+    fun getCinema(id: Long): LiveData<Resource<Cinema>> {
+        return Transformations.switchMap(cinemaCache.getCinema(id), { cinema ->
+            val liveData = MutableLiveData<Resource<Cinema>>()
+            if (cinema == null) {
+                liveData.postValue(Resource.error("Cinema not found", null))
+            } else {
+                liveData.postValue(Resource.success(cinema))
+            }
+            liveData
+        })
+    }
 }

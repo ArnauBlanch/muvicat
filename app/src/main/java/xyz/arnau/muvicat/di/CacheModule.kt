@@ -46,7 +46,10 @@ class CacheModule {
 
     @Singleton
     @Provides
-    fun provideCinemaCache(cinemaDao: CinemaDao, preferencesHelper: PreferencesHelper): CinemaCache {
+    fun provideCinemaCache(
+        cinemaDao: CinemaDao,
+        preferencesHelper: PreferencesHelper
+    ): CinemaCache {
         return CinemaCacheImpl(cinemaDao, preferencesHelper)
     }
 }

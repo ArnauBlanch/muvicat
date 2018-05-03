@@ -53,6 +53,22 @@ class CinemaDaoTest {
     }
 
     @Test
+    fun getCinemaRetrievesCinema() {
+        val cinema = CinemaFactory.makeCinema()
+
+        muvicatDatabase.cinemaDao().insertCinemas(listOf(cinema))
+
+        val retrievedCinema = muvicatDatabase.cinemaDao().getCinema(cinema.id).getValueBlocking()
+        assertEquals(cinema, retrievedCinema)
+    }
+
+    @Test
+    fun getCinemaThrowsExceptionIfItDoesntExist() {
+        val retrievedCinema = muvicatDatabase.cinemaDao().getCinema(123.toLong()).getValueBlocking()
+        assertEquals(null, retrievedCinema)
+    }
+
+    @Test
     fun clearCinemasDeletesAllCinemas() {
         val cinemas = CinemaFactory.makeCinemaList(5)
         muvicatDatabase.cinemaDao().insertCinemas(cinemas)

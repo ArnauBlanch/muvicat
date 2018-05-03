@@ -5,6 +5,7 @@ import xyz.arnau.muvicat.data.model.Cinema
 
 interface CinemaCache {
     fun getCinemas(): LiveData<List<Cinema>>
-    fun updateCinemas(movies: List<Cinema>)
+    fun getCinema(cinemaId: Long): LiveData<Cinema>
+    fun updateCinemas(cinemas: List<Cinema>)
     fun isExpired(): Boolean
 }

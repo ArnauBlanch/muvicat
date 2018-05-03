@@ -2,11 +2,8 @@ package xyz.arnau.muvicat.cache
 
 import android.arch.lifecycle.LiveData
 import xyz.arnau.muvicat.cache.dao.CinemaDao
-import xyz.arnau.muvicat.cache.dao.MovieDao
 import xyz.arnau.muvicat.data.model.Cinema
-import xyz.arnau.muvicat.data.model.Movie
 import xyz.arnau.muvicat.data.repository.CinemaCache
-import xyz.arnau.muvicat.data.repository.MovieCache
 import xyz.arnau.muvicat.data.utils.PreferencesHelper
 import javax.inject.Inject
 
@@ -21,6 +18,10 @@ class CinemaCacheImpl @Inject constructor(
 
     override fun getCinemas(): LiveData<List<Cinema>> {
         return cinemaDao.getCinemas()
+    }
+
+    override fun getCinema(cinemaId: Long): LiveData<Cinema> {
+        return cinemaDao.getCinema(cinemaId)
     }
 
     override fun isExpired(): Boolean {
