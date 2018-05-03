@@ -2,12 +2,12 @@
 <android.support.design.widget.AppBarLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/moviesToolbarLayout"
+    android:id="@+id/cinemasToolbarLayout"
     android:layout_width="match_parent"
     android:layout_height="80dp">
 
     <android.support.design.widget.CollapsingToolbarLayout
-        android:id="@+id/moviesToolbarCollapsing"
+        android:id="@+id/cinemasToolbarCollapsing"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:expandedTitleMarginTop="20dp"
@@ -15,10 +15,10 @@
         app:collapsedTitleTextAppearance="@style/CollapsingToolbarLayoutCollapsedTextStyle"
         app:layout_scrollFlags="scroll|exitUntilCollapsed"
         app:expandedTitleGravity="top|left"
-        app:title="Pel·lícules">
+        app:title="Sales">
 
         <android.support.v7.widget.Toolbar
-            android:id="@+id/moviesToolbar"
+            android:id="@+id/cinemasToolbar"
             android:layout_width="match_parent"
             android:layout_height="?android:attr/actionBarSize"
             app:titleMarginStart="0dp"
