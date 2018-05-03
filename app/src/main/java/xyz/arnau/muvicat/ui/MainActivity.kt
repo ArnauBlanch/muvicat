@@ -8,8 +8,8 @@ import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
 import kotlinx.android.synthetic.main.activity_main.*
-import timber.log.Timber
 import xyz.arnau.muvicat.R
+import xyz.arnau.muvicat.ui.cinema.CinemaListFragment
 import xyz.arnau.muvicat.ui.movie.MovieListFragment
 import javax.inject.Inject
 
@@ -22,7 +22,7 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
 
     private val viewPagerAdapter = ViewPagerAdapter(listOf(
         MovieListFragment(),
-        Fragment()
+        CinemaListFragment()
     ), supportFragmentManager)
 
     private val FRAG_MOVIES = 0

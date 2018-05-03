@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/movieFragmentLayout"
+    android:id="@+id/cinemaFragmentLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <include layout="@layout/movie_list_toolbar" />
-    <include layout="@layout/movie_grid"/>
+    <include layout="@layout/cinema_list_toolbar" />
+    <include layout="@layout/cinema_list"/>
     <include layout="@layout/error_layout" />
 </android.support.design.widget.CoordinatorLayout>
