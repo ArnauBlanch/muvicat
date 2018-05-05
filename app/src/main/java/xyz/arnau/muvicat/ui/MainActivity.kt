@@ -44,7 +44,7 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
                 R.id.action_movies -> {
                     fragmentsViewPager.setCurrentItem(MovieListFragment.FRAG_ID, false)
                     FirebaseAnalytics.getInstance(this)
-                            .setCurrentScreen(this, "Movie list", "Movie list")
+                        .setCurrentScreen(this, "Movie list", "Movie list")
                     true
                 }
                 R.id.action_cinemas -> {

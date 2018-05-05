@@ -10,8 +10,9 @@ import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
 import org.mockito.Mockito.*
 import xyz.arnau.muvicat.cache.dao.CinemaDao
-import xyz.arnau.muvicat.data.model.Cinema
+import xyz.arnau.muvicat.data.model.CinemaInfo
 import xyz.arnau.muvicat.data.test.CinemaFactory
+import xyz.arnau.muvicat.data.test.CinemaInfoFactory
 import xyz.arnau.muvicat.data.utils.PreferencesHelper
 
 
@@ -27,8 +28,8 @@ class CinemaCacheImplTest {
 
     @Test
     fun getCinemasReturnsData() {
-        val cinemas = CinemaFactory.makeCinemaList(5)
-        val cinemasLiveData = MutableLiveData<List<Cinema>>()
+        val cinemas = CinemaInfoFactory.makeCinemaInfoList(5)
+        val cinemasLiveData = MutableLiveData<List<CinemaInfo>>()
         cinemasLiveData.value = cinemas
         `when`(cinemaDao.getCinemas()).thenReturn(cinemasLiveData)
         val cinemasFromCache = cinemaCacheImpl.getCinemas()
@@ -37,9 +38,9 @@ class CinemaCacheImplTest {
     }
 
     @Test
-    fun getCinemaReturnsCinema() {
-        val cinema = CinemaFactory.makeCinema()
-        val cinemaLiveData = MutableLiveData<Cinema>()
+    fun getCinemaReturnsCinemaInfo() {
+        val cinema = CinemaInfoFactory.makeCinemaInfo()
+        val cinemaLiveData = MutableLiveData<CinemaInfo>()
         cinemaLiveData.value = cinema
         `when`(cinemaDao.getCinema(cinema.id)).thenReturn(cinemaLiveData)
         val cinemaFromCache = cinemaCacheImpl.getCinema(cinema.id)

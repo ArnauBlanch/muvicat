@@ -18,13 +18,12 @@ import kotlinx.android.synthetic.main.cinema_list.*
 import kotlinx.android.synthetic.main.cinema_list_toolbar.*
 import kotlinx.android.synthetic.main.error_layout.*
 import xyz.arnau.muvicat.R
-import xyz.arnau.muvicat.data.model.Cinema
+import xyz.arnau.muvicat.data.model.CinemaInfo
 import xyz.arnau.muvicat.data.model.Resource
 import xyz.arnau.muvicat.data.model.Status
 import xyz.arnau.muvicat.di.Injectable
 import xyz.arnau.muvicat.ui.MainActivity
 import xyz.arnau.muvicat.ui.SimpleDividerItemDecoration
-import xyz.arnau.muvicat.ui.movie.MovieListFragment
 import xyz.arnau.muvicat.viewmodel.cinema.CinemaListViewModel
 import javax.inject.Inject
 
@@ -58,7 +57,7 @@ class CinemaListFragment : Fragment(), Injectable {
     override fun onStart() {
         super.onStart()
         cinemaListViewModel.cinemas.observe(this,
-            Observer<Resource<List<Cinema>>> {
+            Observer<Resource<List<CinemaInfo>>> {
                 if (it != null) handleDateState(it.status, it.data)
             })
     }
@@ -91,7 +90,7 @@ class CinemaListFragment : Fragment(), Injectable {
     }
 
 
-    private fun handleDateState(status: Status, data: List<Cinema>?) {
+    private fun handleDateState(status: Status, data: List<CinemaInfo>?) {
         if (status == Status.SUCCESS) data?.let {
             updateCinemaList(it)
             skeleton.hide()
@@ -112,7 +111,7 @@ class CinemaListFragment : Fragment(), Injectable {
         }
     }
 
-    private fun updateCinemaList(data: List<Cinema>) {
+    private fun updateCinemaList(data: List<CinemaInfo>) {
         cinemasAdapter.cinemas = data
         cinemasAdapter.notifyDataSetChanged()
     }

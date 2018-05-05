@@ -10,16 +10,10 @@ import android.os.Bundle
 import android.support.design.widget.AppBarLayout
 import android.support.v4.content.res.ResourcesCompat
 import android.support.v7.app.AppCompatActivity
-import android.view.View
-import com.google.firebase.analytics.FirebaseAnalytics
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.cinema_info.*
-import kotlinx.android.synthetic.main.movie_info.*
-import timber.log.Timber
-import xyz.arnau.muvicat.GlideApp
 import xyz.arnau.muvicat.R
-import xyz.arnau.muvicat.data.model.Cinema
-import xyz.arnau.muvicat.data.model.Movie
+import xyz.arnau.muvicat.data.model.CinemaInfo
 import xyz.arnau.muvicat.data.model.Resource
 import xyz.arnau.muvicat.data.model.Status
 import xyz.arnau.muvicat.viewmodel.cinema.CinemaViewModel
@@ -49,13 +43,13 @@ class CinemaActivity : AppCompatActivity() {
         super.onStart()
 
         cinemaViewModel.cinema.observe(this,
-            Observer<Resource<Cinema>> {
+            Observer<Resource<CinemaInfo>> {
                 if (it != null) handleDataState(it)
             })
     }
 
     @SuppressLint("SetTextI18n")
-    private fun handleDataState(cinemaRes: Resource<Cinema>) {
+    private fun handleDataState(cinemaRes: Resource<CinemaInfo>) {
         when (cinemaRes.status) {
             Status.SUCCESS -> {
                 val cinema = cinemaRes.data
@@ -77,7 +71,7 @@ class CinemaActivity : AppCompatActivity() {
         }
     }
 
-    private fun setupToolbar(cinema: Cinema?) {
+    private fun setupToolbar(cinema: CinemaInfo?) {
         setSupportActionBar(cinemaInfoToolbar)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         supportActionBar!!.setDisplayShowHomeEnabled(true)
