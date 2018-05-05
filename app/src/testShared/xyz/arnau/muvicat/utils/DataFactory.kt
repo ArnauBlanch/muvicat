@@ -11,6 +11,8 @@ class DataFactory {
 
         fun randomString() = UUID.randomUUID().toString()
 
+        fun randomDouble() = ThreadLocalRandom.current().nextDouble(20.0)
+
         fun randomDate() = Date(randomLong())
     }
 }

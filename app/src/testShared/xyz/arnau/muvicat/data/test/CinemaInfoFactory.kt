@@ -1,40 +1,41 @@
 package xyz.arnau.muvicat.data.test
 
-import xyz.arnau.muvicat.data.model.Cinema
+import xyz.arnau.muvicat.data.model.CinemaInfo
 import xyz.arnau.muvicat.utils.DataFactory.Factory.randomLong
 import xyz.arnau.muvicat.utils.DataFactory.Factory.randomString
 
-class CinemaFactory {
+class CinemaInfoFactory {
     companion object Factory {
-        fun makeCinema() =
-            Cinema(
+        fun makeCinemaInfo() =
+            CinemaInfo(
                 randomLong(),
                 randomString(),
                 randomString(),
                 randomString(),
                 randomString(),
                 randomString(),
+                null,
                 null
             )
 
-        private fun makeCinemaWithNullValues() =
-            Cinema(
+        private fun makeCinemaInfoWithNullValues() =
+            CinemaInfo(
                 randomLong(), randomString(), randomString(), null, null,
-                null, null
+                null, null, null
             )
 
-        fun makeCinemaList(count: Int): List<Cinema> {
-            val cinemas = mutableListOf<Cinema>()
+        fun makeCinemaInfoList(count: Int): List<CinemaInfo> {
+            val cinemas = mutableListOf<CinemaInfo>()
             repeat(count) {
-                cinemas.add(makeCinema())
+                cinemas.add(makeCinemaInfo())
             }
             return cinemas
         }
 
-        fun makeCinemaListWithNullValues(count: Int): List<Cinema> {
-            val cinemas = mutableListOf<Cinema>()
+        fun makeCinemaInfoListWithNullValues(count: Int): List<CinemaInfo> {
+            val cinemas = mutableListOf<CinemaInfo>()
             repeat(count) {
-                cinemas.add(makeCinemaWithNullValues())
+                cinemas.add(makeCinemaInfoWithNullValues())
             }
             return cinemas
         }

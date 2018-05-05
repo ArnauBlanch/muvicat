@@ -5,6 +5,7 @@ import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Transformations
 import xyz.arnau.muvicat.AppExecutors
 import xyz.arnau.muvicat.data.model.Cinema
+import xyz.arnau.muvicat.data.model.CinemaInfo
 import xyz.arnau.muvicat.data.model.Resource
 import xyz.arnau.muvicat.data.repository.CinemaCache
 import xyz.arnau.muvicat.data.repository.GencatRemote
@@ -24,8 +25,8 @@ class CinemaRepository @Inject constructor(
     private val preferencesHelper: PreferencesHelper
 ) {
 
-    fun getCinemas(): LiveData<Resource<List<Cinema>>> =
-        object : NetworkBoundResource<List<Cinema>>(appExecutors) {
+    fun getCinemas(): LiveData<Resource<List<CinemaInfo>>> =
+        object : NetworkBoundResource<List<CinemaInfo>, List<Cinema>>(appExecutors) {
             override fun saveResponse(response: Response<List<Cinema>>) {
                 if (response.type == SUCCESSFUL) {
                     response.body?.let { cinemaCache.updateCinemas(it) }
@@ -42,19 +43,19 @@ class CinemaRepository @Inject constructor(
                 return gencatRemote.getCinemas(preferencesHelper.cinemasETag)
             }
 
-            override fun loadFromDb(): LiveData<List<Cinema>> {
+            override fun loadFromDb(): LiveData<List<CinemaInfo>> {
                 return cinemaCache.getCinemas()
             }
 
-            override fun shouldFetch(data: List<Cinema>?): Boolean {
+            override fun shouldFetch(data: List<CinemaInfo>?): Boolean {
                 return data == null || data.isEmpty() || cinemaCache.isExpired()
             }
 
         }.asLiveData()
 
-    fun getCinema(id: Long): LiveData<Resource<Cinema>> {
+    fun getCinema(id: Long): LiveData<Resource<CinemaInfo>> {
         return Transformations.switchMap(cinemaCache.getCinema(id), { cinema ->
-            val liveData = MutableLiveData<Resource<Cinema>>()
+            val liveData = MutableLiveData<Resource<CinemaInfo>>()
             if (cinema == null) {
                 liveData.postValue(Resource.error("Cinema not found", null))
             } else {
