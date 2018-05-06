@@ -29,4 +29,12 @@ class NonSwipeableViewPager(context: Context, attrs: AttributeSet) : ViewPager(c
         } else false
 
     }
+
+    fun setCurrentItemOrScrollToTop(item: Int, smoothScroll: Boolean) {
+        if (super.getCurrentItem() == item) {
+            ((super.getAdapter() as ViewPagerAdapter).getItem(item) as ScrollableFragment)
+                .scrollToTop()
+        }
+        super.setCurrentItem(item, smoothScroll)
+    }
 }

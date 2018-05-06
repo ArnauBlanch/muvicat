@@ -45,13 +45,14 @@ class MainActivity : BaseLocationAwareActivity(), HasSupportFragmentInjector {
         bottomNavigation.setOnNavigationItemSelectedListener {
             when (it.itemId) {
                 R.id.action_movies -> {
-                    fragmentsViewPager.setCurrentItem(MovieListFragment.FRAG_ID, false)
+                    fragmentsViewPager.setCurrentItemOrScrollToTop(MovieListFragment.FRAG_ID, false)
+
                     FirebaseAnalytics.getInstance(this)
                         .setCurrentScreen(this, "Movie list", "Movie list")
                     true
                 }
                 R.id.action_cinemas -> {
-                    fragmentsViewPager.setCurrentItem(CinemaListFragment.FRAG_ID, false)
+                    fragmentsViewPager.setCurrentItemOrScrollToTop(CinemaListFragment.FRAG_ID, false)
                     FirebaseAnalytics.getInstance(this)
                         .setCurrentScreen(this, "Cinema list", "Cinema list")
                     true
