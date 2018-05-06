@@ -150,8 +150,8 @@ class MovieListFragment : ScrollableFragment(), Injectable {
     }
 
     override fun scrollToTop() {
-        moviesRecyclerView.scrollToPosition(0)
-        moviesToolbarLayout.setExpanded(true)
+        moviesRecyclerView?.scrollToPosition(0)
+        moviesToolbarLayout?.setExpanded(true)
     }
 
     companion object {

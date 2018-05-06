@@ -36,7 +36,7 @@ abstract class MuvicatDatabase : RoomDatabase() {
 
         private fun buildDatabase(context: Context, appExecutors: AppExecutors): MuvicatDatabase {
             return Room.databaseBuilder(context, MuvicatDatabase::class.java, "muvicat-db")
-                .addMigrations(Migration_1_2)
+                .addMigrations(Migration_1_2, Migration_2_3)
                 .addCallback(object: RoomDatabase.Callback() {
                     override fun onCreate(db: SupportSQLiteDatabase) {
                         super.onCreate(db)

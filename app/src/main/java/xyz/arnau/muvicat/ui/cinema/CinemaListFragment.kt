@@ -177,8 +177,8 @@ class CinemaListFragment : ScrollableFragment(), Injectable {
     }
 
     override fun scrollToTop() {
-        cinemasRecyclerView.scrollToPosition(0)
-        cinemasToolbarLayout.setExpanded(true)
+        cinemasRecyclerView?.scrollToPosition(0)
+        cinemasToolbarLayout?.setExpanded(true)
     }
 
     companion object {
