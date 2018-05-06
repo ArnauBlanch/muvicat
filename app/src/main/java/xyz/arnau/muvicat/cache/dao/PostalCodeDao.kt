@@ -13,4 +13,7 @@ abstract class PostalCodeDao {
 
     @Query("SELECT * FROM postal_codes")
     abstract fun getPostalCodes(): List<PostalCode>
+
+    @Query("SELECT * FROM postal_codes LIMIT 1")
+    abstract fun isNotEmpty(): Boolean
 }
