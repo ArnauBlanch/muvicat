@@ -13,11 +13,14 @@ import org.mockito.Mockito
 import org.mockito.Mockito.*
 import xyz.arnau.muvicat.AppExecutors
 import xyz.arnau.muvicat.data.model.Cinema
+import xyz.arnau.muvicat.data.model.CinemaInfo
 import xyz.arnau.muvicat.data.model.Resource
 import xyz.arnau.muvicat.data.model.Status
 import xyz.arnau.muvicat.data.repository.CinemaCache
 import xyz.arnau.muvicat.data.repository.GencatRemote
 import xyz.arnau.muvicat.data.test.CinemaFactory
+import xyz.arnau.muvicat.data.test.CinemaInfoFactory
+import xyz.arnau.muvicat.data.test.CinemaInfoMapper
 import xyz.arnau.muvicat.data.utils.PreferencesHelper
 import xyz.arnau.muvicat.remote.model.Response
 import xyz.arnau.muvicat.remote.model.ResponseStatus
@@ -39,16 +42,16 @@ class CinemaRepositoryTest {
 
     @Test
     fun getCinemasWhenCinemasAreCachedAndNotExpired() {
-        val dbCinemaLiveData = MutableLiveData<List<Cinema>>()
+        val dbCinemaLiveData = MutableLiveData<List<CinemaInfo>>()
         `when`(cinemaCache.getCinemas()).thenReturn(dbCinemaLiveData)
-        val dbCinemas = CinemaFactory.makeCinemaList(3)
+        val dbCinemas = CinemaInfoFactory.makeCinemaInfoList(3)
         dbCinemaLiveData.postValue(dbCinemas)
         `when`(cinemaCache.isExpired()).thenReturn(false)
 
         val cinemas = cinemaRepository.getCinemas()
         val observer: Observer<*>? = mock(Observer::class.java)
         @Suppress("UNCHECKED_CAST")
-        cinemas.observeForever(observer as Observer<Resource<List<Cinema>>>)
+        cinemas.observeForever(observer as Observer<Resource<List<CinemaInfo>>>)
         verify(observer).onChanged(Resource.success(dbCinemas))
         verify(preferencesHelper, never()).cinemasUpdated()
         verify(gencatRemote, never()).getCinemas(ArgumentMatchers.anyString())
@@ -56,9 +59,9 @@ class CinemaRepositoryTest {
 
     @Test
     fun getCinemasWhenCinemasAreCachedButExpired() {
-        val dbCinemaLiveData = MutableLiveData<List<Cinema>>()
+        val dbCinemaLiveData = MutableLiveData<List<CinemaInfo>>()
         `when`(cinemaCache.getCinemas()).thenReturn(dbCinemaLiveData)
-        val dbCinemas = CinemaFactory.makeCinemaList(3)
+        val dbCinemas = CinemaInfoFactory.makeCinemaInfoList(3)
         `when`(cinemaCache.isExpired()).thenReturn(true)
         `when`(preferencesHelper.cinemasETag).thenReturn("cinema-etag")
         val remoteCinemaLiveData = MutableLiveData<Response<List<Cinema>>>()
@@ -71,7 +74,7 @@ class CinemaRepositoryTest {
 
         val observer: Observer<*>? = mock(Observer::class.java)
         @Suppress("UNCHECKED_CAST")
-        cinemas.observeForever(observer as Observer<Resource<List<Cinema>>>)
+        cinemas.observeForever(observer as Observer<Resource<List<CinemaInfo>>>)
         dbCinemaLiveData.postValue(dbCinemas)
         verify(observer).onChanged(Resource.loading(dbCinemas))
         remoteCinemaLiveData.postValue(
@@ -80,8 +83,9 @@ class CinemaRepositoryTest {
                 ResponseStatus.SUCCESSFUL, "cinema-etag2"
             )
         )
-        dbCinemaLiveData.postValue(remoteCinemas)
-        verify(observer).onChanged(Resource.success(remoteCinemas))
+        val dbCinemas2 = CinemaInfoMapper.mapFromCinemaList(remoteCinemas)
+        dbCinemaLiveData.postValue(dbCinemas2)
+        verify(observer).onChanged(Resource.success(dbCinemas2))
         verify(preferencesHelper).cinemasETag = "cinema-etag2"
         verify(preferencesHelper).cinemasUpdated()
         verify(cinemaCache).updateCinemas(remoteCinemas)
@@ -89,9 +93,9 @@ class CinemaRepositoryTest {
 
     @Test
     fun getCinemasWhenCinemasAreCachedButExpiredNotModified() {
-        val dbCinemaLiveData = MutableLiveData<List<Cinema>>()
+        val dbCinemaLiveData = MutableLiveData<List<CinemaInfo>>()
         `when`(cinemaCache.getCinemas()).thenReturn(dbCinemaLiveData)
-        val dbCinemas = CinemaFactory.makeCinemaList(3)
+        val dbCinemas = CinemaInfoFactory.makeCinemaInfoList(3)
         `when`(cinemaCache.isExpired()).thenReturn(true)
         `when`(preferencesHelper.cinemasETag).thenReturn("cinema-etag")
         val remoteCinemaLiveData = MutableLiveData<Response<List<Cinema>>>()
@@ -103,7 +107,7 @@ class CinemaRepositoryTest {
 
         val observer: Observer<*>? = mock(Observer::class.java)
         @Suppress("UNCHECKED_CAST")
-        cinemas.observeForever(observer as Observer<Resource<List<Cinema>>>)
+        cinemas.observeForever(observer as Observer<Resource<List<CinemaInfo>>>)
         dbCinemaLiveData.postValue(dbCinemas)
         verify(observer).onChanged(Resource.loading(dbCinemas))
         remoteCinemaLiveData.postValue(
@@ -119,9 +123,9 @@ class CinemaRepositoryTest {
 
     @Test
     fun getCinemasWhenCinemasAreNotCached() {
-        val dbCinemaLiveData = MutableLiveData<List<Cinema>>()
+        val dbCinemaLiveData = MutableLiveData<List<CinemaInfo>>()
         `when`(cinemaCache.getCinemas()).thenReturn(dbCinemaLiveData)
-        val dbCinemas = listOf<Cinema>()
+        val dbCinemas = listOf<CinemaInfo>()
         `when`(preferencesHelper.cinemasETag).thenReturn("cinema-etag")
         val remoteCinemaLiveData = MutableLiveData<Response<List<Cinema>>>()
         val remoteCinemas = CinemaFactory.makeCinemaList(3)
@@ -133,7 +137,7 @@ class CinemaRepositoryTest {
 
         val observer: Observer<*>? = mock(Observer::class.java)
         @Suppress("UNCHECKED_CAST")
-        cinemas.observeForever(observer as Observer<Resource<List<Cinema>>>)
+        cinemas.observeForever(observer as Observer<Resource<List<CinemaInfo>>>)
         dbCinemaLiveData.postValue(dbCinemas)
         verify(observer).onChanged(Resource.loading(dbCinemas))
         remoteCinemaLiveData.postValue(
@@ -142,8 +146,9 @@ class CinemaRepositoryTest {
                 ResponseStatus.SUCCESSFUL, "cinema-etag2"
             )
         )
-        dbCinemaLiveData.postValue(remoteCinemas)
-        verify(observer).onChanged(Resource.success(remoteCinemas))
+        val mappedCinemas = CinemaInfoMapper.mapFromCinemaList(remoteCinemas)
+        dbCinemaLiveData.postValue(mappedCinemas)
+        verify(observer).onChanged(Resource.success(mappedCinemas))
         verify(preferencesHelper).cinemasETag = "cinema-etag2"
         verify(preferencesHelper).cinemasUpdated()
         verify(cinemaCache).updateCinemas(remoteCinemas)
@@ -151,9 +156,9 @@ class CinemaRepositoryTest {
 
     @Test
     fun getCinemasWhenCinemasAreNotCachedWithNullResponseBody() {
-        val dbCinemaLiveData = MutableLiveData<List<Cinema>>()
+        val dbCinemaLiveData = MutableLiveData<List<CinemaInfo>>()
         `when`(cinemaCache.getCinemas()).thenReturn(dbCinemaLiveData)
-        val dbCinemas = listOf<Cinema>()
+        val dbCinemas = listOf<CinemaInfo>()
         `when`(preferencesHelper.cinemasETag).thenReturn("cinema-etag")
         val remoteCinemaLiveData = MutableLiveData<Response<List<Cinema>>>()
         `when`(gencatRemote.getCinemas("cinema-etag"))
@@ -164,7 +169,7 @@ class CinemaRepositoryTest {
 
         val observer: Observer<*>? = mock(Observer::class.java)
         @Suppress("UNCHECKED_CAST")
-        cinemas.observeForever(observer as Observer<Resource<List<Cinema>>>)
+        cinemas.observeForever(observer as Observer<Resource<List<CinemaInfo>>>)
         verify(observer).onChanged(Resource.loading(null))
         remoteCinemaLiveData.postValue(
             Response(
@@ -181,8 +186,8 @@ class CinemaRepositoryTest {
 
     @Test
     fun getCinemaReturnsCinemaLiveDataWithSuccessIfExists() {
-        val cinema = CinemaFactory.makeCinema()
-        val cinemaLiveData = MutableLiveData<Cinema>()
+        val cinema = CinemaInfoFactory.makeCinemaInfo()
+        val cinemaLiveData = MutableLiveData<CinemaInfo>()
         `when`(cinemaCache.getCinema(cinema.id)).thenReturn(cinemaLiveData)
         cinemaLiveData.postValue(cinema)
 
@@ -193,7 +198,7 @@ class CinemaRepositoryTest {
 
     @Test
     fun getCinemaReturnsCinemaLiveDataWithErrorIfDoesNotExist() {
-        val cinemaLiveData = MutableLiveData<Cinema>()
+        val cinemaLiveData = MutableLiveData<CinemaInfo>()
         `when`(cinemaCache.getCinema(100.toLong())).thenReturn(cinemaLiveData)
         cinemaLiveData.postValue(null)
 

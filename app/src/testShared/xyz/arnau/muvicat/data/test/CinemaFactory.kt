@@ -1,7 +1,6 @@
 package xyz.arnau.muvicat.data.test
 
 import xyz.arnau.muvicat.data.model.Cinema
-import xyz.arnau.muvicat.utils.DataFactory.Factory.randomInt
 import xyz.arnau.muvicat.utils.DataFactory.Factory.randomLong
 import xyz.arnau.muvicat.utils.DataFactory.Factory.randomString
 
@@ -15,7 +14,7 @@ class CinemaFactory {
                 randomString(),
                 randomString(),
                 randomString(),
-                randomInt()
+                null
             )
 
         private fun makeCinemaWithNullValues() =

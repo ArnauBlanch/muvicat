@@ -10,6 +10,8 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import xyz.arnau.muvicat.cache.db.MuvicatDatabase
 import xyz.arnau.muvicat.data.test.CinemaFactory
+import xyz.arnau.muvicat.data.test.CinemaInfoMapper
+import xyz.arnau.muvicat.data.test.PostalCodeFactory
 import xyz.arnau.muvicat.utils.getValueBlocking
 
 
@@ -34,7 +36,7 @@ class CinemaDaoTest {
 
         val retrievedCinemas = muvicatDatabase.cinemaDao().getCinemas().getValueBlocking()
         assertEquals(
-            cinemas.sortedWith(compareBy({ it.id }, { it.id })),
+            CinemaInfoMapper.mapFromCinemaList(cinemas.sortedWith(compareBy({ it.id }, { it.id }))),
             retrievedCinemas
         )
     }
@@ -47,7 +49,7 @@ class CinemaDaoTest {
 
         val retrievedCinemas = muvicatDatabase.cinemaDao().getCinemas().getValueBlocking()
         assertEquals(
-            cinemas.sortedWith(compareBy({ it.id }, { it.id })),
+            CinemaInfoMapper.mapFromCinemaList(cinemas.sortedWith(compareBy({ it.id }, { it.id }))),
             retrievedCinemas
         )
     }
@@ -59,7 +61,7 @@ class CinemaDaoTest {
         muvicatDatabase.cinemaDao().insertCinemas(listOf(cinema))
 
         val retrievedCinema = muvicatDatabase.cinemaDao().getCinema(cinema.id).getValueBlocking()
-        assertEquals(cinema, retrievedCinema)
+        assertEquals(CinemaInfoMapper.mapFromCinema(cinema), retrievedCinema)
     }
 
     @Test
@@ -83,7 +85,7 @@ class CinemaDaoTest {
         muvicatDatabase.cinemaDao().insertCinemas(cinemas)
 
         assertEquals(
-            cinemas.sortedWith(compareBy({ it.id }, { it.id })),
+            CinemaInfoMapper.mapFromCinemaList(cinemas.sortedWith(compareBy({ it.id }, { it.id }))),
             muvicatDatabase.cinemaDao().getCinemas().getValueBlocking()!!
         )
     }
@@ -95,7 +97,7 @@ class CinemaDaoTest {
         muvicatDatabase.cinemaDao().updateCinemaDb(cinemas)
 
         Assert.assertEquals(
-            cinemas.sortedWith(compareBy({ it.id }, { it.id })),
+            CinemaInfoMapper.mapFromCinemaList(cinemas.sortedWith(compareBy({ it.id }, { it.id }))),
             muvicatDatabase.cinemaDao().getCinemas().getValueBlocking()
         )
     }
@@ -110,8 +112,32 @@ class CinemaDaoTest {
         muvicatDatabase.cinemaDao().updateCinemaDb(cinemas2)
 
         assertEquals(
-            cinemas2.sortedWith(compareBy({ it.id }, { it.id })),
+            CinemaInfoMapper.mapFromCinemaList(cinemas2.sortedWith(compareBy({ it.id }, { it.id }))),
             muvicatDatabase.cinemaDao().getCinemas().getValueBlocking()
         )
+    }
+
+    @Test
+    fun getCinemasRetrivesDataWithCoordinates() {
+        val cinemas = CinemaFactory.makeCinemaList(5)
+        val pc1 = PostalCodeFactory.makePostalCode()
+        val pc2 = PostalCodeFactory.makePostalCode()
+        cinemas[0].postalCode = pc1.code
+        cinemas[1].postalCode = pc2.code
+        cinemas[2].postalCode = 11111
+        cinemas[3].postalCode = 22222
+
+        muvicatDatabase.postalCodeDao().insertPostalCodes(listOf(pc1, pc2))
+        muvicatDatabase.cinemaDao().insertCinemas(cinemas)
+
+        val expectedCinemas = CinemaInfoMapper.mapFromCinemaList(cinemas)
+        expectedCinemas[0].latitude = pc1.latitude
+        expectedCinemas[0].longitude = pc1.longitude
+        expectedCinemas[1].latitude = pc2.latitude
+        expectedCinemas[1].longitude = pc2.longitude
+
+        val retrievedCinemas = muvicatDatabase.cinemaDao().getCinemas().getValueBlocking()
+
+        assertEquals(expectedCinemas.sortedWith(compareBy({ it.id }, { it.id })), retrievedCinemas)
     }
 }
