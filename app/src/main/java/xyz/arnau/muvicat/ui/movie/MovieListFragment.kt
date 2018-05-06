@@ -5,7 +5,6 @@ import android.arch.lifecycle.Observer
 import android.os.Bundle
 import android.os.Parcelable
 import android.support.design.widget.Snackbar
-import android.support.v4.app.Fragment
 import android.support.v4.content.res.ResourcesCompat
 import android.support.v7.widget.GridLayoutManager
 import android.view.LayoutInflater
@@ -23,11 +22,11 @@ import xyz.arnau.muvicat.data.model.Resource
 import xyz.arnau.muvicat.data.model.Status
 import xyz.arnau.muvicat.di.Injectable
 import xyz.arnau.muvicat.ui.MainActivity
+import xyz.arnau.muvicat.ui.ScrollableFragment
 import xyz.arnau.muvicat.viewmodel.movie.MovieListViewModel
 import javax.inject.Inject
 
-class MovieListFragment : Fragment(), Injectable {
-
+class MovieListFragment : ScrollableFragment(), Injectable {
     @Inject
     lateinit var moviesAdapter: MovieListAdapter
 
@@ -111,8 +110,7 @@ class MovieListFragment : Fragment(), Injectable {
             .setCollapsedTitleTypeface(ResourcesCompat.getFont(context!!, R.font.nunito_sans_black))
 
         moviesToolbar.setOnClickListener {
-            moviesRecyclerView.scrollToPosition(0)
-            moviesToolbarLayout.setExpanded(true)
+            scrollToTop()
         }
     }
 
@@ -149,6 +147,11 @@ class MovieListFragment : Fragment(), Injectable {
     private fun updateMovieList(data: List<Movie>) {
         moviesAdapter.movies = data
         moviesAdapter.notifyDataSetChanged()
+    }
+
+    override fun scrollToTop() {
+        moviesRecyclerView.scrollToPosition(0)
+        moviesToolbarLayout.setExpanded(true)
     }
 
     companion object {

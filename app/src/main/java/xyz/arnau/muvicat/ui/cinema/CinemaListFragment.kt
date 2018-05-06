@@ -1,13 +1,11 @@
 package xyz.arnau.muvicat.ui.cinema
 
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.arch.lifecycle.Observer
 import android.location.Location
 import android.os.Bundle
 import android.os.Parcelable
 import android.support.design.widget.Snackbar
-import android.support.v4.app.Fragment
 import android.support.v4.content.res.ResourcesCompat
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
@@ -16,24 +14,25 @@ import android.view.ViewGroup
 import com.ethanhua.skeleton.RecyclerViewSkeletonScreen
 import com.ethanhua.skeleton.Skeleton
 import com.google.firebase.analytics.FirebaseAnalytics
-import kotlinx.android.synthetic.main.cinema_info.*
 import kotlinx.android.synthetic.main.cinema_list.*
 import kotlinx.android.synthetic.main.cinema_list_toolbar.*
 import kotlinx.android.synthetic.main.error_layout.*
+import kotlinx.android.synthetic.main.movie_grid.*
+import kotlinx.android.synthetic.main.movie_list_toolbar.*
 import xyz.arnau.muvicat.R
-import xyz.arnau.muvicat.data.model.Cinema
 import xyz.arnau.muvicat.data.model.CinemaInfo
 import xyz.arnau.muvicat.data.model.Resource
 import xyz.arnau.muvicat.data.model.Status
 import xyz.arnau.muvicat.di.Injectable
 import xyz.arnau.muvicat.ui.MainActivity
+import xyz.arnau.muvicat.ui.ScrollableFragment
 import xyz.arnau.muvicat.ui.SimpleDividerItemDecoration
 import xyz.arnau.muvicat.utils.LocationUtils
 import xyz.arnau.muvicat.viewmodel.cinema.CinemaListViewModel
 import javax.inject.Inject
 
 
-class CinemaListFragment : Fragment(), Injectable {
+class CinemaListFragment : ScrollableFragment(), Injectable {
     @Inject
     lateinit var cinemasAdapter: CinemaListAdapter
 
@@ -132,8 +131,7 @@ class CinemaListFragment : Fragment(), Injectable {
             .setCollapsedTitleTypeface(ResourcesCompat.getFont(context!!, R.font.nunito_sans_black))
 
         cinemasToolbar.setOnClickListener {
-            cinemasRecyclerView.scrollToPosition(0)
-            cinemasToolbarLayout.setExpanded(true)
+            scrollToTop()
         }
     }
 
@@ -166,6 +164,11 @@ class CinemaListFragment : Fragment(), Injectable {
                 it.distance = LocationUtils.getDistance(location, it.latitude!!, it.longitude!!)
             }
         }
+    }
+
+    override fun scrollToTop() {
+        cinemasRecyclerView.scrollToPosition(0)
+        cinemasToolbarLayout.setExpanded(true)
     }
 
     companion object {
