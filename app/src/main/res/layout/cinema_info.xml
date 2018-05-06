@@ -83,6 +83,18 @@
                         android:textSize="14sp"
                         android:lineSpacingMultiplier="0.9"
                         android:fontFamily="@font/nunito_sans_bold" />
+
+                    <TextView
+                        android:id="@+id/cinemaDistance"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="8dp"
+                        android:fontFamily="@font/nunito_sans_bold_italic"
+                        android:textAlignment="center"
+                        android:textColor="@color/grey"
+                        android:textSize="16sp"
+                        android:visibility="gone" />
                 </LinearLayout>
             </FrameLayout>
 

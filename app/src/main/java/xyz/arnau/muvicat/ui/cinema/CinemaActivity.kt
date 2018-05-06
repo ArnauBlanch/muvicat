@@ -6,25 +6,32 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.PorterDuff
+import android.location.Location
 import android.os.Bundle
 import android.support.design.widget.AppBarLayout
 import android.support.v4.content.res.ResourcesCompat
-import android.support.v7.app.AppCompatActivity
+import android.view.View
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.cinema_info.*
 import xyz.arnau.muvicat.R
 import xyz.arnau.muvicat.data.model.CinemaInfo
 import xyz.arnau.muvicat.data.model.Resource
 import xyz.arnau.muvicat.data.model.Status
+import xyz.arnau.muvicat.ui.BaseLocationAwareActivity
+import xyz.arnau.muvicat.utils.LocationUtils
 import xyz.arnau.muvicat.viewmodel.cinema.CinemaViewModel
 import javax.inject.Inject
 
-class CinemaActivity : AppCompatActivity() {
+class CinemaActivity : BaseLocationAwareActivity() {
     @Inject
     lateinit var cinemaViewModel: CinemaViewModel
 
     @Inject
     lateinit var context: Context
+
+    private var cinemaLatitude: Double? = null
+    private var cinemaLongitude: Double? = null
+    private var lastLocation: Location? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,6 +71,11 @@ class CinemaActivity : AppCompatActivity() {
                         cinemaRegion.text = cinema.region
                     else if (cinema.province != null)
                         cinemaRegion.text = cinema.province
+
+                    cinemaLatitude = cinema.latitude
+                    cinemaLongitude = cinema.longitude
+                    if (lastLocation != null)
+                        processLastLocation(lastLocation!!)
                 }
             }
             Status.ERROR -> throw Exception("The cinema could not be retrieved")
@@ -118,5 +130,14 @@ class CinemaActivity : AppCompatActivity() {
             return Intent(context, CinemaActivity::class.java).putExtra(CINEMA_ID, cinemaId)
                 .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         }
+    }
+
+    @SuppressLint("SetTextI18n")
+    override fun processLastLocation(location: Location) {
+        if (cinemaLatitude != null && cinemaLongitude != null) {
+            cinemaDistance.text = "≈ ${LocationUtils.getDistance(location, cinemaLatitude!!, cinemaLongitude!!)} km"
+            cinemaDistance.visibility = View.VISIBLE
+        }
+        lastLocation = location
     }
 }
