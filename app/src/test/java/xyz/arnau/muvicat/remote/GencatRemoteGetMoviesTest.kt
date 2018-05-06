@@ -16,6 +16,8 @@ import org.junit.runners.JUnit4
 import retrofit2.Retrofit
 import retrofit2.converter.simplexml.SimpleXmlConverterFactory
 import xyz.arnau.muvicat.data.repository.GencatRemote
+import xyz.arnau.muvicat.remote.mapper.GencatCinemaEntityMapper
+import xyz.arnau.muvicat.remote.mapper.GencatCinemaListEntityMapper
 import xyz.arnau.muvicat.remote.mapper.GencatMovieEntityMapper
 import xyz.arnau.muvicat.remote.mapper.GencatMovieListEntityMapper
 import xyz.arnau.muvicat.remote.model.ResponseStatus.*
@@ -32,7 +34,8 @@ class GencatServiceGetMoviesTest {
     private lateinit var mockServer: MockWebServer
     private lateinit var gencatService: GencatService
 
-    private lateinit var entityMapper: GencatMovieListEntityMapper
+    private lateinit var moviesEntityMapper: GencatMovieListEntityMapper
+    private lateinit var cinemasEntityMapper: GencatCinemaListEntityMapper
     private lateinit var gencatRemote: GencatRemote
 
     @get:Rule
@@ -50,8 +53,9 @@ class GencatServiceGetMoviesTest {
             .build()
             .create(GencatService::class.java)
 
-        entityMapper = GencatMovieListEntityMapper(GencatMovieEntityMapper())
-        gencatRemote = GencatRemoteImpl(gencatService, entityMapper)
+        moviesEntityMapper = GencatMovieListEntityMapper(GencatMovieEntityMapper())
+        cinemasEntityMapper = GencatCinemaListEntityMapper(GencatCinemaEntityMapper())
+        gencatRemote = GencatRemoteImpl(gencatService, moviesEntityMapper, cinemasEntityMapper)
     }
 
     @After
@@ -71,7 +75,7 @@ class GencatServiceGetMoviesTest {
         )
 
         val result = gencatRemote.getMovies(null).getValueBlocking()
-        assertEquals(entityMapper.mapFromRemote(body), result?.body)
+        assertEquals(moviesEntityMapper.mapFromRemote(body), result?.body)
         assertEquals(SUCCESSFUL, result?.type)
         assertEquals(null, result?.errorMessage)
         assertEquals(eTag, result?.eTag)

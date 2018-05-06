@@ -1,14 +1,12 @@
 package xyz.arnau.muvicat.ui.movie
 
 import android.content.Context
-import android.support.v4.content.ContextCompat.startActivity
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import timber.log.Timber
 import xyz.arnau.muvicat.GlideApp
 import xyz.arnau.muvicat.R
 import xyz.arnau.muvicat.data.model.Movie
@@ -27,12 +25,13 @@ class MovieListAdapter @Inject constructor() : RecyclerView.Adapter<MovieListAda
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val movie = movies[position]
         holder.titleText.text = movie.title
-        if (movie.releaseDate != null) {
-            val dateString = dateFormatter.shortDate(movie.releaseDate)
-            dateString?.let {
-                holder.releaseDate.text = dateString
-                holder.releaseDate.visibility = View.VISIBLE
-            }
+        val dateString = dateFormatter.shortDate(movie.releaseDate)
+        if (dateString != null) {
+            holder.releaseDate.text = dateString
+            holder.releaseDate.visibility = View.VISIBLE
+        } else {
+            holder.releaseDate.text = ""
+            holder.releaseDate.visibility = View.GONE
         }
 
         GlideApp.with(holder.itemView.context)

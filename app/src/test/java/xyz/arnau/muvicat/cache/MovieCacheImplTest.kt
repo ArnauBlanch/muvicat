@@ -43,7 +43,7 @@ class MovieCacheImplTest {
     }
 
     @Test
-    fun getMoviesReturnsMovie() {
+    fun getMovieReturnsMovie() {
         val movie = MovieFactory.makeMovie()
         val movieLiveData = MutableLiveData<Movie>()
         movieLiveData.value = movie

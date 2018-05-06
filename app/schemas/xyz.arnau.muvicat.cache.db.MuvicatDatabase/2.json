@@ -1,0 +1,179 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 2,
+    "identityHash": "8d0e80a2e9a767c49cceace5a43aa4cf",
+    "entities": [
+      {
+        "tableName": "movies",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `title` TEXT, `originalTitle` TEXT, `year` INTEGER, `direction` TEXT, `castList` TEXT, `plot` TEXT, `releaseDate` INTEGER, `posterUrl` TEXT, `priority` INTEGER, `originalLanguage` TEXT, `ageRating` TEXT, `trailerUrl` TEXT, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "title",
+            "columnName": "title",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "originalTitle",
+            "columnName": "originalTitle",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "year",
+            "columnName": "year",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "direction",
+            "columnName": "direction",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "cast",
+            "columnName": "castList",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "plot",
+            "columnName": "plot",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "releaseDate",
+            "columnName": "releaseDate",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "posterUrl",
+            "columnName": "posterUrl",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "priority",
+            "columnName": "priority",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "originalLanguage",
+            "columnName": "originalLanguage",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "ageRating",
+            "columnName": "ageRating",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "trailerUrl",
+            "columnName": "trailerUrl",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [
+          {
+            "name": "movieId",
+            "unique": false,
+            "columnNames": [
+              "id"
+            ],
+            "createSql": "CREATE  INDEX `movieId` ON `${TABLE_NAME}` (`id`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "cinemas",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `name` TEXT NOT NULL, `address` TEXT NOT NULL, `town` TEXT, `region` TEXT, `province` TEXT, `postalCode` INTEGER, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "address",
+            "columnName": "address",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "town",
+            "columnName": "town",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "region",
+            "columnName": "region",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "province",
+            "columnName": "province",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "postalCode",
+            "columnName": "postalCode",
+            "affinity": "INTEGER",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [
+          {
+            "name": "cinemaId",
+            "unique": false,
+            "columnNames": [
+              "id"
+            ],
+            "createSql": "CREATE  INDEX `cinemaId` ON `${TABLE_NAME}` (`id`)"
+          }
+        ],
+        "foreignKeys": []
+      }
+    ],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"8d0e80a2e9a767c49cceace5a43aa4cf\")"
+    ]
+  }
+}

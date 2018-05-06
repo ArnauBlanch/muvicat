@@ -9,12 +9,12 @@ import xyz.arnau.muvicat.data.model.Resource
 import xyz.arnau.muvicat.remote.model.Response
 import xyz.arnau.muvicat.remote.model.ResponseStatus
 
-abstract class NetworkBoundResource<T> @MainThread constructor(private val appExecutors: AppExecutors) {
-    private val result = MediatorLiveData<Resource<T>>()
+abstract class NetworkBoundResource<ResultType, RequestType> @MainThread constructor(private val appExecutors: AppExecutors) {
+    private val result = MediatorLiveData<Resource<ResultType>>()
 
     init {
         result.value = Resource.loading(null)
-        val dbSource: LiveData<T> = loadFromDb()
+        val dbSource: LiveData<ResultType> = loadFromDb()
         result.addSource(dbSource, { data ->
             result.removeSource(dbSource)
             if (shouldFetch(data)) {
@@ -26,14 +26,14 @@ abstract class NetworkBoundResource<T> @MainThread constructor(private val appEx
     }
 
     @MainThread
-    private fun setValue(newValue: Resource<T>) {
+    private fun setValue(newValue: Resource<ResultType>) {
         if (!equals(result.value, newValue)) {
             result.value = newValue
         }
     }
 
-    private fun fetchFromNetwork(dbSource: LiveData<T>) {
-        val apiResponse: LiveData<Response<T>> = createCall()
+    private fun fetchFromNetwork(dbSource: LiveData<ResultType>) {
+        val apiResponse: LiveData<Response<RequestType>> = createCall()
         result.addSource(dbSource, { newData -> setValue(Resource.loading(newData)) })
         result.addSource(apiResponse, { response ->
             result.removeSource(apiResponse)
@@ -66,22 +66,21 @@ abstract class NetworkBoundResource<T> @MainThread constructor(private val appEx
     protected fun onFetchFailed() {
     }
 
-    fun asLiveData(): LiveData<Resource<T>> = result
+    fun asLiveData(): LiveData<Resource<ResultType>> = result
 
     @WorkerThread
-    protected abstract fun saveResponse(response: Response<T>)
+    protected abstract fun saveResponse(response: Response<RequestType>)
 
     @MainThread
-    protected abstract fun shouldFetch(data: T?): Boolean
+    protected abstract fun shouldFetch(data: ResultType?): Boolean
 
     @MainThread
-    protected abstract fun loadFromDb(): LiveData<T>
+    protected abstract fun loadFromDb(): LiveData<ResultType>
 
     @MainThread
-    protected abstract fun createCall(): LiveData<Response<T>>
+    protected abstract fun createCall(): LiveData<Response<RequestType>>
 
     private fun equals(a: Any?, b: Any): Boolean {
-        @Suppress("SuspiciousEqualsCombination")
         return a === b || a != null && a == b
     }
 }

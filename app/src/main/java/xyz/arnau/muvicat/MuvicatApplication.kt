@@ -3,6 +3,7 @@ package xyz.arnau.muvicat
 import android.app.Activity
 import android.provider.Settings
 import android.support.multidex.MultiDexApplication
+import com.facebook.stetho.Stetho
 import com.google.firebase.analytics.FirebaseAnalytics
 //import com.squareup.leakcanary.LeakCanary
 import dagger.android.AndroidInjector
@@ -25,7 +26,7 @@ open class MuvicatApplication : MultiDexApplication(), HasActivityInjector {
         }
         LeakCanary.install(this)
         */
-        setupTimber()
+        setupDebug()
         AppInjector.init(this)
         val testLabSetting =
             Settings.System.getString(contentResolver, "firebase.test.lab")
@@ -35,9 +36,10 @@ open class MuvicatApplication : MultiDexApplication(), HasActivityInjector {
         }
     }
 
-    private fun setupTimber() {
+    private fun setupDebug() {
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
+            Stetho.initializeWithDefaults(this);
         }
     }
 
