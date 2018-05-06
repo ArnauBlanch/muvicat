@@ -1,7 +1,9 @@
 package xyz.arnau.muvicat.ui.cinema
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.arch.lifecycle.Observer
+import android.location.Location
 import android.os.Bundle
 import android.os.Parcelable
 import android.support.design.widget.Snackbar
@@ -14,16 +16,19 @@ import android.view.ViewGroup
 import com.ethanhua.skeleton.RecyclerViewSkeletonScreen
 import com.ethanhua.skeleton.Skeleton
 import com.google.firebase.analytics.FirebaseAnalytics
+import kotlinx.android.synthetic.main.cinema_info.*
 import kotlinx.android.synthetic.main.cinema_list.*
 import kotlinx.android.synthetic.main.cinema_list_toolbar.*
 import kotlinx.android.synthetic.main.error_layout.*
 import xyz.arnau.muvicat.R
+import xyz.arnau.muvicat.data.model.Cinema
 import xyz.arnau.muvicat.data.model.CinemaInfo
 import xyz.arnau.muvicat.data.model.Resource
 import xyz.arnau.muvicat.data.model.Status
 import xyz.arnau.muvicat.di.Injectable
 import xyz.arnau.muvicat.ui.MainActivity
 import xyz.arnau.muvicat.ui.SimpleDividerItemDecoration
+import xyz.arnau.muvicat.utils.LocationUtils
 import xyz.arnau.muvicat.viewmodel.cinema.CinemaListViewModel
 import javax.inject.Inject
 
@@ -112,7 +117,10 @@ class CinemaListFragment : Fragment(), Injectable {
     }
 
     private fun updateCinemaList(data: List<CinemaInfo>) {
-        cinemasAdapter.cinemas = data
+        val lastLocation = getLastLocation()
+        if (lastLocation != null)
+            setLocationToCinemas(data, lastLocation)
+        cinemasAdapter.cinemas = data.sortedWith(compareBy<CinemaInfo,Int?>(nullsLast(), { it.distance }))
         cinemasAdapter.notifyDataSetChanged()
     }
 
@@ -144,6 +152,20 @@ class CinemaListFragment : Fragment(), Injectable {
         cinemasRecyclerView.adapter = cinemasAdapter
         cinemasRecyclerView.isEnabled = false
         cinemasRecyclerView.addItemDecoration(SimpleDividerItemDecoration(context!!))
+    }
+
+    private fun getLastLocation() = (activity as MainActivity).lastLocation
+
+    fun notifyLastLocation(lastLocation: Location) {
+        updateCinemaList(cinemasAdapter.cinemas)
+    }
+
+    private fun setLocationToCinemas(cinemaList: List<CinemaInfo>, location: Location) {
+        cinemaList.forEach {
+            if (it.latitude != null && it.longitude != null) {
+                it.distance = LocationUtils.getDistance(location, it.latitude!!, it.longitude!!)
+            }
+        }
     }
 
     companion object {

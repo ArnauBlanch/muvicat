@@ -73,6 +73,24 @@ abstract class MuvicatDatabase : RoomDatabase() {
                                 .readPostalCodeCsv(context.resources.openRawResource(R.raw.cp_lleida))
                         )
 
+                        postalCodes.addAll(
+                            PostalCodeCsvReader
+                                .readPostalCodeCsv(context.resources.openRawResource(R.raw.cp_balears))
+                        )
+
+                        postalCodes.addAll(
+                            PostalCodeCsvReader
+                                .readPostalCodeCsv(context.resources.openRawResource(R.raw.cp_castello))
+                        )
+                        postalCodes.addAll(
+                            PostalCodeCsvReader
+                                .readPostalCodeCsv(context.resources.openRawResource(R.raw.cp_valencia))
+                        )
+                        postalCodes.addAll(
+                            PostalCodeCsvReader
+                                .readPostalCodeCsv(context.resources.openRawResource(R.raw.cp_alacant))
+                        )
+
                         postalCodeDao.insertPostalCodes(postalCodes)
                     }
                 })

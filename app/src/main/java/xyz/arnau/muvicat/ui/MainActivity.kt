@@ -1,8 +1,8 @@
 package xyz.arnau.muvicat.ui
 
+import android.location.Location
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.support.v7.app.AppCompatActivity
 import com.google.firebase.analytics.FirebaseAnalytics
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
@@ -14,11 +14,14 @@ import xyz.arnau.muvicat.ui.movie.MovieListFragment
 import javax.inject.Inject
 
 
-class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
+class MainActivity : BaseLocationAwareActivity(), HasSupportFragmentInjector {
     @Inject
     lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
 
     private lateinit var firebaseAnalytics: FirebaseAnalytics
+
+    var lastLocation: Location? = null
+        private set
 
     private val viewPagerAdapter = ViewPagerAdapter(
         listOf(
@@ -63,5 +66,11 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
 
     override fun supportFragmentInjector(): AndroidInjector<Fragment> {
         return dispatchingAndroidInjector
+    }
+
+    override fun processLastLocation(location: Location) {
+        lastLocation = location
+        (viewPagerAdapter.getItem(CinemaListFragment.FRAG_ID) as CinemaListFragment)
+            .notifyLastLocation(location)
     }
 }

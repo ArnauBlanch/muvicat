@@ -18,12 +18,6 @@ class CinemaInfoFactory {
                 null
             )
 
-        private fun makeCinemaInfoWithNullValues() =
-            CinemaInfo(
-                randomLong(), randomString(), randomString(), null, null,
-                null, null, null
-            )
-
         fun makeCinemaInfoList(count: Int): List<CinemaInfo> {
             val cinemas = mutableListOf<CinemaInfo>()
             repeat(count) {
@@ -32,12 +26,5 @@ class CinemaInfoFactory {
             return cinemas
         }
 
-        fun makeCinemaInfoListWithNullValues(count: Int): List<CinemaInfo> {
-            val cinemas = mutableListOf<CinemaInfo>()
-            repeat(count) {
-                cinemas.add(makeCinemaInfoWithNullValues())
-            }
-            return cinemas
-        }
     }
 }
