@@ -47,7 +47,7 @@ public class NetworkBoundResourceTest {
     private Function<Void, Boolean> shouldFetch;
     private Function<Void, LiveData<Response<Foo>>> createCall;
     private MutableLiveData<Foo> dbData = new MutableLiveData<>();
-    private NetworkBoundResource<Foo> networkBoundResource;
+    private NetworkBoundResource<Foo, Foo> networkBoundResource;
     private AtomicBoolean fetchedOnce = new AtomicBoolean(false);
     private CountingAppExecutors countingAppExecutors;
 
@@ -68,7 +68,7 @@ public class NetworkBoundResourceTest {
         AppExecutors appExecutors = useRealExecutors
                 ? countingAppExecutors.getAppExecutors()
                 : new InstantAppExecutors();
-        networkBoundResource = new NetworkBoundResource<Foo>(appExecutors) {
+        networkBoundResource = new NetworkBoundResource<Foo, Foo>(appExecutors) {
             @NotNull
             @Override
             protected LiveData<Response<Foo>> createCall() {

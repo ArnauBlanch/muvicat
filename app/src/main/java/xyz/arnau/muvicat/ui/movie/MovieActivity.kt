@@ -12,7 +12,6 @@ import android.support.v7.app.AppCompatActivity
 import android.view.View
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.movie_info.*
-import timber.log.Timber
 import xyz.arnau.muvicat.GlideApp
 import xyz.arnau.muvicat.R
 import xyz.arnau.muvicat.data.model.Movie
@@ -66,7 +65,7 @@ class MovieActivity : AppCompatActivity() {
             var scrollRange = -1
             override fun onOffsetChanged(appBarLayout: AppBarLayout?, verticalOffset: Int) {
                 val backArrow =
-                    ResourcesCompat.getDrawable(resources, R.drawable.arrow_back, null)
+                    ResourcesCompat.getDrawable(resources, R.drawable.ic_chevron_left_black, null)
                 if (verticalOffset < -300) {
                     backArrow?.setColorFilter(Color.parseColor("#AF0000"), PorterDuff.Mode.SRC_ATOP)
                     supportActionBar!!.setHomeAsUpIndicator(backArrow)
@@ -92,6 +91,7 @@ class MovieActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
+
         movieViewModel.movie.observe(this,
             Observer<Resource<Movie>> {
                 if (it != null) handleDataState(it)
@@ -101,13 +101,12 @@ class MovieActivity : AppCompatActivity() {
     private fun handleDataState(movieRes: Resource<Movie>) {
         when (movieRes.status) {
             Status.SUCCESS -> {
-                Timber.i(movieRes.data.toString())
                 val movie = movieRes.data
                 if (movie != null) {
                     setupToolbar(movie)
 
                     GlideApp.with(context)
-                        .load("http://www.gencat.cat/llengua/cinema/${movieRes.data?.posterUrl}")
+                        .load("http://www.gencat.cat/llengua/cinema/${movieRes.data.posterUrl}")
                         .error(R.drawable.poster_placeholder)
                         .centerCrop()
                         .into(moviePoster)
@@ -166,7 +165,8 @@ class MovieActivity : AppCompatActivity() {
         private const val MOVIE_ID = "movie_id"
 
         fun createIntent(context: Context, movieId: Long): Intent {
-            return Intent(context, MovieActivity::class.java).putExtra(MOVIE_ID, movieId).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            return Intent(context, MovieActivity::class.java).putExtra(MOVIE_ID, movieId)
+                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         }
     }
 }

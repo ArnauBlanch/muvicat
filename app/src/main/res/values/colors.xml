@@ -10,4 +10,6 @@
     <color name="background_material_light">#ffffff</color>
     <color name="skeleton_light">#E0E0E0</color>
     <color name="skeleton_shimmer">#DCDCDC</color>
+    <color name="light_grey">#AAFFFFFF</color>
+    <color name="grey_light">#dddbdb</color>
 </resources>

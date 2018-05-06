@@ -13,8 +13,8 @@ android {
         applicationId "xyz.arnau.muvicat"
         minSdkVersion 21
         targetSdkVersion 27
-        versionCode 8
-        versionName "0.1-beta"
+        versionCode 11
+        versionName "0.2-beta"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
 
@@ -66,7 +66,6 @@ android {
     kapt {
         mapDiagnosticLocations = true
         useBuildCache = true
-        // generateStubs = true
     }
     testOptions {
         unitTests {
@@ -104,7 +103,7 @@ dependencies {
     implementation 'com.squareup.okhttp3:okhttp:3.10.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:3.10.0'
     implementation 'com.squareup.retrofit2:adapter-rxjava2:2.3.0'
-    implementation 'com.google.firebase:firebase-core:15.0.0'
+    implementation 'com.google.firebase:firebase-core:15.0.2'
     testImplementation 'com.squareup.okhttp3:mockwebserver:3.10.0'
 
     // ViewModel and LiveData
@@ -117,8 +116,8 @@ dependencies {
     kapt "android.arch.lifecycle:compiler:1.1.1"
 
     // Room (use 1.1.0-beta2 for latest beta)
-    implementation "android.arch.persistence.room:runtime:1.1.0-beta3"
-    kapt "android.arch.persistence.room:compiler:1.1.0-beta3"
+    implementation "android.arch.persistence.room:runtime:1.1.0-rc1"
+    kapt "android.arch.persistence.room:compiler:1.1.0-rc1"
 
     // Paging
     implementation "android.arch.paging:runtime:1.0.0-rc1"
@@ -128,7 +127,7 @@ dependencies {
     androidTestImplementation "android.arch.core:core-testing:1.1.1"
 
     // Test helpers for Room
-    androidTestImplementation "android.arch.persistence.room:testing:1.1.0-beta3"
+    androidTestImplementation "android.arch.persistence.room:testing:1.1.0-rc1"
 
     // Dagger 2
     kapt 'com.google.dagger:dagger-compiler:2.15'
@@ -171,11 +170,14 @@ dependencies {
     implementation group: 'org.joda', name: 'joda-convert', version: '2.0.1', classifier: 'classic'
     implementation 'joda-time:joda-time:2.9.9'
 
-    implementation 'com.crashlytics.sdk.android:crashlytics:2.9.1'
+    implementation 'com.crashlytics.sdk.android:crashlytics:2.9.2'
     implementation 'com.android.support:multidex:1.0.3'
 
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.5.4'
     releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
+
+    implementation 'com.facebook.stetho:stetho:1.5.0'
+    implementation 'com.google.android.gms:play-services-location:15.0.1'
 }
 
 configurations {
