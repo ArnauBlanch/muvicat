@@ -25,7 +25,7 @@ class MovieRepository @Inject constructor(
 ) {
 
     fun getMovies(): LiveData<Resource<List<Movie>>> =
-        object : NetworkBoundResource<List<Movie>>(appExecutors) {
+        object : NetworkBoundResource<List<Movie>, List<Movie>>(appExecutors) {
             override fun saveResponse(response: Response<List<Movie>>) {
                 if (response.type == SUCCESSFUL) {
                     response.body?.let { movieCache.updateMovies(it) }

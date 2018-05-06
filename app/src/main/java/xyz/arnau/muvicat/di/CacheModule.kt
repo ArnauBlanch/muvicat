@@ -1,14 +1,13 @@
 package xyz.arnau.muvicat.di
 
 import android.app.Application
-import android.arch.persistence.room.Room
 import dagger.Module
 import dagger.Provides
+import xyz.arnau.muvicat.AppExecutors
 import xyz.arnau.muvicat.cache.CinemaCacheImpl
 import xyz.arnau.muvicat.cache.MovieCacheImpl
 import xyz.arnau.muvicat.cache.dao.CinemaDao
 import xyz.arnau.muvicat.cache.dao.MovieDao
-import xyz.arnau.muvicat.cache.db.Migration_1_2
 import xyz.arnau.muvicat.cache.db.MuvicatDatabase
 import xyz.arnau.muvicat.data.repository.CinemaCache
 import xyz.arnau.muvicat.data.repository.MovieCache
@@ -19,11 +18,8 @@ import javax.inject.Singleton
 class CacheModule {
     @Singleton
     @Provides
-    fun provideDb(app: Application): MuvicatDatabase {
-        return Room
-            .databaseBuilder(app, MuvicatDatabase::class.java, "muvicat-db")
-            .addMigrations(Migration_1_2)
-            .build()
+    fun provideDb(app: Application, appExecutors: AppExecutors): MuvicatDatabase {
+        return MuvicatDatabase.getInstance(app, appExecutors)
     }
 
     @Singleton

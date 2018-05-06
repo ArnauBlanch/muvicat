@@ -10,10 +10,10 @@ import org.junit.runners.JUnit4
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock
 import xyz.arnau.muvicat.data.CinemaRepository
-import xyz.arnau.muvicat.data.model.Cinema
+import xyz.arnau.muvicat.data.model.CinemaInfo
 import xyz.arnau.muvicat.data.model.Resource
 import xyz.arnau.muvicat.data.model.Status
-import xyz.arnau.muvicat.data.test.CinemaFactory
+import xyz.arnau.muvicat.data.test.CinemaInfoFactory
 import xyz.arnau.muvicat.utils.getValueBlocking
 
 @RunWith(JUnit4::class)
@@ -26,10 +26,10 @@ class CinemaViewModelTest {
 
     @Test
     fun getCinemaReturnsLiveData() {
-        val cinema = CinemaFactory.makeCinema()
+        val cinema = CinemaInfoFactory.makeCinemaInfo()
         cinemaViewModel.setId(cinema.id)
 
-        val cinemaLiveData = MutableLiveData<Resource<Cinema>>()
+        val cinemaLiveData = MutableLiveData<Resource<CinemaInfo>>()
         `when`(cinemaRepository.getCinema(cinema.id)).thenReturn(cinemaLiveData)
         cinemaLiveData.postValue(Resource.success(cinema))
 

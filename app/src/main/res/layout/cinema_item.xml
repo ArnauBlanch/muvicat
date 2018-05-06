@@ -21,7 +21,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/nunito_sans_extrabold"
-            android:textSize="20sp"
+            android:textSize="18sp"
             android:layout_marginBottom="3dp"
             android:ellipsize="marquee"
             android:textColor="@android:color/black"
@@ -44,6 +44,17 @@
             android:layout_marginTop="10dp"
             />-->
     </LinearLayout>
+    <TextView
+        android:id="@+id/cinemaDistance"
+        android:visibility="gone"
+        android:fontFamily="@font/nunito_sans_bold_italic"
+        android:text="≈ 3 km"
+        android:textSize="15sp"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="10dp"
+        android:textColor="@color/grey"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
     <ImageView
         android:id="@+id/arrow"
         android:layout_gravity="center_vertical"

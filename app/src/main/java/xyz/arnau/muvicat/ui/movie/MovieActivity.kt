@@ -1,6 +1,5 @@
 package xyz.arnau.muvicat.ui.movie
 
-import android.app.Activity
 import android.arch.lifecycle.Observer
 import android.content.Context
 import android.content.Intent
@@ -11,10 +10,8 @@ import android.support.design.widget.AppBarLayout
 import android.support.v4.content.res.ResourcesCompat
 import android.support.v7.app.AppCompatActivity
 import android.view.View
-import com.google.firebase.analytics.FirebaseAnalytics
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.movie_info.*
-import timber.log.Timber
 import xyz.arnau.muvicat.GlideApp
 import xyz.arnau.muvicat.R
 import xyz.arnau.muvicat.data.model.Movie
@@ -109,7 +106,7 @@ class MovieActivity : AppCompatActivity() {
                     setupToolbar(movie)
 
                     GlideApp.with(context)
-                        .load("http://www.gencat.cat/llengua/cinema/${movieRes.data?.posterUrl}")
+                        .load("http://www.gencat.cat/llengua/cinema/${movieRes.data.posterUrl}")
                         .error(R.drawable.poster_placeholder)
                         .centerCrop()
                         .into(moviePoster)
