@@ -2,7 +2,6 @@ package xyz.arnau.muvicat.ui.cinema
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.location.Location
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -10,7 +9,6 @@ import android.view.ViewGroup
 import android.widget.TextView
 import xyz.arnau.muvicat.R
 import xyz.arnau.muvicat.data.model.CinemaInfo
-import xyz.arnau.muvicat.utils.LocationUtils
 import javax.inject.Inject
 
 class CinemaListAdapter @Inject constructor() :

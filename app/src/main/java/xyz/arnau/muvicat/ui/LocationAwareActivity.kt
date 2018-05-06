@@ -12,13 +12,14 @@ import android.support.design.widget.Snackbar
 import android.support.v4.app.ActivityCompat
 import android.support.v7.app.AppCompatActivity
 import android.view.View
+import android.widget.TextView
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import timber.log.Timber
 import xyz.arnau.muvicat.BuildConfig.APPLICATION_ID
 import xyz.arnau.muvicat.R
 
-abstract class BaseLocationAwareActivity: AppCompatActivity() {
+abstract class LocationAwareActivity: AppCompatActivity() {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private val REQUEST_PERMISSIONS_REQUEST_CODE = 34
 
@@ -98,7 +99,8 @@ abstract class BaseLocationAwareActivity: AppCompatActivity() {
         listener: View.OnClickListener? = null
     ) {
         val snackbar =
-            Snackbar.make(findViewById(android.R.id.content), getString(snackStrId), Snackbar.LENGTH_LONG)
+            Snackbar.make(findViewById(android.R.id.content), getString(snackStrId), 12000)
+        (snackbar.view.findViewById(android.support.design.R.id.snackbar_text) as TextView).maxLines = 5
         if (actionStrId != 0 && listener != null) {
             snackbar.setAction(getString(actionStrId), listener)
         }

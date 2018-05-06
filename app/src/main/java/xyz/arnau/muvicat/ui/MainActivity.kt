@@ -14,7 +14,7 @@ import xyz.arnau.muvicat.ui.movie.MovieListFragment
 import javax.inject.Inject
 
 
-class MainActivity : BaseLocationAwareActivity(), HasSupportFragmentInjector {
+class MainActivity : LocationAwareActivity(), HasSupportFragmentInjector {
     @Inject
     lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
 
