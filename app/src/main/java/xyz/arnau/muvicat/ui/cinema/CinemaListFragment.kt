@@ -2,6 +2,7 @@ package xyz.arnau.muvicat.ui.cinema
 
 import android.app.Activity
 import android.arch.lifecycle.Observer
+import android.content.Context
 import android.location.Location
 import android.os.Bundle
 import android.os.Parcelable
@@ -17,8 +18,7 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import kotlinx.android.synthetic.main.cinema_list.*
 import kotlinx.android.synthetic.main.cinema_list_toolbar.*
 import kotlinx.android.synthetic.main.error_layout.*
-import kotlinx.android.synthetic.main.movie_grid.*
-import kotlinx.android.synthetic.main.movie_list_toolbar.*
+import timber.log.Timber
 import xyz.arnau.muvicat.R
 import xyz.arnau.muvicat.data.model.CinemaInfo
 import xyz.arnau.muvicat.data.model.Resource
@@ -41,6 +41,8 @@ class CinemaListFragment : ScrollableFragment(), Injectable {
 
     private lateinit var skeleton: RecyclerViewSkeletonScreen
     private var mSavedRecyclerViewState: Parcelable? = null
+
+    private var hasLocation = false
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -68,6 +70,9 @@ class CinemaListFragment : ScrollableFragment(), Injectable {
 
     override fun onResume() {
         super.onResume()
+        if (!hasLocation && getLastLocation() != null) {
+            notifyLastLocation(getLastLocation()!!)
+        }
         if ((activity as MainActivity).isSelectedFragment(FRAG_ID)) context?.let {
             FirebaseAnalytics.getInstance(it)
                 .setCurrentScreen(activity as Activity, "Cinema list", "Cinema list")
@@ -96,13 +101,13 @@ class CinemaListFragment : ScrollableFragment(), Injectable {
 
     private fun handleDateState(status: Status, data: List<CinemaInfo>?) {
         if (status == Status.SUCCESS) data?.let {
-            updateCinemaList(it)
+            updateCinemaList(it, getLastLocation())
             skeleton.hide()
             cinemasRecyclerView.layoutManager.onRestoreInstanceState(mSavedRecyclerViewState)
         } else if (status == Status.ERROR) {
             skeleton.hide()
             if (data != null && !data.isEmpty()) {
-                updateCinemaList(data)
+                updateCinemaList(data, getLastLocation())
                 skeleton.hide()
                 view?.let {
                     Snackbar.make(it, getString(R.string.couldnt_update_data), 6000)
@@ -115,10 +120,11 @@ class CinemaListFragment : ScrollableFragment(), Injectable {
         }
     }
 
-    private fun updateCinemaList(data: List<CinemaInfo>) {
-        val lastLocation = getLastLocation()
-        if (lastLocation != null)
+    private fun updateCinemaList(data: List<CinemaInfo>, lastLocation: Location?) {
+        if (lastLocation != null) {
             setLocationToCinemas(data, lastLocation)
+            hasLocation = true
+        }
         cinemasAdapter.cinemas = data.sortedWith(compareBy<CinemaInfo,Int?>(nullsLast(), { it.distance }))
         cinemasAdapter.notifyDataSetChanged()
     }
@@ -155,7 +161,11 @@ class CinemaListFragment : ScrollableFragment(), Injectable {
     private fun getLastLocation() = (activity as MainActivity).lastLocation
 
     fun notifyLastLocation(lastLocation: Location) {
-        updateCinemaList(cinemasAdapter.cinemas)
+        if (::cinemasAdapter.isInitialized) {
+            updateCinemaList(cinemasAdapter.cinemas, lastLocation)
+        } else {
+            hasLocation = false
+        }
     }
 
     private fun setLocationToCinemas(cinemaList: List<CinemaInfo>, location: Location) {

@@ -17,12 +17,12 @@ import xyz.arnau.muvicat.R
 import xyz.arnau.muvicat.data.model.CinemaInfo
 import xyz.arnau.muvicat.data.model.Resource
 import xyz.arnau.muvicat.data.model.Status
-import xyz.arnau.muvicat.ui.BaseLocationAwareActivity
+import xyz.arnau.muvicat.ui.LocationAwareActivity
 import xyz.arnau.muvicat.utils.LocationUtils
 import xyz.arnau.muvicat.viewmodel.cinema.CinemaViewModel
 import javax.inject.Inject
 
-class CinemaActivity : BaseLocationAwareActivity() {
+class CinemaActivity : LocationAwareActivity() {
     @Inject
     lateinit var cinemaViewModel: CinemaViewModel
 
