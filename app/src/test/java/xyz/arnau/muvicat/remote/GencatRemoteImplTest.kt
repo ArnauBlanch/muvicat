@@ -12,17 +12,16 @@ import org.junit.runners.JUnit4
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock
 import retrofit2.Response
-import xyz.arnau.muvicat.remote.mapper.GencatCinemaEntityMapper
-import xyz.arnau.muvicat.remote.mapper.GencatCinemaListEntityMapper
-import xyz.arnau.muvicat.remote.mapper.GencatMovieEntityMapper
-import xyz.arnau.muvicat.remote.mapper.GencatMovieListEntityMapper
+import xyz.arnau.muvicat.remote.mapper.*
 import xyz.arnau.muvicat.remote.model.GencatCinemaResponse
 import xyz.arnau.muvicat.remote.model.GencatMovieResponse
+import xyz.arnau.muvicat.remote.model.GencatShowingResponse
 import xyz.arnau.muvicat.remote.model.ResponseStatus.SUCCESSFUL
 import xyz.arnau.muvicat.remote.service.GencatService
 import xyz.arnau.muvicat.remote.util.ApiResponse
-import xyz.arnau.muvicat.remote.util.GencatRemoteSampleCinemaData
-import xyz.arnau.muvicat.remote.util.GencatRemoteSampleMovieData
+import xyz.arnau.muvicat.remote.test.GencatRemoteSampleCinemaData
+import xyz.arnau.muvicat.remote.test.GencatRemoteSampleMovieData
+import xyz.arnau.muvicat.remote.test.GencatRemoteSampleShowingData
 import xyz.arnau.muvicat.utils.getValueBlocking
 
 @RunWith(JUnit4::class)
@@ -33,8 +32,9 @@ class GencatRemoteImplTest {
     private val gencatService = mock(GencatService::class.java)
     private val moviesEntityMapper = GencatMovieListEntityMapper(GencatMovieEntityMapper())
     private val cinemasEntityMapper = GencatCinemaListEntityMapper(GencatCinemaEntityMapper())
+    private val showingsEntityMapper = GencatShowingListEntityMapper(GencatShowingEntityMapper())
     private val gencatRemote =
-        GencatRemoteImpl(gencatService, moviesEntityMapper, cinemasEntityMapper)
+        GencatRemoteImpl(gencatService, moviesEntityMapper, cinemasEntityMapper, showingsEntityMapper)
 
     @Test
     fun getMoviesReturnsMovieList() {
@@ -116,5 +116,47 @@ class GencatRemoteImplTest {
         assertEquals(null, result?.errorMessage)
         assertEquals("cinemas-etag2", result?.eTag)
         assertEquals(2, result?.body!!.size)
+    }
+
+    @Test
+    fun getShowingsReturnsShowingList() {
+        val eTag = "showings-etag1"
+        val liveData = MutableLiveData<ApiResponse<GencatShowingResponse>>()
+        `when`(gencatService.getShowings(eTag)).thenReturn(liveData)
+        val response = Response.success(
+            GencatRemoteSampleShowingData.body,
+            Headers.of(mapOf("ETag" to "showings-etag2"))
+        )
+        liveData.postValue(ApiResponse<GencatShowingResponse>(response))
+
+        val result = gencatRemote.getShowings(eTag).getValueBlocking()
+        assertEquals(
+            showingsEntityMapper.mapFromRemote(GencatRemoteSampleShowingData.body),
+            result?.body
+        )
+        assertEquals(SUCCESSFUL, result?.type)
+        assertEquals(null, result?.errorMessage)
+        assertEquals("showings-etag2", result?.eTag)
+    }
+
+    @Test
+    fun getShowingsReturnsShowingListWithNullIds() {
+        val eTag = "showings-etag1"
+        val liveData = MutableLiveData<ApiResponse<GencatShowingResponse>>()
+        `when`(gencatService.getShowings(eTag)).thenReturn(liveData)
+        val showingsResponseWithNullIds = GencatRemoteSampleShowingData.bodyWithNullId
+        val response =
+            Response.success(
+                showingsResponseWithNullIds,
+                Headers.of(mapOf("ETag" to "showings-etag2"))
+            )
+        liveData.postValue(ApiResponse<GencatShowingResponse>(response))
+
+        val result = gencatRemote.getShowings(eTag).getValueBlocking()
+        assertEquals(showingsEntityMapper.mapFromRemote(showingsResponseWithNullIds), result?.body)
+        assertEquals(SUCCESSFUL, result?.type)
+        assertEquals(null, result?.errorMessage)
+        assertEquals("showings-etag2", result?.eTag)
+        assertEquals(1, result?.body!!.size)
     }
 }
