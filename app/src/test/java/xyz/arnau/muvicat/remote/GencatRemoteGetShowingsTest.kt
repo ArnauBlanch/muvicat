@@ -19,15 +19,15 @@ import xyz.arnau.muvicat.data.repository.GencatRemote
 import xyz.arnau.muvicat.remote.mapper.*
 import xyz.arnau.muvicat.remote.model.ResponseStatus.*
 import xyz.arnau.muvicat.remote.service.GencatService
-import xyz.arnau.muvicat.remote.test.GencatRemoteSampleMovieData.body
-import xyz.arnau.muvicat.remote.test.GencatRemoteSampleMovieData.eTag
-import xyz.arnau.muvicat.remote.test.GencatRemoteSampleMovieData.xml
+import xyz.arnau.muvicat.remote.test.GencatRemoteSampleShowingData.body
+import xyz.arnau.muvicat.remote.test.GencatRemoteSampleShowingData.eTag
+import xyz.arnau.muvicat.remote.test.GencatRemoteSampleShowingData.xml
 import xyz.arnau.muvicat.remote.util.LiveDataCallAdapterFactory
 import xyz.arnau.muvicat.utils.getValueBlocking
 import java.net.HttpURLConnection.*
 
 @RunWith(JUnit4::class)
-class GencatServiceGetMoviesTest {
+class GencatServiceGetShowingsTest {
     private lateinit var mockServer: MockWebServer
     private lateinit var gencatService: GencatService
 
@@ -73,8 +73,8 @@ class GencatServiceGetMoviesTest {
                 .setBody(xml)
         )
 
-        val result = gencatRemote.getMovies(null).getValueBlocking()
-        assertEquals(moviesEntityMapper.mapFromRemote(body), result?.body)
+        val result = gencatRemote.getShowings(null).getValueBlocking()
+        assertEquals(showingsEntityMapper.mapFromRemote(body), result?.body)
         assertEquals(SUCCESSFUL, result?.type)
         assertEquals(null, result?.errorMessage)
         assertEquals(eTag, result?.eTag)
@@ -89,7 +89,7 @@ class GencatServiceGetMoviesTest {
                 .setBody(xml)
         )
 
-        val result = gencatRemote.getMovies(eTag).getValueBlocking()
+        val result = gencatRemote.getShowings(eTag).getValueBlocking()
         assertEquals(null, result?.body)
         assertEquals(NOT_MODIFIED, result?.type)
         assertEquals(null, result?.errorMessage)
@@ -105,7 +105,7 @@ class GencatServiceGetMoviesTest {
                 .setBody("ERROR BODY")
         )
 
-        val result = gencatRemote.getMovies(eTag).getValueBlocking()
+        val result = gencatRemote.getShowings(eTag).getValueBlocking()
         assertEquals(null, result?.body)
         assertEquals(ERROR, result?.type)
         assertEquals("ERROR BODY", result?.errorMessage)

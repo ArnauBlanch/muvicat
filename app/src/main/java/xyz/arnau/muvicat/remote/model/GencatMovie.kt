@@ -6,7 +6,7 @@ import org.simpleframework.xml.Root
 @Root(name = "FILM", strict = false)
 data class GencatMovie(
     @field:Element(name = "IDFILM", required = false)
-    var id: Int? = null, // TODO: Test rare cases
+    var id: Int? = null,
 
     @field:Element(name = "TITOL", required = false)
     var title: String? = null,

@@ -1,4 +1,4 @@
-package xyz.arnau.muvicat.remote.util
+package xyz.arnau.muvicat.remote.test
 
 import xyz.arnau.muvicat.remote.model.GencatMovie
 import xyz.arnau.muvicat.remote.model.GencatMovieResponse
