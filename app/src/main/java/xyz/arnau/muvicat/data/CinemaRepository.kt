@@ -4,8 +4,8 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Transformations
 import xyz.arnau.muvicat.AppExecutors
+import xyz.arnau.muvicat.cache.model.CinemaEntity
 import xyz.arnau.muvicat.data.model.Cinema
-import xyz.arnau.muvicat.data.model.CinemaInfo
 import xyz.arnau.muvicat.data.model.Resource
 import xyz.arnau.muvicat.data.repository.CinemaCache
 import xyz.arnau.muvicat.data.repository.GencatRemote
@@ -28,15 +28,15 @@ class CinemaRepository @Inject constructor(
         const val EXPIRATION_TIME: Long = (3 * 60 * 60 * 1000).toLong() // $COVERAGE-IGNORE$
     }
 
-    fun hasExpired(): Boolean {
+    internal fun hasExpired(): Boolean {
         val currentTime = System.currentTimeMillis()
         val lastUpdateTime = preferencesHelper.cinemaslastUpdateTime
         return currentTime - lastUpdateTime > EXPIRATION_TIME
     }
 
-    fun getCinemas(): LiveData<Resource<List<CinemaInfo>>> =
-        object : NetworkBoundResource<List<CinemaInfo>, List<Cinema>>(appExecutors) {
-            override fun saveResponse(response: Response<List<Cinema>>) {
+    fun getCinemas(): LiveData<Resource<List<Cinema>>> =
+        object : NetworkBoundResource<List<Cinema>, List<CinemaEntity>>(appExecutors) {
+            override fun saveResponse(response: Response<List<CinemaEntity>>) {
                 if (response.type == SUCCESSFUL) {
                     response.body?.let {
                         cinemaCache.updateCinemas(it)
@@ -48,25 +48,25 @@ class CinemaRepository @Inject constructor(
                 }
             }
 
-            override fun createCall(): LiveData<Response<List<Cinema>>> {
+            override fun createCall(): LiveData<Response<List<CinemaEntity>>> {
                 return gencatRemote.getCinemas()
             }
 
-            override fun loadFromDb(): LiveData<List<CinemaInfo>> {
+            override fun loadFromDb(): LiveData<List<Cinema>> {
                 return cinemaCache.getCinemas()
             }
 
-            override fun shouldFetch(data: List<CinemaInfo>?): Boolean {
+            override fun shouldFetch(data: List<Cinema>?): Boolean {
                 return data == null || data.isEmpty() || hasExpired()
             }
 
         }.asLiveData()
 
-    fun getCinema(id: Long): LiveData<Resource<CinemaInfo>> {
+    fun getCinema(id: Long): LiveData<Resource<Cinema>> {
         return Transformations.switchMap(cinemaCache.getCinema(id), { cinema ->
-            val liveData = MutableLiveData<Resource<CinemaInfo>>()
+            val liveData = MutableLiveData<Resource<Cinema>>()
             if (cinema == null) {
-                liveData.postValue(Resource.error("Cinema not found", null))
+                liveData.postValue(Resource.error("CinemaEntity not found", null))
             } else {
                 liveData.postValue(Resource.success(cinema))
             }

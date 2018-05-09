@@ -3,6 +3,7 @@ package xyz.arnau.muvicat.viewmodel.movie
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.ViewModel
 import xyz.arnau.muvicat.data.MovieRepository
+import xyz.arnau.muvicat.cache.model.MovieEntity
 import xyz.arnau.muvicat.data.model.Movie
 import xyz.arnau.muvicat.data.model.Resource
 import javax.inject.Inject

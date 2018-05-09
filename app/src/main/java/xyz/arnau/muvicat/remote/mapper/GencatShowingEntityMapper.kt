@@ -1,25 +1,25 @@
 package xyz.arnau.muvicat.remote.mapper
 
 import android.annotation.SuppressLint
-import xyz.arnau.muvicat.data.model.Showing
+import xyz.arnau.muvicat.cache.model.ShowingEntity
 import xyz.arnau.muvicat.remote.model.GencatShowing
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 
-class GencatShowingEntityMapper : EntityMapper<GencatShowing, Showing> {
-    override fun mapFromRemote(type: GencatShowing): Showing? {
+class GencatShowingEntityMapper : EntityMapper<GencatShowing, ShowingEntity> {
+    override fun mapFromRemote(type: GencatShowing): ShowingEntity? {
         if (type.movieId == null || type.cinemaId == null || type.date == null) return null
         checkNullValues(type)
         val date = parseDate(type) ?: return null
-        return Showing(
+        return ShowingEntity(
             null,
             type.movieId!!.toLong(),
             type.cinemaId!!.toLong(),
             date,
             type.version,
             type.seasonId?.toLong()
-            )
+        )
     }
 
 

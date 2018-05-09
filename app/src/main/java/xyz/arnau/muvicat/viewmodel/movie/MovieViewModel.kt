@@ -5,6 +5,7 @@ import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Transformations
 import android.arch.lifecycle.ViewModel
 import xyz.arnau.muvicat.data.MovieRepository
+import xyz.arnau.muvicat.cache.model.MovieEntity
 import xyz.arnau.muvicat.data.model.Movie
 import xyz.arnau.muvicat.data.model.Resource
 import javax.inject.Inject

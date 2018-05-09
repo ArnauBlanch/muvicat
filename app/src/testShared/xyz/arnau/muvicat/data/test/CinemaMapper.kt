@@ -1,11 +1,11 @@
 package xyz.arnau.muvicat.data.test
 
+import xyz.arnau.muvicat.cache.model.CinemaEntity
 import xyz.arnau.muvicat.data.model.Cinema
-import xyz.arnau.muvicat.data.model.CinemaInfo
 
-object CinemaInfoMapper {
-    fun mapFromCinema(cinema: Cinema) =
-        CinemaInfo(
+object CinemaMapper {
+    fun mapFromCinemaEntity(cinema: CinemaEntity) =
+        Cinema(
             cinema.id,
             cinema.name,
             cinema.address,
@@ -16,6 +16,6 @@ object CinemaInfoMapper {
             null
         )
 
-    fun mapFromCinemaList(cinemaList: List<Cinema>) =
-        cinemaList.map { mapFromCinema(it) }
+    fun mapFromCinemaEntityList(cinemaList: List<CinemaEntity>) =
+        cinemaList.map { mapFromCinemaEntity(it) }
 }

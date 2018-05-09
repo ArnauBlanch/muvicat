@@ -5,7 +5,7 @@ import xyz.arnau.muvicat.remote.model.GencatShowingResponse
 import xyz.arnau.muvicat.utils.DataFactory.Factory.randomInt
 import xyz.arnau.muvicat.utils.DataFactory.Factory.randomString
 
-class ShowingFactory {
+class GencatShowingFactory {
     companion object Factory {
         fun makeGencatShowingModel(): GencatShowing =
             GencatShowing(

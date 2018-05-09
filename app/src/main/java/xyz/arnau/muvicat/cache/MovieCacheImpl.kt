@@ -2,6 +2,7 @@ package xyz.arnau.muvicat.cache
 
 import android.arch.lifecycle.LiveData
 import xyz.arnau.muvicat.cache.dao.MovieDao
+import xyz.arnau.muvicat.cache.model.MovieEntity
 import xyz.arnau.muvicat.data.model.Movie
 import xyz.arnau.muvicat.data.repository.MovieCache
 import javax.inject.Inject
@@ -15,7 +16,7 @@ class MovieCacheImpl @Inject constructor(private val movieDao: MovieDao) : Movie
         return movieDao.getMovie(movieId)
     }
 
-    override fun updateMovies(movies: List<Movie>) {
+    override fun updateMovies(movies: List<MovieEntity>) {
         movieDao.updateMovieDb(movies)
     }
 }
