@@ -12,12 +12,14 @@ import org.junit.runners.JUnit4
 import org.mockito.Mockito
 import org.mockito.Mockito.*
 import xyz.arnau.muvicat.AppExecutors
+import xyz.arnau.muvicat.cache.model.MovieEntity
 import xyz.arnau.muvicat.data.model.Movie
 import xyz.arnau.muvicat.data.model.Resource
 import xyz.arnau.muvicat.data.model.Status
 import xyz.arnau.muvicat.data.repository.GencatRemote
 import xyz.arnau.muvicat.data.repository.MovieCache
-import xyz.arnau.muvicat.data.test.MovieFactory
+import xyz.arnau.muvicat.data.test.MovieEntityFactory
+import xyz.arnau.muvicat.data.test.MovieMapper
 import xyz.arnau.muvicat.data.utils.RepoPreferencesHelper
 import xyz.arnau.muvicat.remote.model.Response
 import xyz.arnau.muvicat.remote.model.ResponseStatus
@@ -41,7 +43,7 @@ class MovieRepositoryTest {
     fun getMoviesWhenMoviesAreCachedAndNotExpired() {
         val dbMovieLiveData = MutableLiveData<List<Movie>>()
         `when`(movieCache.getMovies()).thenReturn(dbMovieLiveData)
-        val dbMovies = MovieFactory.makeMovieList(3)
+        val dbMovies = MovieMapper.mapFromMovieEntityList(MovieEntityFactory.makeMovieEntityList(3))
         dbMovieLiveData.postValue(dbMovies)
         val currentTime = System.currentTimeMillis()
         `when`(preferencesHelper.movieslastUpdateTime).thenReturn(currentTime - 5000)
@@ -59,14 +61,14 @@ class MovieRepositoryTest {
     fun getMoviesWhenMoviesAreCachedButExpired() {
         val dbMovieLiveData = MutableLiveData<List<Movie>>()
         `when`(movieCache.getMovies()).thenReturn(dbMovieLiveData)
-        val dbMovies = MovieFactory.makeMovieList(3)
+        val dbMovies = MovieMapper.mapFromMovieEntityList(MovieEntityFactory.makeMovieEntityList(3))
 
         val currentTime = System.currentTimeMillis()
         `when`(preferencesHelper.movieslastUpdateTime)
             .thenReturn(currentTime - (MovieRepository.EXPIRATION_TIME + 500))
 
-        val remoteMovieLiveData = MutableLiveData<Response<List<Movie>>>()
-        val remoteMovies = MovieFactory.makeMovieList(3)
+        val remoteMovieLiveData = MutableLiveData<Response<List<MovieEntity>>>()
+        val remoteMovies = MovieEntityFactory.makeMovieEntityList(3)
         `when`(gencatRemote.getMovies()).thenReturn(remoteMovieLiveData)
 
 
@@ -80,8 +82,8 @@ class MovieRepositoryTest {
         remoteMovieLiveData.postValue(
             Response(remoteMovies, null, ResponseStatus.SUCCESSFUL)
         )
-        dbMovieLiveData.postValue(remoteMovies)
-        verify(observer).onChanged(Resource.success(remoteMovies))
+        dbMovieLiveData.postValue(MovieMapper.mapFromMovieEntityList(remoteMovies))
+        verify(observer).onChanged(Resource.success(MovieMapper.mapFromMovieEntityList(remoteMovies)))
         verify(preferencesHelper).moviesUpdated()
         verify(movieCache).updateMovies(remoteMovies)
     }
@@ -90,13 +92,13 @@ class MovieRepositoryTest {
     fun getMoviesWhenMoviesAreCachedButExpiredNotModified() {
         val dbMovieLiveData = MutableLiveData<List<Movie>>()
         `when`(movieCache.getMovies()).thenReturn(dbMovieLiveData)
-        val dbMovies = MovieFactory.makeMovieList(3)
+        val dbMovies = MovieMapper.mapFromMovieEntityList(MovieEntityFactory.makeMovieEntityList(3))
 
         val currentTime = System.currentTimeMillis()
         `when`(preferencesHelper.movieslastUpdateTime)
             .thenReturn(currentTime - (MovieRepository.EXPIRATION_TIME + 500))
 
-        val remoteMovieLiveData = MutableLiveData<Response<List<Movie>>>()
+        val remoteMovieLiveData = MutableLiveData<Response<List<MovieEntity>>>()
         `when`(gencatRemote.getMovies()).thenReturn(remoteMovieLiveData)
 
 
@@ -120,8 +122,8 @@ class MovieRepositoryTest {
         val dbMovieLiveData = MutableLiveData<List<Movie>>()
         `when`(movieCache.getMovies()).thenReturn(dbMovieLiveData)
         val dbMovies = listOf<Movie>()
-        val remoteMovieLiveData = MutableLiveData<Response<List<Movie>>>()
-        val remoteMovies = MovieFactory.makeMovieList(3)
+        val remoteMovieLiveData = MutableLiveData<Response<List<MovieEntity>>>()
+        val remoteMovies = MovieEntityFactory.makeMovieEntityList(3)
         `when`(gencatRemote.getMovies()).thenReturn(remoteMovieLiveData)
 
 
@@ -135,8 +137,8 @@ class MovieRepositoryTest {
         remoteMovieLiveData.postValue(
             Response(remoteMovies, null, ResponseStatus.SUCCESSFUL)
         )
-        dbMovieLiveData.postValue(remoteMovies)
-        verify(observer).onChanged(Resource.success(remoteMovies))
+        dbMovieLiveData.postValue(MovieMapper.mapFromMovieEntityList(remoteMovies))
+        verify(observer).onChanged(Resource.success(MovieMapper.mapFromMovieEntityList(remoteMovies)))
         verify(preferencesHelper).moviesUpdated()
         verify(movieCache).updateMovies(remoteMovies)
     }
@@ -146,7 +148,7 @@ class MovieRepositoryTest {
         val dbMovieLiveData = MutableLiveData<List<Movie>>()
         `when`(movieCache.getMovies()).thenReturn(dbMovieLiveData)
         val dbMovies = listOf<Movie>()
-        val remoteMovieLiveData = MutableLiveData<Response<List<Movie>>>()
+        val remoteMovieLiveData = MutableLiveData<Response<List<MovieEntity>>>()
         `when`(gencatRemote.getMovies()).thenReturn(remoteMovieLiveData)
 
 
@@ -167,7 +169,7 @@ class MovieRepositoryTest {
 
     @Test
     fun getMovieReturnsMovieLiveDataWithSuccessIfExists() {
-        val movie = MovieFactory.makeMovie()
+        val movie = MovieMapper.mapFromMovieEntity(MovieEntityFactory.makeMovieEntity())
         val movieLiveData = MutableLiveData<Movie>()
         `when`(movieCache.getMovie(movie.id)).thenReturn(movieLiveData)
         movieLiveData.postValue(movie)

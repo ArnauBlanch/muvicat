@@ -11,10 +11,12 @@ import org.junit.runners.JUnit4
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock
 import xyz.arnau.muvicat.data.MovieRepository
+import xyz.arnau.muvicat.cache.model.MovieEntity
 import xyz.arnau.muvicat.data.model.Movie
 import xyz.arnau.muvicat.data.model.Resource
 import xyz.arnau.muvicat.data.model.Status
-import xyz.arnau.muvicat.data.test.MovieFactory
+import xyz.arnau.muvicat.data.test.MovieEntityFactory
+import xyz.arnau.muvicat.data.test.MovieMapper
 import xyz.arnau.muvicat.utils.getValueBlocking
 
 @RunWith(JUnit4::class)
@@ -34,7 +36,7 @@ class MovieListViewModelTest {
 
     @Test
     fun getMoviesReturnsLiveData() {
-        val movies = MovieFactory.makeMovieList(5)
+        val movies = MovieMapper.mapFromMovieEntityList(MovieEntityFactory.makeMovieEntityList(5))
         moviesLiveData.postValue(Resource.success(movies))
 
         val result = movieListViewModel.movies.getValueBlocking()

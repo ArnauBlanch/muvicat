@@ -8,18 +8,21 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.junit.runners.JUnit4
-import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.Mockito.*
+import org.powermock.api.mockito.PowerMockito
+import org.powermock.api.mockito.PowerMockito.`when`
+import org.powermock.core.classloader.annotations.PrepareForTest
+import org.powermock.modules.junit4.PowerMockRunner
 import xyz.arnau.muvicat.cache.dao.PostalCodeDao
+import xyz.arnau.muvicat.cache.model.PostalCodeEntity
 import xyz.arnau.muvicat.cache.utils.PostalCodeCsvReader
-import xyz.arnau.muvicat.data.model.PostalCode
 import xyz.arnau.muvicat.utils.InstantAppExecutors
 import java.io.InputStream
 
 
-@RunWith(JUnit4::class)
+@RunWith(PowerMockRunner::class)
+@PrepareForTest(MuvicatDatabase::class)
 class PostalCodesDbCallbackTest {
     @get:Rule
     val rule = InstantTaskExecutorRule()
@@ -36,22 +39,23 @@ class PostalCodesDbCallbackTest {
 
     private val callback = PostalCodesDbCallback(context, appExecutors, csvReader)
 
-    private var pcTimes = 0
-
     @Before
     fun setUp() {
         `when`(context.resources).thenReturn(resources)
         `when`(resources.openRawResource(anyInt())).thenReturn(stream)
-        //`when`(csvReader.readPostalCodeCsv(stream))
 
-        `when`(csvReader.readPostalCodeCsv(stream)).thenReturn(listOf(PostalCode(0, 0.0, 0.0)))
-        callback.muvicatDatabase = db
+        PowerMockito.mockStatic(MuvicatDatabase::class.java)
+        PowerMockito.`when`(MuvicatDatabase.getInstance(context, appExecutors)).thenReturn(db)
+
+        `when`(csvReader.readPostalCodeCsv(stream))
+            .thenReturn(listOf(PostalCodeEntity(0, 0.0, 0.0)))
         `when`(db.postalCodeDao()).thenReturn(dao)
     }
 
     @Test
     fun testOnCreate() {
         callback.onCreate(sqlDb)
+
         verify(csvReader, times(8)).readPostalCodeCsv(stream)
         verify(dao).insertPostalCodes(postalCodeList(8))
     }
@@ -72,10 +76,10 @@ class PostalCodesDbCallbackTest {
         verify(dao, never()).insertPostalCodes(postalCodeList(8))
     }
 
-    private fun postalCodeList(count: Int): List<PostalCode> {
-        val postalCodeList = mutableListOf<PostalCode>()
+    private fun postalCodeList(count: Int): List<PostalCodeEntity> {
+        val postalCodeList = mutableListOf<PostalCodeEntity>()
         repeat(count) {
-            postalCodeList.add(PostalCode(0, 0.0, 0.0))
+            postalCodeList.add(PostalCodeEntity(0, 0.0, 0.0))
         }
         return postalCodeList
     }

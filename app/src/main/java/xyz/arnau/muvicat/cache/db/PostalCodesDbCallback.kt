@@ -6,35 +6,38 @@ import android.content.Context
 import xyz.arnau.muvicat.AppExecutors
 import xyz.arnau.muvicat.R
 import xyz.arnau.muvicat.cache.dao.PostalCodeDao
+import xyz.arnau.muvicat.cache.model.PostalCodeEntity
 import xyz.arnau.muvicat.cache.utils.PostalCodeCsvReader
-import xyz.arnau.muvicat.data.model.PostalCode
 import javax.inject.Inject
 
-class PostalCodesDbCallback(
+class PostalCodesDbCallback @Inject constructor(
     private val context: Context,
     private val appExecutors: AppExecutors,
     private val csvReader: PostalCodeCsvReader
 ) : RoomDatabase.Callback() {
-    @Inject
-    lateinit var muvicatDatabase: MuvicatDatabase
+
+    fun test(context: Context, appExecutors: AppExecutors) {
+        MuvicatDatabase.getInstance(context, appExecutors)
+    }
+
 
     override fun onCreate(db: SupportSQLiteDatabase) {
-
         appExecutors.diskIO().execute {
-            initPostalCodes(muvicatDatabase.postalCodeDao())
+            initPostalCodes(MuvicatDatabase.getInstance(context, appExecutors).postalCodeDao())
         }
     }
 
     override fun onOpen(db: SupportSQLiteDatabase) {
         appExecutors.diskIO().execute {
-            val postalCodeDao = muvicatDatabase.postalCodeDao()
+            val postalCodeDao = MuvicatDatabase.getInstance(context, appExecutors).postalCodeDao()
             if (!postalCodeDao.isNotEmpty())
                 initPostalCodes(postalCodeDao)
         }
     }
 
+
     private fun initPostalCodes(postalCodeDao: PostalCodeDao) {
-        val postalCodes = mutableListOf<PostalCode>()
+        val postalCodes = mutableListOf<PostalCodeEntity>()
         postalCodes.addAll(csvReader.readPostalCodeCsv(context.resources.openRawResource(R.raw.cp_barcelona)))
         postalCodes.addAll(csvReader.readPostalCodeCsv(context.resources.openRawResource(R.raw.cp_girona)))
         postalCodes.addAll(csvReader.readPostalCodeCsv(context.resources.openRawResource(R.raw.cp_tarragona)))

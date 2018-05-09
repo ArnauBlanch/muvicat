@@ -3,9 +3,9 @@ package xyz.arnau.muvicat.remote.mapper
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
-import xyz.arnau.muvicat.data.model.Cinema
+import xyz.arnau.muvicat.cache.model.CinemaEntity
 import xyz.arnau.muvicat.remote.model.GencatCinema
-import xyz.arnau.muvicat.remote.test.CinemaFactory
+import xyz.arnau.muvicat.remote.test.GencatCinemaFactory
 
 class GencatCinemaEntityMapperTest {
     private lateinit var cinemaEntityMapper: GencatCinemaEntityMapper
@@ -17,7 +17,7 @@ class GencatCinemaEntityMapperTest {
 
     @Test
     fun mapFromRemoteMapsDataWithoutPostalCode() {
-        val cinemaModel = CinemaFactory.makeGencatCinemaModelWithoutPostalCode()
+        val cinemaModel = GencatCinemaFactory.makeGencatCinemaModelWithoutPostalCode()
         val cinemaEntity = cinemaEntityMapper.mapFromRemote(cinemaModel)
 
         assertCinemaEquality(cinemaEntity!!, cinemaModel, null)
@@ -25,7 +25,7 @@ class GencatCinemaEntityMapperTest {
 
     @Test
     fun mapFromRemoteMapsDataWithPostalCode() {
-        val cinemaModel = CinemaFactory.makeGencatCinemaModelWithPostalCode(12345)
+        val cinemaModel = GencatCinemaFactory.makeGencatCinemaModelWithPostalCode(12345)
         val cinemaEntity = cinemaEntityMapper.mapFromRemote(cinemaModel)
 
         assertCinemaEquality(cinemaEntity!!, cinemaModel, 12345)
@@ -33,7 +33,7 @@ class GencatCinemaEntityMapperTest {
 
     @Test
     fun mapFromRemoteMapsDataWithShortPostalCode() {
-        val cinemaModel = CinemaFactory.makeGencatCinemaModelWithPostalCode(123)
+        val cinemaModel = GencatCinemaFactory.makeGencatCinemaModelWithPostalCode(123)
         val cinemaEntity = cinemaEntityMapper.mapFromRemote(cinemaModel)
 
         assertCinemaEquality(cinemaEntity!!, cinemaModel, null)
@@ -41,7 +41,7 @@ class GencatCinemaEntityMapperTest {
 
     @Test
     fun mapFromRemoteReturnsNullIfNullId() {
-        val cinemaModel = CinemaFactory.makeGencatCinemaModelWithNullId()
+        val cinemaModel = GencatCinemaFactory.makeGencatCinemaModelWithNullId()
         val cinemaEntity = cinemaEntityMapper.mapFromRemote(cinemaModel)
 
         assertEquals(null, cinemaEntity)
@@ -49,7 +49,7 @@ class GencatCinemaEntityMapperTest {
 
     @Test
     fun mapFromRemoteReturnsNullIfNullName() {
-        val cinemaModel = CinemaFactory.makeGencatCinemaModelWithNullName()
+        val cinemaModel = GencatCinemaFactory.makeGencatCinemaModelWithNullName()
         val cinemaEntity = cinemaEntityMapper.mapFromRemote(cinemaModel)
 
         assertEquals(null, cinemaEntity)
@@ -57,7 +57,7 @@ class GencatCinemaEntityMapperTest {
 
     @Test
     fun mapFromRemoteReturnsNullIfNullAddress() {
-        val cinemaModel = CinemaFactory.makeGencatCinemaModelWithNullAddress()
+        val cinemaModel = GencatCinemaFactory.makeGencatCinemaModelWithNullAddress()
         val cinemaEntity = cinemaEntityMapper.mapFromRemote(cinemaModel)
 
         assertEquals(null, cinemaEntity)
@@ -65,7 +65,7 @@ class GencatCinemaEntityMapperTest {
 
     @Test
     fun mapFromRemoteReturnsNullIfEmptyName() {
-        val cinemaModel = CinemaFactory.makeGencatCinemaModelWithEmptyName()
+        val cinemaModel = GencatCinemaFactory.makeGencatCinemaModelWithEmptyName()
         val cinemaEntity = cinemaEntityMapper.mapFromRemote(cinemaModel)
 
         cinemaModel.name = null
@@ -74,7 +74,7 @@ class GencatCinemaEntityMapperTest {
 
     @Test
     fun mapFromRemoteReturnsNullIfEmptyAddress() {
-        val cinemaModel = CinemaFactory.makeGencatCinemaModelWithEmptyAddress()
+        val cinemaModel = GencatCinemaFactory.makeGencatCinemaModelWithEmptyAddress()
         val cinemaEntity = cinemaEntityMapper.mapFromRemote(cinemaModel)
 
         cinemaModel.address = null
@@ -83,7 +83,7 @@ class GencatCinemaEntityMapperTest {
 
     @Test
     fun mapFromRemoteReturnsNullIfInvalidName() {
-        val cinemaModel = CinemaFactory.makeGencatCinemaModelWithInvalidName()
+        val cinemaModel = GencatCinemaFactory.makeGencatCinemaModelWithInvalidName()
         val cinemaEntity = cinemaEntityMapper.mapFromRemote(cinemaModel)
 
         cinemaModel.name = null
@@ -92,7 +92,7 @@ class GencatCinemaEntityMapperTest {
 
     @Test
     fun mapFromRemoteReturnsNullIfInvalidAddress() {
-        val cinemaModel = CinemaFactory.makeGencatCinemaModelWithInvalidAddress()
+        val cinemaModel = GencatCinemaFactory.makeGencatCinemaModelWithInvalidAddress()
         val cinemaEntity = cinemaEntityMapper.mapFromRemote(cinemaModel)
 
         cinemaModel.address = null
@@ -101,7 +101,7 @@ class GencatCinemaEntityMapperTest {
 
     @Test
     fun mapFromRemoteMapsDataWithNullUnrequiredFields() {
-        val cinemaModel = CinemaFactory.makeGencatCinemaModelWithNullUnrequiredFields()
+        val cinemaModel = GencatCinemaFactory.makeGencatCinemaModelWithNullUnrequiredFields()
         val cinemaEntity = cinemaEntityMapper.mapFromRemote(cinemaModel)
 
         assertEquals(cinemaModel.id?.toLong(), cinemaEntity!!.id)
@@ -115,7 +115,7 @@ class GencatCinemaEntityMapperTest {
 
     @Test
     fun mapFromRemoteMapsDataWithEmptyUnrequiredFields() {
-        val cinemaModel = CinemaFactory.makeGencatCinemaModelWithEmptyUnrequiredFields()
+        val cinemaModel = GencatCinemaFactory.makeGencatCinemaModelWithEmptyUnrequiredFields()
         val cinemaEntity = cinemaEntityMapper.mapFromRemote(cinemaModel)
 
         assertEquals(cinemaModel.id?.toLong(), cinemaEntity!!.id)
@@ -129,7 +129,7 @@ class GencatCinemaEntityMapperTest {
 
     @Test
     fun mapFromRemoteMapsDataWithInvalidUnrequiredFields() {
-        val cinemaModel = CinemaFactory.makeGencatCinemaModelWithInvalidUnrequiredFields()
+        val cinemaModel = GencatCinemaFactory.makeGencatCinemaModelWithInvalidUnrequiredFields()
         val cinemaEntity = cinemaEntityMapper.mapFromRemote(cinemaModel)
 
         assertEquals(cinemaModel.id?.toLong(), cinemaEntity!!.id)
@@ -143,7 +143,7 @@ class GencatCinemaEntityMapperTest {
 
 
     private fun assertCinemaEquality(
-        cinema: Cinema, cinemaModel: GencatCinema, postalCode: Int?
+        cinema: CinemaEntity, cinemaModel: GencatCinema, postalCode: Int?
     ) {
         assertEquals(cinemaModel.id?.toLong(), cinema.id)
         assertEquals(cinemaModel.name, cinema.name)

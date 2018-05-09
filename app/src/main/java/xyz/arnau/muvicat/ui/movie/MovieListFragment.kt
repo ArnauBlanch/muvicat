@@ -64,7 +64,7 @@ class MovieListFragment : ScrollableFragment(), Injectable {
         super.onResume()
         if ((activity as MainActivity).isSelectedFragment(FRAG_ID)) context?.let {
             FirebaseAnalytics.getInstance(it)
-                .setCurrentScreen(activity as Activity, "Movie list", "Movie list")
+                .setCurrentScreen(activity as Activity, "MovieEntity list", "MovieEntity list")
         }
 
         if (mSavedRecyclerLayoutState != null) {

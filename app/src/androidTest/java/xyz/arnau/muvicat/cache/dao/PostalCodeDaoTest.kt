@@ -8,7 +8,7 @@ import org.junit.After
 import org.junit.Test
 import org.junit.runner.RunWith
 import xyz.arnau.muvicat.cache.db.MuvicatDatabase
-import xyz.arnau.muvicat.data.test.PostalCodeFactory
+import xyz.arnau.muvicat.data.test.PostalCodeEntityFactory
 
 
 @RunWith(AndroidJUnit4::class)
@@ -26,7 +26,7 @@ class PostalCodeDaoTest {
 
     @Test
     fun getPostalCodesRetrievesData() {
-        val postalCodes = PostalCodeFactory.makePostalCodeList(4)
+        val postalCodes = PostalCodeEntityFactory.makePostalCodeEntityList(4)
 
         muvicatDatabase.postalCodeDao().insertPostalCodes(postalCodes)
 
@@ -39,7 +39,7 @@ class PostalCodeDaoTest {
 
     @Test
     fun isNotEmptyReturnsTrueWhenDataExists() {
-        val postalCodes = PostalCodeFactory.makePostalCodeList(4)
+        val postalCodes = PostalCodeEntityFactory.makePostalCodeEntityList(4)
 
         muvicatDatabase.postalCodeDao().insertPostalCodes(postalCodes)
 

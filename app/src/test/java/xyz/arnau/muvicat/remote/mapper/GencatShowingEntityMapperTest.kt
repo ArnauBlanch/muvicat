@@ -3,9 +3,9 @@ package xyz.arnau.muvicat.remote.mapper
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
-import xyz.arnau.muvicat.data.model.Showing
+import xyz.arnau.muvicat.cache.model.ShowingEntity
 import xyz.arnau.muvicat.remote.model.GencatShowing
-import xyz.arnau.muvicat.remote.test.ShowingFactory
+import xyz.arnau.muvicat.remote.test.GencatShowingFactory
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -19,7 +19,7 @@ class GencatShowingEntityMapperTest {
 
     @Test
     fun mapFromRemoteMapsData() {
-        val showingModel = ShowingFactory.makeGencatShowingModel()
+        val showingModel = GencatShowingFactory.makeGencatShowingModel()
         val showingEntity = showingEntityMapper.mapFromRemote(showingModel)
 
         val sdf = SimpleDateFormat("dd/MM/yyyy")
@@ -29,7 +29,7 @@ class GencatShowingEntityMapperTest {
 
     @Test
     fun mapFromRemoteReturnsNullIfNullMovieId() {
-        val showingModel = ShowingFactory.makeGencatShowingModelWithNullMovieId()
+        val showingModel = GencatShowingFactory.makeGencatShowingModelWithNullMovieId()
         val showingEntity = showingEntityMapper.mapFromRemote(showingModel)
 
         assertEquals(null, showingEntity)
@@ -37,7 +37,7 @@ class GencatShowingEntityMapperTest {
 
     @Test
     fun mapFromRemoteReturnsNullIfNullCinemaId() {
-        val showingModel = ShowingFactory.makeGencatShowingModelWithNullCinemaId()
+        val showingModel = GencatShowingFactory.makeGencatShowingModelWithNullCinemaId()
         val showingEntity = showingEntityMapper.mapFromRemote(showingModel)
 
         assertEquals(null, showingEntity)
@@ -45,7 +45,7 @@ class GencatShowingEntityMapperTest {
 
     @Test
     fun mapFromRemoteReturnsNullIfInvalidDate() {
-        val showingModel = ShowingFactory.makeGencatShowingModelWithInvalidDate()
+        val showingModel = GencatShowingFactory.makeGencatShowingModelWithInvalidDate()
         val showingEntity = showingEntityMapper.mapFromRemote(showingModel)
 
         assertEquals(null, showingEntity)
@@ -53,7 +53,7 @@ class GencatShowingEntityMapperTest {
 
     @Test
     fun mapFromRemoteReturnsNullIfNullDate() {
-        val showingModel = ShowingFactory.makeGencatShowingModelWithNullDate()
+        val showingModel = GencatShowingFactory.makeGencatShowingModelWithNullDate()
         val showingEntity = showingEntityMapper.mapFromRemote(showingModel)
 
         assertEquals(null, showingEntity)
@@ -61,7 +61,7 @@ class GencatShowingEntityMapperTest {
 
     @Test
     fun mapFromRemoteReturnsNullIfNullVersion() {
-        val showingModel = ShowingFactory.makeGencatShowingModelWithNullVersion()
+        val showingModel = GencatShowingFactory.makeGencatShowingModelWithNullVersion()
         val showingEntity = showingEntityMapper.mapFromRemote(showingModel)
 
         val sdf = SimpleDateFormat("dd/MM/yyyy")
@@ -71,7 +71,7 @@ class GencatShowingEntityMapperTest {
 
     @Test
     fun mapFromRemoteReturnsNullIfEmptyVersion() {
-        val showingModel = ShowingFactory.makeGencatShowingModelWithEmptyVersion()
+        val showingModel = GencatShowingFactory.makeGencatShowingModelWithEmptyVersion()
         val showingEntity = showingEntityMapper.mapFromRemote(showingModel)
 
         val sdf = SimpleDateFormat("dd/MM/yyyy")
@@ -81,7 +81,7 @@ class GencatShowingEntityMapperTest {
 
     @Test
     fun mapFromRemoteReturnsNullIfInvalidVersion() {
-        val showingModel = ShowingFactory.makeGencatShowingModelWithInvalidVersion()
+        val showingModel = GencatShowingFactory.makeGencatShowingModelWithInvalidVersion()
         val showingEntity = showingEntityMapper.mapFromRemote(showingModel)
 
         val sdf = SimpleDateFormat("dd/MM/yyyy")
@@ -91,7 +91,7 @@ class GencatShowingEntityMapperTest {
 
     @Test
     fun mapFromRemoteReturnsNullIfNullSeasonId() {
-        val showingModel = ShowingFactory.makeGencatShowingModelWithNullSeasonId()
+        val showingModel = GencatShowingFactory.makeGencatShowingModelWithNullSeasonId()
         val showingEntity = showingEntityMapper.mapFromRemote(showingModel)
 
         val sdf = SimpleDateFormat("dd/MM/yyyy")
@@ -101,7 +101,7 @@ class GencatShowingEntityMapperTest {
 
     @Test
     fun mapFromRemoteReturnsNullIfSeasonIdEqualTo0() {
-        val showingModel = ShowingFactory.makeGencatShowingModelWithSeasonIdEqualTo0()
+        val showingModel = GencatShowingFactory.makeGencatShowingModelWithSeasonIdEqualTo0()
         val showingEntity = showingEntityMapper.mapFromRemote(showingModel)
 
         val sdf = SimpleDateFormat("dd/MM/yyyy")
@@ -111,7 +111,7 @@ class GencatShowingEntityMapperTest {
 
     @Test
     fun mapFromRemoteReturnsNullIfSeasonIdEqualTo1() {
-        val showingModel = ShowingFactory.makeGencatShowingModelWithSeasonidEqualTo1()
+        val showingModel = GencatShowingFactory.makeGencatShowingModelWithSeasonidEqualTo1()
         val showingEntity = showingEntityMapper.mapFromRemote(showingModel)
 
         val sdf = SimpleDateFormat("dd/MM/yyyy")
@@ -121,7 +121,7 @@ class GencatShowingEntityMapperTest {
 
 
     private fun assertShowingEquality(
-        showing: Showing, showingModel: GencatShowing, date: Date?, version: String?, seasonId: Int?
+        showing: ShowingEntity, showingModel: GencatShowing, date: Date?, version: String?, seasonId: Int?
     ) {
         assertEquals(null, showing.id)
         assertEquals(showingModel.movieId?.toLong(), showing.movieId)

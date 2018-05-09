@@ -5,7 +5,7 @@ import xyz.arnau.muvicat.remote.model.GencatMovieResponse
 import xyz.arnau.muvicat.utils.DataFactory.Factory.randomInt
 import xyz.arnau.muvicat.utils.DataFactory.Factory.randomString
 
-class MovieFactory {
+class GencatMovieFactory {
     companion object Factory {
         fun makeGencatMovieModel(): GencatMovie =
             GencatMovie(

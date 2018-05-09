@@ -11,7 +11,8 @@ import org.junit.runners.JUnit4
 import org.mockito.Mockito.*
 import xyz.arnau.muvicat.cache.dao.MovieDao
 import xyz.arnau.muvicat.data.model.Movie
-import xyz.arnau.muvicat.data.test.MovieFactory
+import xyz.arnau.muvicat.data.test.MovieEntityFactory
+import xyz.arnau.muvicat.data.test.MovieMapper
 
 
 @RunWith(JUnit4::class)
@@ -25,7 +26,7 @@ class MovieCacheImplTest {
 
     @Test
     fun getMoviesReturnsData() {
-        val movies = MovieFactory.makeMovieList(5)
+        val movies = MovieMapper.mapFromMovieEntityList(MovieEntityFactory.makeMovieEntityList(5))
         val moviesLiveData = MutableLiveData<List<Movie>>()
         moviesLiveData.value = movies
         `when`(movieDao.getMovies()).thenReturn(moviesLiveData)
@@ -36,7 +37,7 @@ class MovieCacheImplTest {
 
     @Test
     fun getMovieReturnsMovie() {
-        val movie = MovieFactory.makeMovie()
+        val movie = MovieMapper.mapFromMovieEntity(MovieEntityFactory.makeMovieEntity())
         val movieLiveData = MutableLiveData<Movie>()
         movieLiveData.value = movie
         `when`(movieDao.getMovie(movie.id)).thenReturn(movieLiveData)
@@ -47,7 +48,7 @@ class MovieCacheImplTest {
 
     @Test
     fun updateMoviesUpdateData() {
-        val movies = MovieFactory.makeMovieList(5)
+        val movies = MovieEntityFactory.makeMovieEntityList(5)
         movieCacheImpl.updateMovies(movies)
 
         verify(movieDao).updateMovieDb(movies)

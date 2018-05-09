@@ -11,7 +11,8 @@ import org.junit.runners.JUnit4
 import org.mockito.Mockito.*
 import xyz.arnau.muvicat.cache.dao.ShowingDao
 import xyz.arnau.muvicat.data.model.Showing
-import xyz.arnau.muvicat.data.test.ShowingFactory
+import xyz.arnau.muvicat.data.test.ShowingEntityFactory
+import xyz.arnau.muvicat.data.test.ShowingMapper
 
 
 @RunWith(JUnit4::class)
@@ -25,18 +26,18 @@ class ShowingCacheImplTest {
 
     @Test
     fun getShowingsReturnsData() {
-        val showings = ShowingFactory.makeShowingList(5)
+        val showings = ShowingEntityFactory.makeShowingEntityList(5)
         val showingsLiveData = MutableLiveData<List<Showing>>()
-        showingsLiveData.value = showings
+        showingsLiveData.value = ShowingMapper.mapFromShowingEntityList(showings)
         `when`(showingDao.getShowings()).thenReturn(showingsLiveData)
         val showingsFromCache = showingCacheImpl.getShowings()
         verify(showingDao).getShowings()
-        assertEquals(showings, showingsFromCache.value)
+        assertEquals(ShowingMapper.mapFromShowingEntityList(showings), showingsFromCache.value)
     }
 
     @Test
     fun updateShowingsUpdateData() {
-        val showings = ShowingFactory.makeShowingList(5)
+        val showings = ShowingEntityFactory.makeShowingEntityList(5)
         showingCacheImpl.updateShowings(showings)
 
         verify(showingDao).updateShowingDb(showings)

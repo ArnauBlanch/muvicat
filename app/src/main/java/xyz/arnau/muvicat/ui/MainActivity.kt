@@ -48,13 +48,13 @@ class MainActivity : LocationAwareActivity(), HasSupportFragmentInjector {
                     fragmentsViewPager.setCurrentItemOrScrollToTop(MovieListFragment.FRAG_ID, false)
 
                     FirebaseAnalytics.getInstance(this)
-                        .setCurrentScreen(this, "Movie list", "Movie list")
+                        .setCurrentScreen(this, "MovieEntity list", "MovieEntity list")
                     true
                 }
                 R.id.action_cinemas -> {
                     fragmentsViewPager.setCurrentItemOrScrollToTop(CinemaListFragment.FRAG_ID, false)
                     FirebaseAnalytics.getInstance(this)
-                        .setCurrentScreen(this, "Cinema list", "Cinema list")
+                        .setCurrentScreen(this, "CinemaEntity list", "CinemaEntity list")
                     true
                 }
                 else -> false

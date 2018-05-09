@@ -2,6 +2,7 @@ package xyz.arnau.muvicat.cache.dao
 
 import android.arch.lifecycle.LiveData
 import android.arch.persistence.room.*
+import xyz.arnau.muvicat.cache.model.MovieEntity
 import xyz.arnau.muvicat.data.model.Movie
 import java.util.*
 
@@ -17,7 +18,7 @@ abstract class MovieDao {
     abstract fun clearMovies()
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    abstract fun insertMovies(movies: List<Movie>)
+    abstract fun insertMovies(movies: List<MovieEntity>)
 
     @Query("SELECT id FROM movies")
     abstract fun getMovieIds(): List<Long>
@@ -48,7 +49,7 @@ abstract class MovieDao {
 
 
     @Transaction
-    open fun updateMovieDb(movies: List<Movie>) {
+    open fun updateMovieDb(movies: List<MovieEntity>) {
         val ids: List<Long> = movies.map { it.id }
         val existingIds = getMovieIds()
 

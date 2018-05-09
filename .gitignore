@@ -11,3 +11,4 @@ app/src/debug/google-services.json
 libs/
 src/main/res/layout-v21/
 src/main/res/values-v26/
+/.coveralls.yml

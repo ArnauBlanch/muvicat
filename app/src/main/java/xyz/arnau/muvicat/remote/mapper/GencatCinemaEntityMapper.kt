@@ -1,15 +1,15 @@
 package xyz.arnau.muvicat.remote.mapper
 
-import xyz.arnau.muvicat.data.model.Cinema
+import xyz.arnau.muvicat.cache.model.CinemaEntity
 import xyz.arnau.muvicat.remote.model.GencatCinema
 
-class GencatCinemaEntityMapper : EntityMapper<GencatCinema, Cinema> {
-    override fun mapFromRemote(type: GencatCinema): Cinema? {
+class GencatCinemaEntityMapper : EntityMapper<GencatCinema, CinemaEntity> {
+    override fun mapFromRemote(type: GencatCinema): CinemaEntity? {
         if (type.id == null) return null
         checkNullValues(type)
         if (type.name == null || type.address == null) return null
         val postalCode = parsePostalCode(type)
-        return Cinema(
+        return CinemaEntity(
             type.id!!.toLong(),
             type.name!!,
             type.address!!,
