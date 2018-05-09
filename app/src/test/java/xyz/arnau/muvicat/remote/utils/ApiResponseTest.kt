@@ -3,6 +3,7 @@ package xyz.arnau.muvicat.remote.utils
 import junit.framework.TestCase.assertEquals
 import okhttp3.Headers
 import okhttp3.ResponseBody
+import okhttp3.internal.Util
 import org.junit.Test
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock
@@ -70,7 +71,7 @@ class ApiResponseTest {
     @Test
     fun constructFromErrorResponseWithNotNullUnparseableErrorBody() {
         val exception = mock(IOException::class.java)
-        val response = mockResponse(HTTP_BAD_REQUEST, errorBodyException = exception)
+        val response = mockResponse(HTTP_BAD_REQUEST, errorBody = "error", errorBodyException = exception)
         val apiResponse = ApiResponse(response)
 
         assertEquals(HTTP_BAD_REQUEST, apiResponse.code)
@@ -102,6 +103,16 @@ class ApiResponseTest {
         assertEquals(null, apiResponse.eTag)
         assertEquals(null, apiResponse.errorMessage)
         assertEquals(ERROR, apiResponse.status)
+    }
+
+    @Test
+    fun testSettersForCoverage() {
+        val response = mockResponse(500)
+        val apiResponse = ApiResponse(response)
+        apiResponse.body = null
+        apiResponse.eTag = null
+        apiResponse.errorMessage = null
+        apiResponse.status = NOT_MODIFIED
     }
 
     companion object {

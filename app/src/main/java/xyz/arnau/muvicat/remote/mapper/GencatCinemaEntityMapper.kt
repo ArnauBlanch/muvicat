@@ -25,14 +25,12 @@ class GencatCinemaEntityMapper : EntityMapper<GencatCinema, Cinema> {
         for (char in type.address!!.asIterable()) {
             if (Character.isDigit(char)) {
                 postalCode += char
-                if (postalCode.length == 5) {
-                    break
-                }
+                if (postalCode.length == 5) return postalCode.toInt()
             } else {
                 postalCode = ""
             }
         }
-        return if (postalCode.length == 5) postalCode.toInt() else null
+        return null
     }
 
     private fun checkNullValues(t: GencatCinema) {

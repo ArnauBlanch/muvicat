@@ -41,7 +41,8 @@ class MovieRepository @Inject constructor(
                         movieCache.updateMovies(it)
                         preferencesHelper.moviesUpdated()
                     }
-                } else if (response.type == NOT_MODIFIED) {
+                }
+                if (response.type == NOT_MODIFIED) {
                     preferencesHelper.moviesUpdated()
                 }
             }

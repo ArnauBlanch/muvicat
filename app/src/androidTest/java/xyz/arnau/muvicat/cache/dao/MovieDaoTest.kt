@@ -1,12 +1,15 @@
 package xyz.arnau.muvicat.cache.dao
 
+import android.arch.core.executor.testing.InstantTaskExecutorRule
 import android.arch.persistence.room.Room
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
 import junit.framework.Assert
 import junit.framework.TestCase.assertEquals
 import org.junit.After
+import org.junit.Rule
 import org.junit.Test
+import org.junit.rules.TestRule
 import org.junit.runner.RunWith
 import xyz.arnau.muvicat.cache.db.MuvicatDatabase
 import xyz.arnau.muvicat.data.model.Movie
@@ -16,6 +19,8 @@ import xyz.arnau.muvicat.utils.getValueBlocking
 
 @RunWith(AndroidJUnit4::class)
 class MovieDaoTest {
+    @get:Rule
+    var rule: TestRule = InstantTaskExecutorRule()
 
     private var muvicatDatabase = Room.inMemoryDatabaseBuilder(
         InstrumentationRegistry.getContext(),
@@ -157,8 +162,11 @@ class MovieDaoTest {
         val updatedMovies = MovieFactory.makeMovieList(3)
         updatedMovies.forEachIndexed { index, item -> item.id = index.toLong() }
 
-        val movies2 = MovieFactory.makeMovieList(4) + updatedMovies
-        updatedMovies.forEachIndexed { index, item -> item.id = (index + 10).toLong() }
+        val notUpdatedMovies = listOf(movies1[3])
+        // val deletedMovies = movies1[4]
+        val newMovies = MovieFactory.makeMovieList(3)
+        newMovies.forEach { it.id += 10 }
+        val movies2 = notUpdatedMovies + updatedMovies + newMovies
         muvicatDatabase.movieDao().updateMovieDb(movies2)
 
         assertEquals(
