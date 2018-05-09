@@ -14,7 +14,7 @@ class DateFormatterTest {
     private val dateFormatter = DateFormatter(context)
 
     @Test
-    fun dateFormatterTestToday() {
+    fun shortDateTestToday() {
         val date = LocalDate(2018, 4, 15).toDate()
         val today = LocalDate(2018, 4, 15)
         `when`(context.getString(R.string.release)).thenReturn("Estrena %s")
@@ -23,7 +23,7 @@ class DateFormatterTest {
     }
 
     @Test
-    fun dateFormatterTestTomorrow() {
+    fun shortDateTestTomorrow() {
         val date = LocalDate(2018, 4, 16).toDate()
         val today = LocalDate(2018, 4, 15)
         `when`(context.getString(R.string.release)).thenReturn("Estrena %s")
@@ -32,7 +32,7 @@ class DateFormatterTest {
     }
 
     @Test
-    fun dateFormatterTestAfterToday() {
+    fun shortDateTestAfterToday() {
         val date = LocalDate(2018, 4, 25).toDate()
         val today = LocalDate(2018, 4, 15)
         `when`(context.getString(R.string.release)).thenReturn("Estrena %s")
@@ -40,10 +40,22 @@ class DateFormatterTest {
     }
 
     @Test
-    fun dateFormatterTestBeforeToday() {
+    fun shortDateTestBeforeToday() {
         val date = LocalDate(2018, 4, 10).toDate()
         val today = LocalDate(2018, 4, 15)
         `when`(context.getString(R.string.release)).thenReturn("Estrena %s")
         assertEquals(null, dateFormatter.shortDate(date, today = today))
+    }
+
+    @Test
+    fun shortDateReturnsNullIfDateIsNull() {
+        val today = LocalDate(2018, 4, 15)
+        assertEquals(null, dateFormatter.shortDate(null, today = today))
+    }
+
+    @Test
+    fun longDateTest() {
+        val date = LocalDate(2018, 4, 15).toDate()
+        assertEquals("15 d’abril de 2018", dateFormatter.longDate(date))
     }
 }

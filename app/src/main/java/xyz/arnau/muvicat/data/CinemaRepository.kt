@@ -42,7 +42,8 @@ class CinemaRepository @Inject constructor(
                         cinemaCache.updateCinemas(it)
                         preferencesHelper.cinemasUpdated()
                     }
-                } else if (response.type == NOT_MODIFIED) {
+                }
+                if (response.type == NOT_MODIFIED) {
                     preferencesHelper.cinemasUpdated()
                 }
             }

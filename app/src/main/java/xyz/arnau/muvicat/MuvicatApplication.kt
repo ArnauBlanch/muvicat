@@ -3,7 +3,7 @@ package xyz.arnau.muvicat
 import android.app.Activity
 import android.provider.Settings
 import android.support.multidex.MultiDexApplication
-import com.facebook.stetho.Stetho
+//import com.facebook.stetho.Stetho
 import com.google.firebase.analytics.FirebaseAnalytics
 //import com.squareup.leakcanary.LeakCanary
 import dagger.android.AndroidInjector
@@ -39,7 +39,7 @@ class MuvicatApplication : MultiDexApplication(), HasActivityInjector {
     private fun setupDebug() {
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
-            Stetho.initializeWithDefaults(this);
+            //Stetho.initializeWithDefaults(this);
         }
     }
 

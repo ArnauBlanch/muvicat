@@ -44,6 +44,14 @@ class GencatShowingEntityMapperTest {
     }
 
     @Test
+    fun mapFromRemoteReturnsNullIfInvalidDate() {
+        val showingModel = ShowingFactory.makeGencatShowingModelWithInvalidDate()
+        val showingEntity = showingEntityMapper.mapFromRemote(showingModel)
+
+        assertEquals(null, showingEntity)
+    }
+
+    @Test
     fun mapFromRemoteReturnsNullIfNullDate() {
         val showingModel = ShowingFactory.makeGencatShowingModelWithNullDate()
         val showingEntity = showingEntityMapper.mapFromRemote(showingModel)

@@ -5,10 +5,12 @@ import java.io.BufferedReader
 import java.io.InputStream
 import java.io.InputStreamReader
 
-object PostalCodeCsvReader {
-    val CODE = 0
-    val LATITUDE = 1
-    val LONGITUDE = 2
+class PostalCodeCsvReader {
+    companion object {
+        private const val CODE = 0
+        private const val LATITUDE = 1
+        private const val LONGITUDE = 2
+    }
 
     fun readPostalCodeCsv(stream: InputStream): List<PostalCode> {
         val postalCodes = mutableListOf<PostalCode>()

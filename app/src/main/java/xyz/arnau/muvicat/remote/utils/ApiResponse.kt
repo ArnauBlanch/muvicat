@@ -15,13 +15,9 @@ import java.net.HttpURLConnection.HTTP_SERVER_ERROR
 class ApiResponse<T> {
     val code: Int
     var body: T? = null
-        private set
     var eTag: String? = null
-        private set
     var errorMessage: String? = null
-        private set
     var status: ResponseStatus = ResponseStatus.ERROR
-        private set
 
     constructor(error: Throwable) {
         code = HTTP_SERVER_ERROR

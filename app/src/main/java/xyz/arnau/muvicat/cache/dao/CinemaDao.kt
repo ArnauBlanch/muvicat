@@ -7,19 +7,15 @@ import xyz.arnau.muvicat.data.model.CinemaInfo
 
 @Dao
 abstract class CinemaDao {
-    @Query(
-        """
+    @Query("""
         SELECT c.id, c.name, c.address, c.town, c.region, c.province, pc.latitude, pc.longitude
-        FROM cinemas c LEFT OUTER JOIN postal_codes pc ON c.postalCode = pc.code"""
-    )
+        FROM cinemas c LEFT OUTER JOIN postal_codes pc ON c.postalCode != 0 AND c.postalCode = pc.code""")
     abstract fun getCinemas(): LiveData<List<CinemaInfo>>
 
-    @Query(
-        """
+    @Query("""
         SELECT c.id, c.name, c.address, c.town, c.region, c.province, pc.latitude, pc.longitude
         FROM cinemas c LEFT OUTER JOIN postal_codes pc ON c.postalCode = pc.code
-        WHERE id = :cinemaId"""
-    )
+        WHERE id = :cinemaId""")
     abstract fun getCinema(cinemaId: Long): LiveData<CinemaInfo>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)

@@ -11,6 +11,7 @@ import xyz.arnau.muvicat.cache.dao.MovieDao
 import xyz.arnau.muvicat.cache.dao.PostalCodeDao
 import xyz.arnau.muvicat.cache.dao.ShowingDao
 import xyz.arnau.muvicat.cache.db.migrations.*
+import xyz.arnau.muvicat.cache.utils.PostalCodeCsvReader
 import xyz.arnau.muvicat.data.model.Cinema
 import xyz.arnau.muvicat.data.model.Movie
 import xyz.arnau.muvicat.data.model.PostalCode
@@ -42,7 +43,7 @@ abstract class MuvicatDatabase : RoomDatabase() {
                     DbMigration2to3,
                     DbMigration3to4
                 )
-                .addCallback(PostalCodesDbCallback(context, appExecutors))
+                .addCallback(PostalCodesDbCallback(context, appExecutors, PostalCodeCsvReader()))
                 .build()
         }
     }

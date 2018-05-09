@@ -25,8 +25,7 @@ abstract class MovieDao {
     @Query("DELETE FROM movies WHERE id IN(:ids)")
     abstract fun deleteMoviesById(ids: List<Long>)
 
-    @Query(
-        "UPDATE movies SET " +
+    @Query("UPDATE movies SET " +
                 "title = COALESCE(:title, title), " +
                 "originalTitle = COALESCE(:originalTitle, originalTitle), " +
                 "year = COALESCE(:year, year), " +
@@ -39,8 +38,7 @@ abstract class MovieDao {
                 "originalLanguage = COALESCE(:originalLanguage, originalLanguage), " +
                 "ageRating = COALESCE(:ageRating, ageRating), " +
                 "trailerUrl = COALESCE(:trailerUrl, trailerUrl) " +
-                "WHERE id = :id"
-    )
+                "WHERE id = :id")
     abstract fun updateMovie(
         id: Long, title: String?, originalTitle: String?, year: Int?,
         direction: String?, cast: String?, plot: String?, releaseDate: Date?,

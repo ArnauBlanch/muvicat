@@ -16,11 +16,7 @@ import xyz.arnau.muvicat.BuildConfig
 
 @RunWith(RobolectricTestRunner::class)
 @Config(constants = BuildConfig::class)
-@PowerMockIgnore("org.mockito.*", "org.robolectric.*", "android.*")
-@PrepareForTest(RemotePreferencesHelper::class)
 class RemotePreferencesHelperTest {
-    @get:Rule
-    val rule = PowerMockRule()
 
     private var preferencesHelper =
         RemotePreferencesHelper(RuntimeEnvironment.application)
