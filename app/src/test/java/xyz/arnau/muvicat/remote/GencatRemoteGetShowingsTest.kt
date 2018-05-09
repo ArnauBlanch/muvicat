@@ -13,6 +13,8 @@ import org.junit.Test
 import org.junit.rules.TestRule
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
+import org.mockito.Mockito
+import org.mockito.Mockito.mock
 import retrofit2.Retrofit
 import retrofit2.converter.simplexml.SimpleXmlConverterFactory
 import xyz.arnau.muvicat.data.repository.GencatRemote
@@ -22,7 +24,8 @@ import xyz.arnau.muvicat.remote.service.GencatService
 import xyz.arnau.muvicat.remote.test.GencatRemoteSampleShowingData.body
 import xyz.arnau.muvicat.remote.test.GencatRemoteSampleShowingData.eTag
 import xyz.arnau.muvicat.remote.test.GencatRemoteSampleShowingData.xml
-import xyz.arnau.muvicat.remote.util.LiveDataCallAdapterFactory
+import xyz.arnau.muvicat.remote.utils.LiveDataCallAdapterFactory
+import xyz.arnau.muvicat.remote.utils.RemotePreferencesHelper
 import xyz.arnau.muvicat.utils.getValueBlocking
 import java.net.HttpURLConnection.*
 
@@ -30,7 +33,7 @@ import java.net.HttpURLConnection.*
 class GencatServiceGetShowingsTest {
     private lateinit var mockServer: MockWebServer
     private lateinit var gencatService: GencatService
-
+    private lateinit var preferencesHelper: RemotePreferencesHelper
     private lateinit var moviesEntityMapper: GencatMovieListEntityMapper
     private lateinit var cinemasEntityMapper: GencatCinemaListEntityMapper
     private lateinit var showingsEntityMapper: GencatShowingListEntityMapper
@@ -51,10 +54,17 @@ class GencatServiceGetShowingsTest {
             .build()
             .create(GencatService::class.java)
 
+        preferencesHelper = mock(RemotePreferencesHelper::class.java)
         moviesEntityMapper = GencatMovieListEntityMapper(GencatMovieEntityMapper())
         cinemasEntityMapper = GencatCinemaListEntityMapper(GencatCinemaEntityMapper())
         showingsEntityMapper = GencatShowingListEntityMapper(GencatShowingEntityMapper())
-        gencatRemote = GencatRemoteImpl(gencatService, moviesEntityMapper, cinemasEntityMapper, showingsEntityMapper)
+        gencatRemote = GencatRemoteImpl(
+            gencatService,
+            preferencesHelper,
+            moviesEntityMapper,
+            cinemasEntityMapper,
+            showingsEntityMapper
+        )
     }
 
     @After
@@ -73,11 +83,12 @@ class GencatServiceGetShowingsTest {
                 .setBody(xml)
         )
 
-        val result = gencatRemote.getShowings(null).getValueBlocking()
+        val result = gencatRemote.getShowings().getValueBlocking()
         assertEquals(showingsEntityMapper.mapFromRemote(body), result?.body)
         assertEquals(SUCCESSFUL, result?.type)
         assertEquals(null, result?.errorMessage)
-        assertEquals(eTag, result?.eTag)
+        Mockito.verify(preferencesHelper).showingsETag = eTag
+
     }
 
     @Test
@@ -89,11 +100,11 @@ class GencatServiceGetShowingsTest {
                 .setBody(xml)
         )
 
-        val result = gencatRemote.getShowings(eTag).getValueBlocking()
+        val result = gencatRemote.getShowings().getValueBlocking()
         assertEquals(null, result?.body)
         assertEquals(NOT_MODIFIED, result?.type)
         assertEquals(null, result?.errorMessage)
-        assertEquals(null, result?.eTag)
+        Mockito.verify(preferencesHelper, Mockito.never()).showingsETag = null
     }
 
     @Test
@@ -105,10 +116,10 @@ class GencatServiceGetShowingsTest {
                 .setBody("ERROR BODY")
         )
 
-        val result = gencatRemote.getShowings(eTag).getValueBlocking()
+        val result = gencatRemote.getShowings().getValueBlocking()
         assertEquals(null, result?.body)
         assertEquals(ERROR, result?.type)
         assertEquals("ERROR BODY", result?.errorMessage)
-        assertEquals(null, result?.eTag)
+        Mockito.verify(preferencesHelper, Mockito.never()).showingsETag = null
     }
 }

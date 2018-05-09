@@ -19,7 +19,7 @@ import xyz.arnau.muvicat.remote.model.ResponseStatus.*
 import xyz.arnau.muvicat.remote.test.GencatRemoteSampleCinemaData
 import xyz.arnau.muvicat.remote.test.GencatRemoteSampleMovieData
 import xyz.arnau.muvicat.remote.test.GencatRemoteSampleShowingData
-import xyz.arnau.muvicat.remote.util.LiveDataCallAdapterFactory
+import xyz.arnau.muvicat.remote.utils.LiveDataCallAdapterFactory
 import xyz.arnau.muvicat.utils.getValueBlocking
 import java.net.HttpURLConnection.*
 

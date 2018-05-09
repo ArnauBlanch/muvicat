@@ -9,7 +9,7 @@ import xyz.arnau.muvicat.data.model.Resource
 import xyz.arnau.muvicat.data.repository.GencatRemote
 import xyz.arnau.muvicat.data.repository.MovieCache
 import xyz.arnau.muvicat.data.utils.NetworkBoundResource
-import xyz.arnau.muvicat.data.utils.PreferencesHelper
+import xyz.arnau.muvicat.data.utils.RepoPreferencesHelper
 import xyz.arnau.muvicat.remote.model.Response
 import xyz.arnau.muvicat.remote.model.ResponseStatus.NOT_MODIFIED
 import xyz.arnau.muvicat.remote.model.ResponseStatus.SUCCESSFUL
@@ -21,25 +21,33 @@ class MovieRepository @Inject constructor(
     private val movieCache: MovieCache,
     private val gencatRemote: GencatRemote,
     private val appExecutors: AppExecutors,
-    private val preferencesHelper: PreferencesHelper
+    private val preferencesHelper: RepoPreferencesHelper
 ) {
+    companion object {
+        const val EXPIRATION_TIME: Long = (3 * 60 * 60 * 1000).toLong()
+    }
+
+    fun hasExpired(): Boolean {
+        val currentTime = System.currentTimeMillis()
+        val lastUpdateTime = preferencesHelper.movieslastUpdateTime
+        return currentTime - lastUpdateTime > EXPIRATION_TIME
+    }
 
     fun getMovies(): LiveData<Resource<List<Movie>>> =
         object : NetworkBoundResource<List<Movie>, List<Movie>>(appExecutors) {
             override fun saveResponse(response: Response<List<Movie>>) {
                 if (response.type == SUCCESSFUL) {
-                    response.body?.let { movieCache.updateMovies(it) }
-                }
-                response.eTag?.let { preferencesHelper.moviesETag = response.eTag }
-                if ((response.type == SUCCESSFUL && response.body != null)
-                    || response.type == NOT_MODIFIED
-                ) {
+                    response.body?.let {
+                        movieCache.updateMovies(it)
+                        preferencesHelper.moviesUpdated()
+                    }
+                } else if (response.type == NOT_MODIFIED) {
                     preferencesHelper.moviesUpdated()
                 }
             }
 
             override fun createCall(): LiveData<Response<List<Movie>>> {
-                return gencatRemote.getMovies(preferencesHelper.moviesETag)
+                return gencatRemote.getMovies()
             }
 
             override fun loadFromDb(): LiveData<List<Movie>> {
@@ -47,7 +55,7 @@ class MovieRepository @Inject constructor(
             }
 
             override fun shouldFetch(data: List<Movie>?): Boolean {
-                return data == null || data.isEmpty() || movieCache.isExpired()
+                return data == null || data.isEmpty() || hasExpired()
             }
 
         }.asLiveData()

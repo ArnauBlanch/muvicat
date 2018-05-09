@@ -9,8 +9,8 @@ import org.junit.Assert.assertEquals
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import xyz.arnau.muvicat.cache.db.Migration_1_2
-import xyz.arnau.muvicat.cache.db.Migration_2_3
+import xyz.arnau.muvicat.cache.db.migrations.getMigration_1_2
+import xyz.arnau.muvicat.cache.db.migrations.getMigration_2_3
 import xyz.arnau.muvicat.cache.db.MuvicatDatabase
 
 @RunWith(AndroidJUnit4::class)

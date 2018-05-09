@@ -1,4 +1,4 @@
-package xyz.arnau.muvicat.remote.util
+package xyz.arnau.muvicat.remote.utils
 
 import android.arch.lifecycle.LiveData
 import retrofit2.CallAdapter

@@ -6,7 +6,7 @@ import android.app.Application
 import android.content.Context
 import dagger.Module
 import dagger.Provides
-import xyz.arnau.muvicat.data.utils.PreferencesHelper
+import xyz.arnau.muvicat.data.utils.RepoPreferencesHelper
 import xyz.arnau.muvicat.utils.DateFormatter
 import javax.inject.Singleton
 
@@ -20,13 +20,13 @@ class AppModule {
 
     @Singleton
     @Provides
-    fun providePreferencesHelper(app: Application): PreferencesHelper {
-        return PreferencesHelper(app)
+    fun provideDateFormatter(context: Context): DateFormatter {
+        return DateFormatter(context)
     }
 
     @Singleton
     @Provides
-    fun provideDateFormatter(context: Context): DateFormatter {
-        return DateFormatter(context)
+    fun provideRepoPreferencesHelper(context: Context): RepoPreferencesHelper {
+        return RepoPreferencesHelper(context)
     }
 }
