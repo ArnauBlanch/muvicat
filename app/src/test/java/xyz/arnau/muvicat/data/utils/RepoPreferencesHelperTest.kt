@@ -18,21 +18,22 @@ import xyz.arnau.muvicat.BuildConfig
 @RunWith(RobolectricTestRunner::class)
 @Config(constants = BuildConfig::class)
 @PowerMockIgnore("org.mockito.*", "org.robolectric.*", "android.*")
-@PrepareForTest(PreferencesHelper::class)
-class PreferencesHelperTest {
+@PrepareForTest(RepoPreferencesHelper::class)
+class RepoPreferencesHelperTest {
     @get:Rule
     val rule = PowerMockRule()
 
-    private var preferencesHelper = PreferencesHelper(RuntimeEnvironment.application)
+    private var preferencesHelper =
+        RepoPreferencesHelper(RuntimeEnvironment.application)
     private val sharedPreferences = RuntimeEnvironment.application.getSharedPreferences(
-        PreferencesHelper.PREF_BUFFER_PACKAGE_NAME,
+        RepoPreferencesHelper.PREF_BUFFER_PACKAGE_NAME,
         Context.MODE_PRIVATE
     )
 
     @Test
     fun getLastMovieCacheTimeReturnsLastTime() {
         val lastTime = 500.toLong()
-        sharedPreferences.edit().putLong(PreferencesHelper.PREF_KEY_LAST_MOVIE_UPDATE, lastTime)
+        sharedPreferences.edit().putLong(RepoPreferencesHelper.PREF_KEY_LAST_MOVIE_UPDATE, lastTime)
             .apply()
 
         assertEquals(lastTime, preferencesHelper.movieslastUpdateTime)
@@ -41,10 +42,19 @@ class PreferencesHelperTest {
     @Test
     fun getLastCinemaCacheTimeReturnsLastTime() {
         val lastTime = 500.toLong()
-        sharedPreferences.edit().putLong(PreferencesHelper.PREF_KEY_LAST_CINEMA_UPDATE, lastTime)
+        sharedPreferences.edit().putLong(RepoPreferencesHelper.PREF_KEY_LAST_CINEMA_UPDATE, lastTime)
             .apply()
 
         assertEquals(lastTime, preferencesHelper.cinemaslastUpdateTime)
+    }
+
+    @Test
+    fun getLastShowingCacheTimeReturnsLastTime() {
+        val lastTime = 500.toLong()
+        sharedPreferences.edit().putLong(RepoPreferencesHelper.PREF_KEY_LAST_SHOWING_UPDATE, lastTime)
+            .apply()
+
+        assertEquals(lastTime, preferencesHelper.showingslastUpdateTime)
     }
 
     @Test
@@ -56,7 +66,7 @@ class PreferencesHelperTest {
 
         assertEquals(
             currentTime,
-            sharedPreferences.getLong(PreferencesHelper.PREF_KEY_LAST_MOVIE_UPDATE, 0)
+            sharedPreferences.getLong(RepoPreferencesHelper.PREF_KEY_LAST_MOVIE_UPDATE, 0)
         )
     }
 
@@ -69,45 +79,20 @@ class PreferencesHelperTest {
 
         assertEquals(
             currentTime,
-            sharedPreferences.getLong(PreferencesHelper.PREF_KEY_LAST_CINEMA_UPDATE, 0)
+            sharedPreferences.getLong(RepoPreferencesHelper.PREF_KEY_LAST_CINEMA_UPDATE, 0)
         )
     }
 
     @Test
-    fun getMoviesETagReturnETag() {
-        val eTag = "\"movies-etag\""
-        sharedPreferences.edit().putString(PreferencesHelper.PREF_KEY_MOVIES_ETAG, eTag).apply()
-
-        assertEquals(eTag, preferencesHelper.moviesETag)
-    }
-
-    @Test
-    fun getCinemasETagReturnETag() {
-        val eTag = "\"cinemas-etag\""
-        sharedPreferences.edit().putString(PreferencesHelper.PREF_KEY_CINEMAS_ETAG, eTag).apply()
-
-        assertEquals(eTag, preferencesHelper.cinemasETag)
-    }
-
-    @Test
-    fun setMoviesETagSavesETag() {
-        val eTag = "\"movies-etag\""
-        preferencesHelper.moviesETag = eTag
+    fun showingsUpdatedUpdatesLastShowingUpdateTime() {
+        val currentTime = 1000.toLong()
+        PowerMockito.mockStatic(System::class.java)
+        PowerMockito.`when`(System.currentTimeMillis()).thenReturn(currentTime)
+        preferencesHelper.showingsUpdated()
 
         assertEquals(
-            eTag,
-            sharedPreferences.getString(PreferencesHelper.PREF_KEY_MOVIES_ETAG, null)
-        )
-    }
-
-    @Test
-    fun setCinemasETagSavesETag() {
-        val eTag = "\"cinemas-etag\""
-        preferencesHelper.cinemasETag = eTag
-
-        assertEquals(
-            eTag,
-            sharedPreferences.getString(PreferencesHelper.PREF_KEY_CINEMAS_ETAG, null)
+            currentTime,
+            sharedPreferences.getLong(RepoPreferencesHelper.PREF_KEY_LAST_SHOWING_UPDATE, 0)
         )
     }
 }

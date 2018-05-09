@@ -136,7 +136,7 @@ public class NetworkBoundResourceTest {
             saved.set(true);
             return null;
         };
-        Response response = new Response(null, "ERROR MESSAGE", ResponseStatus.ERROR, null);
+        Response response = new Response(null, "ERROR MESSAGE", ResponseStatus.ERROR);
         createCall = (aVoid) -> ApiUtil.Companion.createCall(response);
 
         Observer<Resource<Foo>> observer = Mockito.mock(Observer.class);
@@ -228,7 +228,7 @@ public class NetworkBoundResourceTest {
         verify(observer).onChanged(Resource.Companion.loading(dbValue));
 
 
-        Response response = new Response<Foo>(null, errorBody, ResponseStatus.ERROR, null);
+        Response response = new Response<Foo>(null, errorBody, ResponseStatus.ERROR);
         apiResponseLiveData.setValue(response);
         drain();
         assertThat(saved.get(), Matchers.is(false));
@@ -264,7 +264,7 @@ public class NetworkBoundResourceTest {
         verify(observer).onChanged(Resource.Companion.loading(dbValue));
 
 
-        Response response = new Response<Foo>(null, null, ResponseStatus.NOT_MODIFIED, null);
+        Response response = new Response<Foo>(null, null, ResponseStatus.NOT_MODIFIED);
         apiResponseLiveData.setValue(response);
         drain();
         assertThat(saved.get(), Matchers.is(true));
@@ -301,7 +301,7 @@ public class NetworkBoundResourceTest {
         drain();
         Foo networkResult = new Foo(1);
         verify(observer).onChanged(Resource.Companion.loading(dbValue));
-        apiResponseLiveData.setValue(new Response<>(networkResult, null, ResponseStatus.SUCCESSFUL, null));
+        apiResponseLiveData.setValue(new Response<>(networkResult, null, ResponseStatus.SUCCESSFUL));
         drain();
         assertThat(saved.get(), Matchers.is(networkResult));
         verify(observer).onChanged(Resource.Companion.success(dbValue2));

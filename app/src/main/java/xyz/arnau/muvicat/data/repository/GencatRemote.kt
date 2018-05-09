@@ -7,7 +7,7 @@ import xyz.arnau.muvicat.data.model.Showing
 import xyz.arnau.muvicat.remote.model.Response
 
 interface GencatRemote {
-    fun getMovies(eTag: String?): LiveData<Response<List<Movie>>>
-    fun getCinemas(eTag: String?): LiveData<Response<List<Cinema>>>
-    fun getShowings(eTag: String?): LiveData<Response<List<Showing>>>
+    fun getMovies(): LiveData<Response<List<Movie>>>
+    fun getCinemas(): LiveData<Response<List<Cinema>>>
+    fun getShowings(): LiveData<Response<List<Showing>>>
 }

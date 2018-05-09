@@ -6,12 +6,14 @@ import dagger.Provides
 import xyz.arnau.muvicat.AppExecutors
 import xyz.arnau.muvicat.cache.CinemaCacheImpl
 import xyz.arnau.muvicat.cache.MovieCacheImpl
+import xyz.arnau.muvicat.cache.ShowingCacheImpl
 import xyz.arnau.muvicat.cache.dao.CinemaDao
 import xyz.arnau.muvicat.cache.dao.MovieDao
+import xyz.arnau.muvicat.cache.dao.ShowingDao
 import xyz.arnau.muvicat.cache.db.MuvicatDatabase
 import xyz.arnau.muvicat.data.repository.CinemaCache
 import xyz.arnau.muvicat.data.repository.MovieCache
-import xyz.arnau.muvicat.data.utils.PreferencesHelper
+import xyz.arnau.muvicat.data.repository.ShowingCache
 import javax.inject.Singleton
 
 @Module
@@ -36,16 +38,25 @@ class CacheModule {
 
     @Singleton
     @Provides
-    fun provideMovieCache(movieDao: MovieDao, preferencesHelper: PreferencesHelper): MovieCache {
-        return MovieCacheImpl(movieDao, preferencesHelper)
+    fun provideShowingDao(db: MuvicatDatabase): ShowingDao {
+        return db.showingDao()
     }
 
     @Singleton
     @Provides
-    fun provideCinemaCache(
-        cinemaDao: CinemaDao,
-        preferencesHelper: PreferencesHelper
-    ): CinemaCache {
-        return CinemaCacheImpl(cinemaDao, preferencesHelper)
+    fun provideMovieCache(movieDao: MovieDao): MovieCache {
+        return MovieCacheImpl(movieDao)
+    }
+
+    @Singleton
+    @Provides
+    fun provideCinemaCache(cinemaDao: CinemaDao): CinemaCache {
+        return CinemaCacheImpl(cinemaDao)
+    }
+
+    @Singleton
+    @Provides
+    fun provideShowingCache(showingDao: ShowingDao): ShowingCache {
+        return ShowingCacheImpl(showingDao)
     }
 }

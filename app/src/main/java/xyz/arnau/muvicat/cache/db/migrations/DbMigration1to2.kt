@@ -1,9 +1,9 @@
-package xyz.arnau.muvicat.cache.db
+package xyz.arnau.muvicat.cache.db.migrations
 
 import android.arch.persistence.db.SupportSQLiteDatabase
 import android.arch.persistence.room.migration.Migration
 
-val Migration_1_2 = object : Migration(1, 2) {
+object DbMigration1to2 : Migration(1, 2) {
     override fun migrate(db: SupportSQLiteDatabase) {
         db.run {
             execSQL(

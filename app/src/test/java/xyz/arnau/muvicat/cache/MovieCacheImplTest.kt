@@ -12,7 +12,6 @@ import org.mockito.Mockito.*
 import xyz.arnau.muvicat.cache.dao.MovieDao
 import xyz.arnau.muvicat.data.model.Movie
 import xyz.arnau.muvicat.data.test.MovieFactory
-import xyz.arnau.muvicat.data.utils.PreferencesHelper
 
 
 @RunWith(JUnit4::class)
@@ -20,16 +19,9 @@ class MovieCacheImplTest {
     @get:Rule
     var rule: TestRule = InstantTaskExecutorRule()
 
-    private val preferencesHelper = mock(PreferencesHelper::class.java)
     private val movieDao = mock(MovieDao::class.java)
 
-    private val movieCacheImpl = MovieCacheImpl(movieDao, preferencesHelper)
-
-    @Test
-    fun clearMoviesDeletesMovies() {
-        movieCacheImpl.clearMovies()
-        verify(movieDao).clearMovies()
-    }
+    private val movieCacheImpl = MovieCacheImpl(movieDao)
 
     @Test
     fun getMoviesReturnsData() {
@@ -59,26 +51,5 @@ class MovieCacheImplTest {
         movieCacheImpl.updateMovies(movies)
 
         verify(movieDao).updateMovieDb(movies)
-    }
-
-    @Test
-    fun isExpiredReturnsTrueIfExpired() {
-        val currentTime = System.currentTimeMillis()
-        `when`(preferencesHelper.movieslastUpdateTime)
-            .thenReturn(currentTime - (MovieCacheImpl.EXPIRATION_TIME + 500))
-        assertEquals(true, movieCacheImpl.isExpired())
-    }
-
-    @Test
-    fun isExpiredReturnsFalseIfNotExpired() {
-        val currentTime = System.currentTimeMillis()
-        `when`(preferencesHelper.movieslastUpdateTime)
-            .thenReturn(currentTime - 5000)
-        assertEquals(false, movieCacheImpl.isExpired())
-    }
-
-    @Test
-    fun companionObjectTest() {
-        assertEquals((3 * 60 * 60 * 1000).toLong(), MovieCacheImpl.EXPIRATION_TIME)
     }
 }

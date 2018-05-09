@@ -8,7 +8,7 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.simplexml.SimpleXmlConverterFactory
-import xyz.arnau.muvicat.remote.util.LiveDataCallAdapterFactory
+import xyz.arnau.muvicat.remote.utils.LiveDataCallAdapterFactory
 import java.util.concurrent.TimeUnit
 
 object GencatServiceFactory {

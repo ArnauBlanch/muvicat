@@ -1,4 +1,4 @@
-package xyz.arnau.muvicat.remote.util
+package xyz.arnau.muvicat.remote.utils
 
 import retrofit2.Response
 import timber.log.Timber

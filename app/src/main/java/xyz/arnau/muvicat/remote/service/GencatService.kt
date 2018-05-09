@@ -6,7 +6,7 @@ import retrofit2.http.Header
 import xyz.arnau.muvicat.remote.model.GencatCinemaResponse
 import xyz.arnau.muvicat.remote.model.GencatMovieResponse
 import xyz.arnau.muvicat.remote.model.GencatShowingResponse
-import xyz.arnau.muvicat.remote.util.ApiResponse
+import xyz.arnau.muvicat.remote.utils.ApiResponse
 
 interface GencatService {
     @GET("provacin.xml")

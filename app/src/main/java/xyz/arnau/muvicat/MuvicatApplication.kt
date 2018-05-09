@@ -13,7 +13,7 @@ import timber.log.Timber
 import xyz.arnau.muvicat.di.AppInjector
 import javax.inject.Inject
 
-open class MuvicatApplication : MultiDexApplication(), HasActivityInjector {
+class MuvicatApplication : MultiDexApplication(), HasActivityInjector {
     @Inject
     lateinit var activityDispatchingAndroidInjector: DispatchingAndroidInjector<Activity>
 

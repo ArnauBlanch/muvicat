@@ -8,5 +8,4 @@ interface CinemaCache {
     fun getCinemas(): LiveData<List<CinemaInfo>>
     fun getCinema(cinemaId: Long): LiveData<CinemaInfo>
     fun updateCinemas(cinemas: List<Cinema>)
-    fun isExpired(): Boolean
 }
