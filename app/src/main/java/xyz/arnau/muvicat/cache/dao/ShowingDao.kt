@@ -14,9 +14,9 @@ abstract class ShowingDao {
             pc.latitude as cinemaLatitude, pc.longitude as cinemaLongitude
         FROM showings s
             JOIN movies m ON s.movieId = m.id
-            JOIN cinemas c ON s.movieId = c.id
+            JOIN cinemas c ON s.cinemaId = c.id
             LEFT OUTER JOIN postal_codes pc ON c.postalCode = pc.code
-        ORDER BY date ASC""")
+        ORDER BY date, m.id, c.name""")
     abstract fun getShowings(): LiveData<List<Showing>>
 
     @Query("DELETE FROM showings")
@@ -25,9 +25,20 @@ abstract class ShowingDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertShowings(showings: List<ShowingEntity>)
 
+    @Query("SELECT id FROM cinemas")
+    internal abstract fun getCinemaIds(): List<Long>
+
+    @Query("SELECT id FROM movies")
+    internal abstract fun getMovieIds(): List<Long>
+
     @Transaction
     open fun updateShowingDb(showings: List<ShowingEntity>) {
         clearShowings()
-        insertShowings(showings)
+        val movieIds = getMovieIds()
+        val cinemaIds = getCinemaIds()
+        val list = mutableListOf<ShowingEntity>()
+        list.addAll(showings)
+        list.removeAll { it.cinemaId !in cinemaIds || it.movieId !in movieIds }
+        insertShowings(list)
     }
 }

@@ -11,6 +11,7 @@ import org.junit.runner.RunWith
 import xyz.arnau.muvicat.cache.db.MuvicatDatabase
 import xyz.arnau.muvicat.data.test.CinemaEntityFactory
 import xyz.arnau.muvicat.data.test.CinemaMapper
+import xyz.arnau.muvicat.data.test.MovieEntityFactory
 import xyz.arnau.muvicat.data.test.PostalCodeEntityFactory
 import xyz.arnau.muvicat.utils.getValueBlocking
 
@@ -54,6 +55,8 @@ class CinemaDaoTest {
         )
     }
 
+
+
     @Test
     fun getCinemaRetrievesCinema() {
         val cinema = CinemaEntityFactory.makeCinemaEntity()
@@ -65,7 +68,7 @@ class CinemaDaoTest {
     }
 
     @Test
-    fun getCinemaThrowsExceptionIfItDoesntExist() {
+    fun getCinemaReturnsNullIfItDoesntExist() {
         val retrievedCinema = muvicatDatabase.cinemaDao().getCinema(123.toLong()).getValueBlocking()
         assertEquals(null, retrievedCinema)
     }
