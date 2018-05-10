@@ -8,7 +8,7 @@ import java.util.*
 @Suppress("DEPRECATION")
 class ShowingEntityFactory {
     companion object Factory {
-        private fun makeShowingEntity() =
+        fun makeShowingEntity() =
             ShowingEntity(
                 null, randomLong(), randomLong(), Date(2000, 1, 1), randomString(), randomLong()
             )

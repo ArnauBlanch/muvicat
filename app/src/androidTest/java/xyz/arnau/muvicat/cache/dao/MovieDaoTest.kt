@@ -83,7 +83,7 @@ class MovieDaoTest {
     }
 
     @Test
-    fun getMovieThrowsExceptionIfItDoesntExist() {
+    fun getMovieReturnsNullIfItDoesntExist() {
         val retrievedMovie = muvicatDatabase.movieDao().getMovie(123.toLong()).getValueBlocking()
         assertEquals(null, retrievedMovie)
     }
