@@ -30,12 +30,16 @@ class GencatRemoteImpl(
                 Response(
                     moviesEntityMapper.mapFromRemote(apiResponse.body),
                     apiResponse.errorMessage,
-                    apiResponse.status
+                    apiResponse.status,
+                    object: DataUpdateCallback {
+                        override fun onDataUpdated() {
+                            if (apiResponse.eTag != null) {
+                                preferencesHelper.moviesETag = apiResponse.eTag
+                            }
+                        }
+                    }
                 )
             )
-            if (apiResponse.eTag != null) {
-                preferencesHelper.moviesETag = apiResponse.eTag
-            }
             data
         })
     }
@@ -49,12 +53,16 @@ class GencatRemoteImpl(
                 Response(
                     cinemasEntityMapper.mapFromRemote(apiResponse.body),
                     apiResponse.errorMessage,
-                    apiResponse.status
+                    apiResponse.status,
+                    object: DataUpdateCallback {
+                        override fun onDataUpdated() {
+                            if (apiResponse.eTag != null) {
+                                preferencesHelper.cinemasETag = apiResponse.eTag
+                            }
+                        }
+                    }
                 )
             )
-            if (apiResponse.eTag != null) {
-                preferencesHelper.cinemasETag = apiResponse.eTag
-            }
             data
         })
     }
@@ -68,12 +76,16 @@ class GencatRemoteImpl(
                 Response(
                     showingsEntityMapper.mapFromRemote(apiResponse.body),
                     apiResponse.errorMessage,
-                    apiResponse.status
+                    apiResponse.status,
+                    object: DataUpdateCallback {
+                        override fun onDataUpdated() {
+                            if (apiResponse.eTag != null) {
+                                preferencesHelper.showingsETag = apiResponse.eTag
+                            }
+                        }
+                    }
                 )
             )
-            if (apiResponse.eTag != null) {
-                preferencesHelper.showingsETag = apiResponse.eTag
-            }
             data
         })
     }

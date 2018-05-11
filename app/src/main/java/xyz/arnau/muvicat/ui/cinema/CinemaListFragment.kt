@@ -60,6 +60,7 @@ class CinemaListFragment : ScrollableFragment(), Injectable {
 
     override fun onStart() {
         super.onStart()
+
         cinemaListViewModel.cinemas.observe(this,
             Observer<Resource<List<Cinema>>> {
                 if (it != null) handleDateState(it.status, it.data)
@@ -73,7 +74,7 @@ class CinemaListFragment : ScrollableFragment(), Injectable {
         }
         if ((activity as MainActivity).isSelectedFragment(FRAG_ID)) context?.let {
             FirebaseAnalytics.getInstance(it)
-                .setCurrentScreen(activity as Activity, "CinemaEntity list", "CinemaEntity list")
+                .setCurrentScreen(activity as Activity, "Cinema list", "Cinema list")
             FirebaseAnalytics.getInstance(it)
         }
         if (mSavedRecyclerViewState != null)
@@ -102,6 +103,10 @@ class CinemaListFragment : ScrollableFragment(), Injectable {
             updateCinemaList(it, getLastLocation())
             skeleton.hide()
             cinemasRecyclerView.layoutManager.onRestoreInstanceState(mSavedRecyclerViewState)
+            if (data.isEmpty()) {
+                cinemasRecyclerView.visibility = View.GONE
+                errorMessage.visibility = View.VISIBLE
+            }
         } else if (status == Status.ERROR) {
             skeleton.hide()
             if (data != null && !data.isEmpty()) {
@@ -123,7 +128,8 @@ class CinemaListFragment : ScrollableFragment(), Injectable {
             setLocationToCinemas(data, lastLocation)
             hasLocation = true
         }
-        cinemasAdapter.cinemas = data.sortedWith(compareBy<Cinema,Int?>(nullsLast(), { it.distance }))
+        cinemasAdapter.cinemas =
+                data.sortedWith(compareBy<Cinema, Int?>(nullsLast(), { it.distance }))
         cinemasAdapter.notifyDataSetChanged()
     }
 
@@ -180,6 +186,6 @@ class CinemaListFragment : ScrollableFragment(), Injectable {
     }
 
     companion object {
-        const val FRAG_ID = 1
+        const val FRAG_ID = 2
     }
 }

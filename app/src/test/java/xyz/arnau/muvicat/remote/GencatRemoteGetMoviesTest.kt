@@ -88,6 +88,8 @@ class GencatServiceGetMoviesTest {
         assertEquals(moviesEntityMapper.mapFromRemote(body), result?.body)
         assertEquals(SUCCESSFUL, result?.type)
         assertEquals(null, result?.errorMessage)
+        Mockito.verify(preferencesHelper, never()).moviesETag = eTag
+        result!!.callback!!.onDataUpdated()
         Mockito.verify(preferencesHelper).moviesETag = eTag
     }
 

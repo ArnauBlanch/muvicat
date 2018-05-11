@@ -23,7 +23,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 
-import xyz.arnau.muvicat.AppExecutors;
+import xyz.arnau.muvicat.utils.AppExecutors;
 import xyz.arnau.muvicat.data.model.Resource;
 import xyz.arnau.muvicat.remote.model.Response;
 import xyz.arnau.muvicat.remote.model.ResponseStatus;
@@ -69,6 +69,11 @@ public class NetworkBoundResourceTest {
                 ? countingAppExecutors.getAppExecutors()
                 : new InstantAppExecutors();
         networkBoundResource = new NetworkBoundResource<Foo, Foo>(appExecutors) {
+            @Override
+            protected void onFetchFailed() {
+
+            }
+
             @NotNull
             @Override
             protected LiveData<Response<Foo>> createCall() {
@@ -136,7 +141,7 @@ public class NetworkBoundResourceTest {
             saved.set(true);
             return null;
         };
-        Response response = new Response(null, "ERROR MESSAGE", ResponseStatus.ERROR);
+        Response response = new Response(null, "ERROR MESSAGE", ResponseStatus.ERROR, null);
         createCall = (aVoid) -> ApiUtil.Companion.createCall(response);
 
         Observer<Resource<Foo>> observer = Mockito.mock(Observer.class);
@@ -228,7 +233,7 @@ public class NetworkBoundResourceTest {
         verify(observer).onChanged(Resource.Companion.loading(dbValue));
 
 
-        Response response = new Response<Foo>(null, errorBody, ResponseStatus.ERROR);
+        Response response = new Response<Foo>(null, errorBody, ResponseStatus.ERROR, null);
         apiResponseLiveData.setValue(response);
         drain();
         assertThat(saved.get(), Matchers.is(false));
@@ -264,7 +269,7 @@ public class NetworkBoundResourceTest {
         verify(observer).onChanged(Resource.Companion.loading(dbValue));
 
 
-        Response response = new Response<Foo>(null, null, ResponseStatus.NOT_MODIFIED);
+        Response response = new Response<Foo>(null, null, ResponseStatus.NOT_MODIFIED, null);
         apiResponseLiveData.setValue(response);
         drain();
         assertThat(saved.get(), Matchers.is(true));
@@ -301,7 +306,7 @@ public class NetworkBoundResourceTest {
         drain();
         Foo networkResult = new Foo(1);
         verify(observer).onChanged(Resource.Companion.loading(dbValue));
-        apiResponseLiveData.setValue(new Response<>(networkResult, null, ResponseStatus.SUCCESSFUL));
+        apiResponseLiveData.setValue(new Response<>(networkResult, null, ResponseStatus.SUCCESSFUL, null));
         drain();
         assertThat(saved.get(), Matchers.is(networkResult));
         verify(observer).onChanged(Resource.Companion.success(dbValue2));

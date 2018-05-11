@@ -61,7 +61,10 @@ class RemoteModule {
 
     @Singleton
     @Provides
-    fun provideGencatRemote(gencatService: GencatService, preferencesHelper: RemotePreferencesHelper): GencatRemote {
+    fun provideGencatRemote(
+        gencatService: GencatService,
+        preferencesHelper: RemotePreferencesHelper
+    ): GencatRemote {
         return GencatRemoteImpl(
             gencatService,
             preferencesHelper,

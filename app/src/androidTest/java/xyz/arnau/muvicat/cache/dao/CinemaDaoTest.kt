@@ -3,15 +3,13 @@ package xyz.arnau.muvicat.cache.dao
 import android.arch.persistence.room.Room
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
-import junit.framework.Assert
-import junit.framework.TestCase.assertEquals
 import org.junit.After
+import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.junit.runner.RunWith
 import xyz.arnau.muvicat.cache.db.MuvicatDatabase
 import xyz.arnau.muvicat.data.test.CinemaEntityFactory
 import xyz.arnau.muvicat.data.test.CinemaMapper
-import xyz.arnau.muvicat.data.test.MovieEntityFactory
 import xyz.arnau.muvicat.data.test.PostalCodeEntityFactory
 import xyz.arnau.muvicat.utils.getValueBlocking
 
@@ -99,7 +97,7 @@ class CinemaDaoTest {
         val cinemas = CinemaEntityFactory.makeCinemaEntityList(5)
         muvicatDatabase.cinemaDao().updateCinemaDb(cinemas)
 
-        Assert.assertEquals(
+        assertEquals(
             CinemaMapper.mapFromCinemaEntityList(cinemas.sortedWith(compareBy({ it.id }, { it.id }))),
             muvicatDatabase.cinemaDao().getCinemas().getValueBlocking()
         )

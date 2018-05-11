@@ -3,7 +3,6 @@ package xyz.arnau.muvicat.data
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Transformations
-import xyz.arnau.muvicat.AppExecutors
 import xyz.arnau.muvicat.cache.model.CinemaEntity
 import xyz.arnau.muvicat.data.model.Cinema
 import xyz.arnau.muvicat.data.model.Resource
@@ -14,19 +13,21 @@ import xyz.arnau.muvicat.data.utils.RepoPreferencesHelper
 import xyz.arnau.muvicat.remote.model.Response
 import xyz.arnau.muvicat.remote.model.ResponseStatus.NOT_MODIFIED
 import xyz.arnau.muvicat.remote.model.ResponseStatus.SUCCESSFUL
-import javax.inject.Inject
-import javax.inject.Singleton
+import xyz.arnau.muvicat.utils.AppExecutors
+import java.util.concurrent.CountDownLatch
 
-@Singleton
-class CinemaRepository @Inject constructor(
+class CinemaRepository(
     private val cinemaCache: CinemaCache,
     private val gencatRemote: GencatRemote,
     private val appExecutors: AppExecutors,
-    private val preferencesHelper: RepoPreferencesHelper
+    private val preferencesHelper: RepoPreferencesHelper,
+    private val countDownLatch: CountDownLatch
 ) {
     companion object {
-        const val EXPIRATION_TIME: Long = (3 * 60 * 60 * 1000).toLong() // $COVERAGE-IGNORE$
+        const val EXPIRATION_TIME: Long = (3 * 60 * 60 * 1000).toLong()
     }
+
+    private var countDownDone = false
 
     internal fun hasExpired(): Boolean {
         val currentTime = System.currentTimeMillis()
@@ -41,10 +42,21 @@ class CinemaRepository @Inject constructor(
                     response.body?.let {
                         cinemaCache.updateCinemas(it)
                         preferencesHelper.cinemasUpdated()
+                        response.callback?.onDataUpdated()
                     }
-                }
-                if (response.type == NOT_MODIFIED) {
+                } else if (response.type == NOT_MODIFIED) {
                     preferencesHelper.cinemasUpdated()
+                }
+                if (!countDownDone) {
+                    countDownLatch.countDown()
+                    countDownDone = true
+                }
+            }
+
+            override fun onFetchFailed() {
+                if (!countDownDone) {
+                    countDownLatch.countDown()
+                    countDownDone = true
                 }
             }
 
@@ -57,7 +69,12 @@ class CinemaRepository @Inject constructor(
             }
 
             override fun shouldFetch(data: List<Cinema>?): Boolean {
-                return data == null || data.isEmpty() || hasExpired()
+                val shouldFetch = data == null || data.isEmpty() || hasExpired()
+                if (!shouldFetch && !countDownDone) {
+                    countDownLatch.countDown()
+                    countDownDone = true
+                }
+                return shouldFetch
             }
 
         }.asLiveData()
@@ -66,7 +83,7 @@ class CinemaRepository @Inject constructor(
         return Transformations.switchMap(cinemaCache.getCinema(id), { cinema ->
             val liveData = MutableLiveData<Resource<Cinema>>()
             if (cinema == null) {
-                liveData.postValue(Resource.error("CinemaEntity not found", null))
+                liveData.postValue(Resource.error("Cinema not found", null))
             } else {
                 liveData.postValue(Resource.success(cinema))
             }

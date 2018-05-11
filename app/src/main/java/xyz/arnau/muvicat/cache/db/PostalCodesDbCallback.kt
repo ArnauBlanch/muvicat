@@ -3,7 +3,7 @@ package xyz.arnau.muvicat.cache.db
 import android.arch.persistence.db.SupportSQLiteDatabase
 import android.arch.persistence.room.RoomDatabase
 import android.content.Context
-import xyz.arnau.muvicat.AppExecutors
+import xyz.arnau.muvicat.utils.AppExecutors
 import xyz.arnau.muvicat.R
 import xyz.arnau.muvicat.cache.dao.PostalCodeDao
 import xyz.arnau.muvicat.cache.model.PostalCodeEntity

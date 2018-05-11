@@ -11,7 +11,7 @@ import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
 import org.mockito.Mockito
 import org.mockito.Mockito.*
-import xyz.arnau.muvicat.AppExecutors
+import xyz.arnau.muvicat.utils.AppExecutors
 import xyz.arnau.muvicat.cache.model.CinemaEntity
 import xyz.arnau.muvicat.data.model.Cinema
 import xyz.arnau.muvicat.data.model.Resource
@@ -26,6 +26,7 @@ import xyz.arnau.muvicat.remote.model.Response
 import xyz.arnau.muvicat.remote.model.ResponseStatus
 import xyz.arnau.muvicat.utils.InstantAppExecutors
 import xyz.arnau.muvicat.utils.getValueBlocking
+import java.util.concurrent.CountDownLatch
 
 @RunWith(JUnit4::class)
 class CinemaRepositoryTest {
@@ -36,9 +37,10 @@ class CinemaRepositoryTest {
     private val gencatRemote: GencatRemote = mock(GencatRemote::class.java)
     private val appExecutors: AppExecutors = InstantAppExecutors()
     private val preferencesHelper: RepoPreferencesHelper = mock(RepoPreferencesHelper::class.java)
+    private val countDownLatch = mock(CountDownLatch::class.java)
 
     private val cinemaRepository =
-        CinemaRepository(cinemaCache, gencatRemote, appExecutors, preferencesHelper)
+        CinemaRepository(cinemaCache, gencatRemote, appExecutors, preferencesHelper, countDownLatch)
 
     @Test
     fun getCinemasWhenCinemasAreCachedAndNotExpired() {
@@ -55,6 +57,7 @@ class CinemaRepositoryTest {
         cinemas.observeForever(observer as Observer<Resource<List<Cinema>>>)
         verify(observer).onChanged(Resource.success(dbCinemas))
         verify(preferencesHelper, never()).cinemasUpdated()
+        verify(countDownLatch).countDown()
         verify(gencatRemote, never()).getCinemas()
     }
 
@@ -81,12 +84,13 @@ class CinemaRepositoryTest {
         dbCinemaLiveData.postValue(dbCinemas)
         verify(observer).onChanged(Resource.loading(dbCinemas))
         remoteCinemaLiveData.postValue(
-            Response(remoteCinemas, null, ResponseStatus.SUCCESSFUL)
+            Response(remoteCinemas, null, ResponseStatus.SUCCESSFUL, null)
         )
         val dbCinemas2 = CinemaMapper.mapFromCinemaEntityList(remoteCinemas)
         dbCinemaLiveData.postValue(dbCinemas2)
         verify(observer).onChanged(Resource.success(dbCinemas2))
         verify(preferencesHelper).cinemasUpdated()
+        verify(countDownLatch).countDown()
         verify(cinemaCache).updateCinemas(remoteCinemas)
     }
 
@@ -112,10 +116,11 @@ class CinemaRepositoryTest {
         dbCinemaLiveData.postValue(dbCinemas)
         verify(observer).onChanged(Resource.loading(dbCinemas))
         remoteCinemaLiveData.postValue(
-            Response(null, null, ResponseStatus.NOT_MODIFIED)
+            Response(null, null, ResponseStatus.NOT_MODIFIED, null)
         )
         verify(observer).onChanged(Resource.success(dbCinemas))
         verify(preferencesHelper).cinemasUpdated()
+        verify(countDownLatch).countDown()
         verify(cinemaCache, never()).updateCinemas(Mockito.anyList())
     }
 
@@ -138,12 +143,13 @@ class CinemaRepositoryTest {
         dbCinemaLiveData.postValue(dbCinemas)
         verify(observer).onChanged(Resource.loading(dbCinemas))
         remoteCinemaLiveData.postValue(
-            Response(remoteCinemas, null, ResponseStatus.SUCCESSFUL)
+            Response(remoteCinemas, null, ResponseStatus.SUCCESSFUL, null)
         )
         val mappedCinemas = CinemaMapper.mapFromCinemaEntityList(remoteCinemas)
         dbCinemaLiveData.postValue(mappedCinemas)
         verify(observer).onChanged(Resource.success(mappedCinemas))
         verify(preferencesHelper).cinemasUpdated()
+        verify(countDownLatch).countDown()
         verify(cinemaCache).updateCinemas(remoteCinemas)
     }
 
@@ -163,11 +169,12 @@ class CinemaRepositoryTest {
         cinemas.observeForever(observer as Observer<Resource<List<Cinema>>>)
         verify(observer).onChanged(Resource.loading(null))
         remoteCinemaLiveData.postValue(
-            Response(null, null, ResponseStatus.SUCCESSFUL)
+            Response(null, null, ResponseStatus.SUCCESSFUL, null)
         )
         dbCinemaLiveData.postValue(dbCinemas)
         verify(observer).onChanged(Resource.success(dbCinemas))
         verify(preferencesHelper, never()).cinemasUpdated()
+        verify(countDownLatch).countDown()
         verify(cinemaCache, never()).updateCinemas(Mockito.anyList())
     }
 

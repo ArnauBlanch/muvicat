@@ -1,4 +1,4 @@
-package xyz.arnau.muvicat
+package xyz.arnau.muvicat.utils
 
 import com.bumptech.glide.annotation.GlideModule
 import com.bumptech.glide.module.AppGlideModule

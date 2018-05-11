@@ -12,7 +12,7 @@ class ShowingCacheImpl @Inject constructor(private val showingDao: ShowingDao) :
         return showingDao.getShowings()
     }
 
-    override fun updateShowings(showings: List<ShowingEntity>) {
-        showingDao.updateShowingDb(showings)
+    override fun updateShowings(showings: List<ShowingEntity>): Boolean {
+        return showingDao.updateShowingDb(showings)
     }
 }

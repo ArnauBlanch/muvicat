@@ -12,7 +12,7 @@ import android.support.v7.app.AppCompatActivity
 import android.view.View
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.movie_info.*
-import xyz.arnau.muvicat.GlideApp
+import xyz.arnau.muvicat.utils.GlideApp
 import xyz.arnau.muvicat.R
 import xyz.arnau.muvicat.data.model.Movie
 import xyz.arnau.muvicat.data.model.Resource

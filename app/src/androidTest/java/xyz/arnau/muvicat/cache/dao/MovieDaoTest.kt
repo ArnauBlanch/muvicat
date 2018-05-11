@@ -4,9 +4,8 @@ import android.arch.core.executor.testing.InstantTaskExecutorRule
 import android.arch.persistence.room.Room
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
-import junit.framework.Assert
-import junit.framework.TestCase.assertEquals
 import org.junit.After
+import org.junit.Assert.assertEquals
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TestRule
@@ -154,7 +153,7 @@ class MovieDaoTest {
         val movies = MovieEntityFactory.makeMovieEntityList(5)
         muvicatDatabase.movieDao().updateMovieDb(movies)
 
-        Assert.assertEquals(
+        assertEquals(
             MovieMapper.mapFromMovieEntityList(movies)
                 .sortedWith(compareByDescending<Movie> { it.priority }.thenBy { it.id }),
             muvicatDatabase.movieDao().getMovies().getValueBlocking()

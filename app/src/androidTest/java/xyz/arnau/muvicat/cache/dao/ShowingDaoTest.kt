@@ -4,18 +4,18 @@ import android.arch.core.executor.testing.InstantTaskExecutorRule
 import android.arch.persistence.room.Room
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
-import junit.framework.Assert
-import junit.framework.TestCase.assertEquals
 import org.junit.After
+import org.junit.Assert.assertEquals
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TestRule
 import org.junit.runner.RunWith
 import xyz.arnau.muvicat.cache.db.MuvicatDatabase
-import xyz.arnau.muvicat.cache.model.MovieEntity
-import xyz.arnau.muvicat.data.model.Movie
 import xyz.arnau.muvicat.data.model.Showing
-import xyz.arnau.muvicat.data.test.*
+import xyz.arnau.muvicat.data.test.CinemaEntityFactory
+import xyz.arnau.muvicat.data.test.MovieEntityFactory
+import xyz.arnau.muvicat.data.test.ShowingEntityFactory
+import xyz.arnau.muvicat.data.test.ShowingMapper
 import xyz.arnau.muvicat.utils.getValueBlocking
 
 
