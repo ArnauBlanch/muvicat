@@ -4,7 +4,7 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MediatorLiveData
 import android.support.annotation.MainThread
 import android.support.annotation.WorkerThread
-import xyz.arnau.muvicat.AppExecutors
+import xyz.arnau.muvicat.utils.AppExecutors
 import xyz.arnau.muvicat.data.model.Resource
 import xyz.arnau.muvicat.remote.model.Response
 import xyz.arnau.muvicat.remote.model.ResponseStatus
@@ -40,14 +40,14 @@ abstract class NetworkBoundResource<ResultType, RequestType> @MainThread constru
             result.removeSource(dbSource)
             when {
                 response?.type == ResponseStatus.SUCCESSFUL ->
-                    appExecutors.diskIO().execute({
+                    appExecutors.diskIO().execute {
                         saveResponse(response)
                         appExecutors.mainThread().execute({
                             result.addSource(loadFromDb(), { newData ->
                                 setValue(Resource.success(newData))
                             })
                         })
-                    })
+                    }
                 response?.type == ResponseStatus.NOT_MODIFIED -> {
                     saveResponse(response)
                     result.addSource(dbSource, { newData -> setValue(Resource.success(newData)) })
@@ -62,9 +62,7 @@ abstract class NetworkBoundResource<ResultType, RequestType> @MainThread constru
         })
     }
 
-    @Suppress("MemberVisibilityCanBePrivate")
-    protected fun onFetchFailed() {
-    }
+    protected abstract fun onFetchFailed()
 
     fun asLiveData(): LiveData<Resource<ResultType>> = result
 

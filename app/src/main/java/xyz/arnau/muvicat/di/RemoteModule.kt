@@ -2,6 +2,7 @@
 
 package xyz.arnau.muvicat.di
 
+import android.content.Context
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
@@ -10,17 +11,21 @@ import retrofit2.Retrofit
 import retrofit2.converter.simplexml.SimpleXmlConverterFactory
 import xyz.arnau.muvicat.data.repository.GencatRemote
 import xyz.arnau.muvicat.remote.GencatRemoteImpl
-import xyz.arnau.muvicat.remote.mapper.GencatCinemaEntityMapper
-import xyz.arnau.muvicat.remote.mapper.GencatCinemaListEntityMapper
-import xyz.arnau.muvicat.remote.mapper.GencatMovieEntityMapper
-import xyz.arnau.muvicat.remote.mapper.GencatMovieListEntityMapper
+import xyz.arnau.muvicat.remote.mapper.*
 import xyz.arnau.muvicat.remote.service.GencatService
-import xyz.arnau.muvicat.remote.util.LiveDataCallAdapterFactory
+import xyz.arnau.muvicat.remote.utils.LiveDataCallAdapterFactory
+import xyz.arnau.muvicat.remote.utils.RemotePreferencesHelper
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
 @Module
 class RemoteModule {
+    @Singleton
+    @Provides
+    fun provideRemotePreferencesHelper(context: Context): RemotePreferencesHelper {
+        return RemotePreferencesHelper(context)
+    }
+
     @Singleton
     @Provides
     fun provideOkHttpClient(httpLoggingInterceptor: HttpLoggingInterceptor): OkHttpClient {
@@ -56,11 +61,16 @@ class RemoteModule {
 
     @Singleton
     @Provides
-    fun provideGencatRemote(gencatService: GencatService): GencatRemote {
+    fun provideGencatRemote(
+        gencatService: GencatService,
+        preferencesHelper: RemotePreferencesHelper
+    ): GencatRemote {
         return GencatRemoteImpl(
             gencatService,
+            preferencesHelper,
             GencatMovieListEntityMapper(GencatMovieEntityMapper()),
-            GencatCinemaListEntityMapper(GencatCinemaEntityMapper())
+            GencatCinemaListEntityMapper(GencatCinemaEntityMapper()),
+            GencatShowingListEntityMapper(GencatShowingEntityMapper())
         )
     }
 

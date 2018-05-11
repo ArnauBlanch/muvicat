@@ -19,7 +19,7 @@ import timber.log.Timber
 import xyz.arnau.muvicat.BuildConfig.APPLICATION_ID
 import xyz.arnau.muvicat.R
 
-abstract class LocationAwareActivity: AppCompatActivity() {
+abstract class LocationAwareActivity : AppCompatActivity() {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private val REQUEST_PERMISSIONS_REQUEST_CODE = 34
 
@@ -47,14 +47,17 @@ abstract class LocationAwareActivity: AppCompatActivity() {
                 grantResults.isEmpty() -> Timber.i("User location was cancelled.")
                 (grantResults[0] == PERMISSION_GRANTED) -> getLastLocation()
                 else -> {
-                    showSnackbar(R.string.permission_denied_explanation, R.string.settings, View.OnClickListener {
-                        val intent = Intent().apply {
-                            action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
-                            data = Uri.fromParts("package", APPLICATION_ID, null)
-                            flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                        }
-                        startActivity(intent)
-                    })
+                    showSnackbar(
+                        R.string.permission_denied_explanation,
+                        R.string.settings,
+                        View.OnClickListener {
+                            val intent = Intent().apply {
+                                action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
+                                data = Uri.fromParts("package", APPLICATION_ID, null)
+                                flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                            }
+                            startActivity(intent)
+                        })
                 }
             }
         }
@@ -76,11 +79,13 @@ abstract class LocationAwareActivity: AppCompatActivity() {
     }
 
     private fun checkPermissions() =
-            ActivityCompat.checkSelfPermission(this, ACCESS_COARSE_LOCATION) == PERMISSION_GRANTED
+        ActivityCompat.checkSelfPermission(this, ACCESS_COARSE_LOCATION) == PERMISSION_GRANTED
 
     private fun startLocationPermissionRequest() {
-        ActivityCompat.requestPermissions(this, arrayOf(ACCESS_COARSE_LOCATION),
-            REQUEST_PERMISSIONS_REQUEST_CODE)
+        ActivityCompat.requestPermissions(
+            this, arrayOf(ACCESS_COARSE_LOCATION),
+            REQUEST_PERMISSIONS_REQUEST_CODE
+        )
     }
 
     private fun requestPermissions() {
@@ -100,7 +105,8 @@ abstract class LocationAwareActivity: AppCompatActivity() {
     ) {
         val snackbar =
             Snackbar.make(findViewById(android.R.id.content), getString(snackStrId), 12000)
-        (snackbar.view.findViewById(android.support.design.R.id.snackbar_text) as TextView).maxLines = 5
+        (snackbar.view.findViewById(android.support.design.R.id.snackbar_text) as TextView).maxLines =
+                5
         if (actionStrId != 0 && listener != null) {
             snackbar.setAction(getString(actionStrId), listener)
         }

@@ -5,9 +5,8 @@ buildscript {
     repositories {
         jcenter()
         google()
-        maven {
-            url 'https://maven.fabric.io/public'
-        }
+        maven { url 'https://maven.fabric.io/public' }
+        maven { url 'https://plugins.gradle.org/m2/' }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.2.0-alpha13'
@@ -15,6 +14,7 @@ buildscript {
         classpath "org.jacoco:org.jacoco.core:0.8.1"
         classpath 'com.google.gms:google-services:3.2.1'
         classpath 'io.fabric.tools:gradle:1.25.3'
+        classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.8.2'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
@@ -41,4 +41,3 @@ allprojects {
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
-

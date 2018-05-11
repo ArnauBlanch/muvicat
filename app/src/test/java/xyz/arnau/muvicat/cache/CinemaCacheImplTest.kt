@@ -10,26 +10,23 @@ import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
 import org.mockito.Mockito.*
 import xyz.arnau.muvicat.cache.dao.CinemaDao
-import xyz.arnau.muvicat.data.model.CinemaInfo
+import xyz.arnau.muvicat.data.model.Cinema
+import xyz.arnau.muvicat.data.test.CinemaEntityFactory
 import xyz.arnau.muvicat.data.test.CinemaFactory
-import xyz.arnau.muvicat.data.test.CinemaInfoFactory
-import xyz.arnau.muvicat.data.utils.PreferencesHelper
-
 
 @RunWith(JUnit4::class)
 class CinemaCacheImplTest {
     @get:Rule
     var rule: TestRule = InstantTaskExecutorRule()
 
-    private val preferencesHelper = mock(PreferencesHelper::class.java)
     private val cinemaDao = mock(CinemaDao::class.java)
 
-    private val cinemaCacheImpl = CinemaCacheImpl(cinemaDao, preferencesHelper)
+    private val cinemaCacheImpl = CinemaCacheImpl(cinemaDao)
 
     @Test
     fun getCinemasReturnsData() {
-        val cinemas = CinemaInfoFactory.makeCinemaInfoList(5)
-        val cinemasLiveData = MutableLiveData<List<CinemaInfo>>()
+        val cinemas = CinemaFactory.makeCinemaList(5)
+        val cinemasLiveData = MutableLiveData<List<Cinema>>()
         cinemasLiveData.value = cinemas
         `when`(cinemaDao.getCinemas()).thenReturn(cinemasLiveData)
         val cinemasFromCache = cinemaCacheImpl.getCinemas()
@@ -39,8 +36,8 @@ class CinemaCacheImplTest {
 
     @Test
     fun getCinemaReturnsCinemaInfo() {
-        val cinema = CinemaInfoFactory.makeCinemaInfo()
-        val cinemaLiveData = MutableLiveData<CinemaInfo>()
+        val cinema = CinemaFactory.makeCinema()
+        val cinemaLiveData = MutableLiveData<Cinema>()
         cinemaLiveData.value = cinema
         `when`(cinemaDao.getCinema(cinema.id)).thenReturn(cinemaLiveData)
         val cinemaFromCache = cinemaCacheImpl.getCinema(cinema.id)
@@ -50,30 +47,9 @@ class CinemaCacheImplTest {
 
     @Test
     fun updateCinemasUpdateData() {
-        val cinemas = CinemaFactory.makeCinemaList(5)
+        val cinemas = CinemaEntityFactory.makeCinemaEntityList(5)
         cinemaCacheImpl.updateCinemas(cinemas)
 
         verify(cinemaDao).updateCinemaDb(cinemas)
-    }
-
-    @Test
-    fun isExpiredReturnsTrueIfExpired() {
-        val currentTime = System.currentTimeMillis()
-        `when`(preferencesHelper.cinemaslastUpdateTime)
-            .thenReturn(currentTime - (CinemaCacheImpl.EXPIRATION_TIME + 500))
-        assertEquals(true, cinemaCacheImpl.isExpired())
-    }
-
-    @Test
-    fun isExpiredReturnsFalseIfNotExpired() {
-        val currentTime = System.currentTimeMillis()
-        `when`(preferencesHelper.cinemaslastUpdateTime)
-            .thenReturn(currentTime - 5000)
-        assertEquals(false, cinemaCacheImpl.isExpired())
-    }
-
-    @Test
-    fun companionObjectTest() {
-        assertEquals((3 * 60 * 60 * 1000).toLong(), CinemaCacheImpl.EXPIRATION_TIME)
     }
 }

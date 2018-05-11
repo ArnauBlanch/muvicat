@@ -14,7 +14,7 @@ import com.ethanhua.skeleton.RecyclerViewSkeletonScreen
 import com.ethanhua.skeleton.Skeleton
 import com.google.firebase.analytics.FirebaseAnalytics
 import kotlinx.android.synthetic.main.error_layout.*
-import kotlinx.android.synthetic.main.movie_grid.*
+import kotlinx.android.synthetic.main.movie_list.*
 import kotlinx.android.synthetic.main.movie_list_toolbar.*
 import xyz.arnau.muvicat.R
 import xyz.arnau.muvicat.data.model.Movie
@@ -98,7 +98,7 @@ class MovieListFragment : ScrollableFragment(), Injectable {
             .adapter(moviesAdapter)
             .count(6)
             .color(R.color.skeleton_shimmer)
-            .load(R.layout.movie_card_skeleton)
+            .load(R.layout.movie_item_skeleton)
             .show()
     }
 
@@ -127,6 +127,10 @@ class MovieListFragment : ScrollableFragment(), Injectable {
             updateMovieList(it)
             skeleton.hide()
             moviesRecyclerView.layoutManager.onRestoreInstanceState(mSavedRecyclerLayoutState)
+            if (data.isEmpty()) {
+                moviesRecyclerView.visibility = View.GONE
+                errorMessage.visibility = View.VISIBLE
+            }
         }
         else if (status == Status.ERROR) {
             skeleton.hide()

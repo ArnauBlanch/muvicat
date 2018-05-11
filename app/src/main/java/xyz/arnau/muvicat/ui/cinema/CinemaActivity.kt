@@ -14,7 +14,7 @@ import android.view.View
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.cinema_info.*
 import xyz.arnau.muvicat.R
-import xyz.arnau.muvicat.data.model.CinemaInfo
+import xyz.arnau.muvicat.data.model.Cinema
 import xyz.arnau.muvicat.data.model.Resource
 import xyz.arnau.muvicat.data.model.Status
 import xyz.arnau.muvicat.ui.LocationAwareActivity
@@ -50,13 +50,13 @@ class CinemaActivity : LocationAwareActivity() {
         super.onStart()
 
         cinemaViewModel.cinema.observe(this,
-            Observer<Resource<CinemaInfo>> {
+            Observer<Resource<Cinema>> {
                 if (it != null) handleDataState(it)
             })
     }
 
     @SuppressLint("SetTextI18n")
-    private fun handleDataState(cinemaRes: Resource<CinemaInfo>) {
+    private fun handleDataState(cinemaRes: Resource<Cinema>) {
         when (cinemaRes.status) {
             Status.SUCCESS -> {
                 val cinema = cinemaRes.data
@@ -83,7 +83,7 @@ class CinemaActivity : LocationAwareActivity() {
         }
     }
 
-    private fun setupToolbar(cinema: CinemaInfo?) {
+    private fun setupToolbar(cinema: Cinema?) {
         setSupportActionBar(cinemaInfoToolbar)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         supportActionBar!!.setDisplayShowHomeEnabled(true)
@@ -135,7 +135,11 @@ class CinemaActivity : LocationAwareActivity() {
     @SuppressLint("SetTextI18n")
     override fun processLastLocation(location: Location) {
         if (cinemaLatitude != null && cinemaLongitude != null) {
-            cinemaDistance.text = "≈ ${LocationUtils.getDistance(location, cinemaLatitude!!, cinemaLongitude!!)} km"
+            cinemaDistance.text = "≈ ${LocationUtils.getDistance(
+                location,
+                cinemaLatitude!!,
+                cinemaLongitude!!
+            )} km"
             cinemaDistance.visibility = View.VISIBLE
         }
         lastLocation = location

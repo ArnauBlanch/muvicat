@@ -1,20 +1,19 @@
 package xyz.arnau.muvicat.data.model
 
 import android.arch.persistence.room.Entity
-import android.arch.persistence.room.Index
-import android.arch.persistence.room.PrimaryKey
+import android.arch.persistence.room.Ignore
 
-@Entity(
-    tableName = "cinemas",
-    indices = [(Index(value = ["id"], name = "cinemaId"))]
-)
-data class Cinema(
-    @PrimaryKey
+@Entity
+data class Cinema constructor(
     var id: Long,
     var name: String,
     var address: String,
     var town: String?,
     var region: String?,
     var province: String?,
-    var postalCode: Int?
-)
+    var latitude: Double?,
+    var longitude: Double?
+) {
+    @Ignore
+    var distance: Int? = null
+}

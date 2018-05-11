@@ -5,6 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <include layout="@layout/movie_list_toolbar" />
-    <include layout="@layout/movie_grid"/>
+    <include layout="@layout/movie_list"/>
     <include layout="@layout/error_layout" />
 </android.support.design.widget.CoordinatorLayout>

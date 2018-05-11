@@ -5,6 +5,7 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'jacoco'
 apply plugin: 'io.fabric'
+apply plugin: "com.github.kt3k.coveralls"
 
 android {
     signingConfigs {}
@@ -52,6 +53,7 @@ android {
             jniDebuggable false
             applicationIdSuffix ".dev"
             testCoverageEnabled true
+            minifyEnabled false
         }
         beta {
             debuggable false
@@ -151,6 +153,7 @@ dependencies {
     testImplementation "org.robolectric:robolectric:3.8"
     testImplementation "org.robolectric:shadows-multidex:3.8"
     testImplementation "org.mockito:mockito-core:2.18.0"
+    testImplementation "org.mockito:mockito-inline:2.18.0"
     implementation 'com.android.support:gridlayout-v7:27.1.1'
     implementation 'com.android.support:cardview-v7:27.1.1'
     testImplementation "org.powermock:powermock-module-junit4:2.0.0-beta.5"
@@ -176,7 +179,7 @@ dependencies {
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.5.4'
     releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
 
-    implementation 'com.facebook.stetho:stetho:1.5.0'
+    debugImplementation 'com.facebook.stetho:stetho:1.5.0'
     implementation 'com.google.android.gms:play-services-location:15.0.1'
 }
 
@@ -200,11 +203,15 @@ task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest', 'crea
     reports {
         xml.enabled = true
         html.enabled = true
+        xml.destination file("$buildDir/reports/jacoco/test/jacocoTestReport.xml")
+        html.destination file("$buildDir/reports/jacoco/test/html")
     }
 
     def fileFilter = ['**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*',
                       '**/*Test*.*', 'android/**/*.*', '**/model/**', '**/constants/**',
-                      '**/**_Impl**', '**/*_Factory.*', '**/di/**', '**/ui/**', "**/*GlideModule.kt"]
+                      '**/**_Impl**', '**/*_Factory.*', '**/di/**', '**/ui/**', "**/*GlideModule.*",
+                      "**/*ViewModelFactory.*", "**/*PreferencesHelper.*", "**/MuvicatApplication.*",
+                      "**/MuvicatDatabase*", "**/ZipLiveData*"]
     def javaClasses = fileTree(dir: "$project.buildDir/intermediates/classes/debug", excludes: fileFilter)
     def kotlinClasses = fileTree(dir: "$project.buildDir/tmp/kotlin-classes/debug", excludes: fileFilter)
     def javaSrc = "$project.projectDir/src/main/java"

@@ -7,7 +7,11 @@ object LocationUtils {
     fun getDistance(location: Location, latitude: Double, longitude: Double): Int {
         val theta = location.longitude - longitude
         var dist =
-            Math.sin(deg2rad(location.latitude)) * Math.sin(deg2rad(latitude)) + Math.cos(deg2rad(location.latitude)) * Math.cos(
+            Math.sin(deg2rad(location.latitude)) * Math.sin(deg2rad(latitude)) + Math.cos(
+                deg2rad(
+                    location.latitude
+                )
+            ) * Math.cos(
                 deg2rad(latitude)
             ) * Math.cos(deg2rad(theta))
         dist = Math.acos(dist)
