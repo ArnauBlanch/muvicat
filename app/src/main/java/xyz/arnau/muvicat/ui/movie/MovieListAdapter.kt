@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import xyz.arnau.muvicat.GlideApp
+import xyz.arnau.muvicat.utils.GlideApp
 import xyz.arnau.muvicat.R
 import xyz.arnau.muvicat.data.model.Movie
 import xyz.arnau.muvicat.utils.DateFormatter
@@ -25,7 +25,7 @@ class MovieListAdapter @Inject constructor() : RecyclerView.Adapter<MovieListAda
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val movie = movies[position]
         holder.titleText.text = movie.title
-        val dateString = dateFormatter.shortDate(movie.releaseDate)
+        val dateString = dateFormatter.shortReleaseDate(movie.releaseDate)
         if (dateString != null) {
             holder.releaseDate.text = dateString
             holder.releaseDate.visibility = View.VISIBLE
@@ -53,7 +53,7 @@ class MovieListAdapter @Inject constructor() : RecyclerView.Adapter<MovieListAda
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val itemView = LayoutInflater
             .from(parent.context)
-            .inflate(R.layout.movie_card, parent, false)
+            .inflate(R.layout.movie_item, parent, false)
         return ViewHolder(itemView)
     }
 

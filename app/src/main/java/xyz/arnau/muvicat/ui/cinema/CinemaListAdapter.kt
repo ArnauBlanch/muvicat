@@ -8,7 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import xyz.arnau.muvicat.R
-import xyz.arnau.muvicat.data.model.CinemaInfo
+import xyz.arnau.muvicat.data.model.Cinema
 import javax.inject.Inject
 
 class CinemaListAdapter @Inject constructor() :
@@ -16,7 +16,7 @@ class CinemaListAdapter @Inject constructor() :
     @Inject
     lateinit var context: Context
 
-    var cinemas: List<CinemaInfo> = arrayListOf()
+    var cinemas: List<Cinema> = arrayListOf()
 
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {

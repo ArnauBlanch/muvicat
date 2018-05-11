@@ -3,7 +3,7 @@ package xyz.arnau.muvicat.remote.mapper
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import xyz.arnau.muvicat.remote.model.GencatCinemaResponse
-import xyz.arnau.muvicat.remote.test.CinemaFactory
+import xyz.arnau.muvicat.remote.test.GencatCinemaFactory
 
 class GencatCinemaListEntityMapperTest {
     private val cinemaEntityMapper = GencatCinemaEntityMapper()
@@ -12,7 +12,7 @@ class GencatCinemaListEntityMapperTest {
 
     @Test
     fun mapFromRemoteMapsData() {
-        val cinemaResponse = CinemaFactory.makeGencatCinemaResponse(5)
+        val cinemaResponse = GencatCinemaFactory.makeGencatCinemaResponse(5)
         val cinemaList =
             cinemaResponse.cinemaList?.map { cinemaEntityMapper.mapFromRemote(it) }
 
@@ -22,7 +22,7 @@ class GencatCinemaListEntityMapperTest {
 
     @Test
     fun mapFromRemoteMapsDataWithNullCinemas() {
-        val cinemaResponse = CinemaFactory.makeGencatCinemaResponse(5)
+        val cinemaResponse = GencatCinemaFactory.makeGencatCinemaResponse(5)
         val cinemaList =
             cinemaResponse.cinemaList?.map { cinemaEntityMapper.mapFromRemote(it) }
 

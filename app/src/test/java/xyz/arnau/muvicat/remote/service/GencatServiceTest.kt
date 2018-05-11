@@ -16,9 +16,10 @@ import org.junit.runners.JUnit4
 import retrofit2.Retrofit
 import retrofit2.converter.simplexml.SimpleXmlConverterFactory
 import xyz.arnau.muvicat.remote.model.ResponseStatus.*
-import xyz.arnau.muvicat.remote.util.GencatRemoteSampleCinemaData
-import xyz.arnau.muvicat.remote.util.GencatRemoteSampleMovieData
-import xyz.arnau.muvicat.remote.util.LiveDataCallAdapterFactory
+import xyz.arnau.muvicat.remote.test.GencatRemoteSampleCinemaData
+import xyz.arnau.muvicat.remote.test.GencatRemoteSampleMovieData
+import xyz.arnau.muvicat.remote.test.GencatRemoteSampleShowingData
+import xyz.arnau.muvicat.remote.utils.LiveDataCallAdapterFactory
 import xyz.arnau.muvicat.utils.getValueBlocking
 import java.net.HttpURLConnection.*
 
@@ -175,6 +176,75 @@ class GencatServiceTest {
         val request = mockServer.takeRequest()
         assertEquals("/cinemes.xml", request.path)
         assertEquals(GencatRemoteSampleCinemaData.eTag, request.getHeader("If-None-Match"))
+
+        assertEquals(HTTP_BAD_REQUEST, response?.code)
+        assertEquals(ERROR, response?.status)
+        assertEquals(null, response?.eTag)
+        assertEquals("ERROR BODY", response?.errorMessage)
+        assertEquals(null, response?.body)
+    }
+
+    @Test
+    fun getShowingsSuccesfulResponse() {
+        mockServer.enqueue(
+            MockResponse()
+                .addHeader("Content-Type", "application/xml")
+                .addHeader("ETag", "\"new_etag\"")
+                .setResponseCode(HTTP_OK)
+                .setBody(GencatRemoteSampleShowingData.xml)
+        )
+        val response =
+            gencatService.getShowings(GencatRemoteSampleShowingData.eTag).getValueBlocking()
+
+        val request = mockServer.takeRequest()
+        assertEquals("/film_sessions.xml", request.path)
+        assertEquals(GencatRemoteSampleShowingData.eTag, request.getHeader("If-None-Match"))
+
+        assertEquals(HTTP_OK, response?.code)
+        assertEquals(SUCCESSFUL, response?.status)
+        assertEquals("\"new_etag\"", response?.eTag)
+        assertEquals(null, response?.errorMessage)
+        val body = GencatRemoteSampleShowingData.body
+        body.showingList!![0].seasonId = 0
+        assertEquals(GencatRemoteSampleShowingData.body, response?.body)
+    }
+
+    @Test
+    fun getShowingsNotModifiedResponse() {
+        mockServer.enqueue(
+            MockResponse()
+                .addHeader("Content-Type", "application/xml")
+                .setResponseCode(HTTP_NOT_MODIFIED)
+                .setBody(GencatRemoteSampleShowingData.xml)
+        )
+        val response =
+            gencatService.getShowings(GencatRemoteSampleShowingData.eTag).getValueBlocking()
+
+        val request = mockServer.takeRequest()
+        assertEquals("/film_sessions.xml", request.path)
+        assertEquals(GencatRemoteSampleShowingData.eTag, request.getHeader("If-None-Match"))
+
+        assertEquals(HTTP_NOT_MODIFIED, response?.code)
+        assertEquals(NOT_MODIFIED, response?.status)
+        assertEquals(null, response?.eTag)
+        assertEquals(null, response?.errorMessage)
+        assertEquals(null, response?.body)
+    }
+
+    @Test
+    fun getShowingsErrorResponse() {
+        mockServer.enqueue(
+            MockResponse()
+                .addHeader("Content-Type", "application/xml")
+                .setResponseCode(HTTP_BAD_REQUEST)
+                .setBody("ERROR BODY")
+        )
+        val response =
+            gencatService.getShowings(GencatRemoteSampleShowingData.eTag).getValueBlocking()
+
+        val request = mockServer.takeRequest()
+        assertEquals("/film_sessions.xml", request.path)
+        assertEquals(GencatRemoteSampleShowingData.eTag, request.getHeader("If-None-Match"))
 
         assertEquals(HTTP_BAD_REQUEST, response?.code)
         assertEquals(ERROR, response?.status)

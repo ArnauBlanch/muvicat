@@ -23,7 +23,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 
-import xyz.arnau.muvicat.AppExecutors;
+import xyz.arnau.muvicat.utils.AppExecutors;
 import xyz.arnau.muvicat.data.model.Resource;
 import xyz.arnau.muvicat.remote.model.Response;
 import xyz.arnau.muvicat.remote.model.ResponseStatus;
@@ -69,6 +69,11 @@ public class NetworkBoundResourceTest {
                 ? countingAppExecutors.getAppExecutors()
                 : new InstantAppExecutors();
         networkBoundResource = new NetworkBoundResource<Foo, Foo>(appExecutors) {
+            @Override
+            protected void onFetchFailed() {
+
+            }
+
             @NotNull
             @Override
             protected LiveData<Response<Foo>> createCall() {

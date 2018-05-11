@@ -2,7 +2,6 @@ package xyz.arnau.muvicat.ui.cinema
 
 import android.app.Activity
 import android.arch.lifecycle.Observer
-import android.content.Context
 import android.location.Location
 import android.os.Bundle
 import android.os.Parcelable
@@ -18,9 +17,8 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import kotlinx.android.synthetic.main.cinema_list.*
 import kotlinx.android.synthetic.main.cinema_list_toolbar.*
 import kotlinx.android.synthetic.main.error_layout.*
-import timber.log.Timber
 import xyz.arnau.muvicat.R
-import xyz.arnau.muvicat.data.model.CinemaInfo
+import xyz.arnau.muvicat.data.model.Cinema
 import xyz.arnau.muvicat.data.model.Resource
 import xyz.arnau.muvicat.data.model.Status
 import xyz.arnau.muvicat.di.Injectable
@@ -62,8 +60,9 @@ class CinemaListFragment : ScrollableFragment(), Injectable {
 
     override fun onStart() {
         super.onStart()
+
         cinemaListViewModel.cinemas.observe(this,
-            Observer<Resource<List<CinemaInfo>>> {
+            Observer<Resource<List<Cinema>>> {
                 if (it != null) handleDateState(it.status, it.data)
             })
     }
@@ -99,11 +98,15 @@ class CinemaListFragment : ScrollableFragment(), Injectable {
     }
 
 
-    private fun handleDateState(status: Status, data: List<CinemaInfo>?) {
+    private fun handleDateState(status: Status, data: List<Cinema>?) {
         if (status == Status.SUCCESS) data?.let {
             updateCinemaList(it, getLastLocation())
             skeleton.hide()
             cinemasRecyclerView.layoutManager.onRestoreInstanceState(mSavedRecyclerViewState)
+            if (data.isEmpty()) {
+                cinemasRecyclerView.visibility = View.GONE
+                errorMessage.visibility = View.VISIBLE
+            }
         } else if (status == Status.ERROR) {
             skeleton.hide()
             if (data != null && !data.isEmpty()) {
@@ -120,12 +123,13 @@ class CinemaListFragment : ScrollableFragment(), Injectable {
         }
     }
 
-    private fun updateCinemaList(data: List<CinemaInfo>, lastLocation: Location?) {
+    private fun updateCinemaList(data: List<Cinema>, lastLocation: Location?) {
         if (lastLocation != null) {
             setLocationToCinemas(data, lastLocation)
             hasLocation = true
         }
-        cinemasAdapter.cinemas = data.sortedWith(compareBy<CinemaInfo,Int?>(nullsLast(), { it.distance }))
+        cinemasAdapter.cinemas =
+                data.sortedWith(compareBy<Cinema, Int?>(nullsLast(), { it.distance }))
         cinemasAdapter.notifyDataSetChanged()
     }
 
@@ -168,7 +172,7 @@ class CinemaListFragment : ScrollableFragment(), Injectable {
         }
     }
 
-    private fun setLocationToCinemas(cinemaList: List<CinemaInfo>, location: Location) {
+    private fun setLocationToCinemas(cinemaList: List<Cinema>, location: Location) {
         cinemaList.forEach {
             if (it.latitude != null && it.longitude != null) {
                 it.distance = LocationUtils.getDistance(location, it.latitude!!, it.longitude!!)
@@ -182,6 +186,6 @@ class CinemaListFragment : ScrollableFragment(), Injectable {
     }
 
     companion object {
-        const val FRAG_ID = 1
+        const val FRAG_ID = 2
     }
 }

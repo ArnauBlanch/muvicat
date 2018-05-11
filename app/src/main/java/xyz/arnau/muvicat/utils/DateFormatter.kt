@@ -12,24 +12,29 @@ import javax.inject.Singleton
 @Singleton
 class DateFormatter @Inject constructor(private val context: Context) {
 
+    fun shortReleaseDate(d: Date?, today: LocalDate = LocalDate.now()): String? {
+        if (d == null) {
+            return null
+        }
+        val releaseString = context.getString(R.string.release)
+        val dateString = shortDate(d, today) ?: return null
+        return String.format(releaseString, dateString)
+    }
+
     fun shortDate(d: Date?, today: LocalDate = LocalDate.now()): String? {
         if (d == null) {
             return null
         }
         val date = LocalDate(d)
-        val releaseString = context.getString(R.string.release)
         return when {
             date.isEqual(today) -> { // today
-                val todayString = context.getString(R.string.today)
-                String.format(releaseString, todayString)
+                context.getString(R.string.today)
             }
             date.isEqual(today.plusDays(1)) -> { // tomorrow
-                val tomorrowString = context.getString(R.string.tomorrow)
-                String.format(releaseString, tomorrowString)
+                context.getString(R.string.tomorrow)
             }
             date.isAfter(today) -> {
-                val dateString = date.toString("EE dd/MM", Locale("ca"))
-                String.format(releaseString, dateString)
+                date.toString("EE dd/MM", Locale("ca"))
             }
             else -> null
         }
