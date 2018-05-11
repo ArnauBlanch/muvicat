@@ -1,4 +1,4 @@
-package xyz.arnau.muvicat
+package xyz.arnau.muvicat.utils
 
 import android.os.Handler
 import android.os.Looper
@@ -16,7 +16,7 @@ open class AppExecutors constructor(
 
     @Inject
     constructor() : this(
-        Executors.newSingleThreadExecutor(), Executors.newFixedThreadPool(3),
+        Executors.newFixedThreadPool(6), Executors.newFixedThreadPool(3),
         MainThreadExecutor()
     )
 

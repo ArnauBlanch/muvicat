@@ -56,6 +56,8 @@ class GencatRemoteImplTest {
         )
         assertEquals(SUCCESSFUL, result?.type)
         assertEquals(null, result?.errorMessage)
+        verify(preferencesHelper, never()).moviesETag = "movies-etag2"
+        result!!.callback!!.onDataUpdated()
         verify(preferencesHelper).moviesETag = "movies-etag2"
     }
 
@@ -75,8 +77,10 @@ class GencatRemoteImplTest {
         assertEquals(moviesEntityMapper.mapFromRemote(movieResponseWithNullIds), result?.body)
         assertEquals(SUCCESSFUL, result?.type)
         assertEquals(null, result?.errorMessage)
+        verify(preferencesHelper, never()).moviesETag = "movies-etag2"
+        result!!.callback!!.onDataUpdated()
         verify(preferencesHelper).moviesETag = "movies-etag2"
-        assertEquals(1, result?.body!!.size)
+        assertEquals(1, result.body!!.size)
     }
 
     @Test
@@ -98,6 +102,8 @@ class GencatRemoteImplTest {
         )
         assertEquals(SUCCESSFUL, result?.type)
         assertEquals(null, result?.errorMessage)
+        verify(preferencesHelper, never()).cinemasETag = "cinemas-etag2"
+        result!!.callback!!.onDataUpdated()
         verify(preferencesHelper).cinemasETag = "cinemas-etag2"
     }
 
@@ -119,8 +125,10 @@ class GencatRemoteImplTest {
         assertEquals(cinemasEntityMapper.mapFromRemote(cinemaResponseWithNullIds), result?.body)
         assertEquals(SUCCESSFUL, result?.type)
         assertEquals(null, result?.errorMessage)
+        verify(preferencesHelper, never()).cinemasETag = "cinemas-etag2"
+        result!!.callback!!.onDataUpdated()
         verify(preferencesHelper).cinemasETag = "cinemas-etag2"
-        assertEquals(2, result?.body!!.size)
+        assertEquals(2, result.body!!.size)
     }
 
     @Test
@@ -142,6 +150,8 @@ class GencatRemoteImplTest {
         )
         assertEquals(SUCCESSFUL, result?.type)
         assertEquals(null, result?.errorMessage)
+        verify(preferencesHelper, never()).showingsETag = "showings-etag2"
+        result!!.callback!!.onDataUpdated()
         verify(preferencesHelper).showingsETag = "showings-etag2"
     }
 
@@ -163,7 +173,9 @@ class GencatRemoteImplTest {
         assertEquals(showingsEntityMapper.mapFromRemote(showingsResponseWithNullIds), result?.body)
         assertEquals(SUCCESSFUL, result?.type)
         assertEquals(null, result?.errorMessage)
+        verify(preferencesHelper, never()).showingsETag = "showings-etag2"
+        result!!.callback!!.onDataUpdated()
         verify(preferencesHelper).showingsETag = "showings-etag2"
-        assertEquals(1, result?.body!!.size)
+        assertEquals(1, result.body!!.size)
     }
 }

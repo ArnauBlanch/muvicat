@@ -12,7 +12,8 @@ data class Cinema constructor(
     var region: String?,
     var province: String?,
     var latitude: Double?,
-    var longitude: Double?) {
+    var longitude: Double?
+) {
     @Ignore
     var distance: Int? = null
 }

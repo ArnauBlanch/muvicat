@@ -9,7 +9,7 @@ import xyz.arnau.muvicat.remote.model.ResponseStatus
 class ApiUtil {
     companion object {
         fun <T> successCall(data: T): LiveData<Response<T>> {
-            return createCall(Response(data, null, ResponseStatus.SUCCESSFUL))
+            return createCall(Response(data, null, ResponseStatus.SUCCESSFUL, null))
         }
 
         fun <T> createCall(response: Response<T>): LiveData<Response<T>> {

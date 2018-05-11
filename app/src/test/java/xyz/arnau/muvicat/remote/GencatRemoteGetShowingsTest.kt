@@ -15,6 +15,7 @@ import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
 import org.mockito.Mockito
 import org.mockito.Mockito.mock
+import org.mockito.Mockito.never
 import retrofit2.Retrofit
 import retrofit2.converter.simplexml.SimpleXmlConverterFactory
 import xyz.arnau.muvicat.data.repository.GencatRemote
@@ -87,6 +88,8 @@ class GencatServiceGetShowingsTest {
         assertEquals(showingsEntityMapper.mapFromRemote(body), result?.body)
         assertEquals(SUCCESSFUL, result?.type)
         assertEquals(null, result?.errorMessage)
+        Mockito.verify(preferencesHelper, never()).showingsETag = eTag
+        result!!.callback!!.onDataUpdated()
         Mockito.verify(preferencesHelper).showingsETag = eTag
 
     }

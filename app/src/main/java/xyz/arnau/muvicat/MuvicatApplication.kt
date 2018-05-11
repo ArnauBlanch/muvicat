@@ -40,7 +40,7 @@ class MuvicatApplication : MultiDexApplication(), HasActivityInjector {
     private fun setupDebug() {
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
-            Stetho.initializeWithDefaults(this)
+            // Stetho.initializeWithDefaults(this)
         }
     }
 

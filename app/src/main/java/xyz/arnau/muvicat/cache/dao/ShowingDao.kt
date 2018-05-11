@@ -7,7 +7,8 @@ import xyz.arnau.muvicat.data.model.Showing
 
 @Dao
 abstract class ShowingDao {
-    @Query("""SELECT
+    @Query(
+        """SELECT
             s.id, s.date, s.version, s.seasonId,
             m.id as movieId, m.title as movieTitle, m.posterUrl as moviePosterUrl,
             c.name as cinemaName, c.town as cinemaTown, c.region as cinemaRegion, c.province as cinemaProvince,
@@ -16,7 +17,8 @@ abstract class ShowingDao {
             JOIN movies m ON s.movieId = m.id
             JOIN cinemas c ON s.cinemaId = c.id
             LEFT OUTER JOIN postal_codes pc ON c.postalCode = pc.code
-        ORDER BY date, m.id, c.name""")
+        ORDER BY date, m.id, c.name"""
+    )
     abstract fun getShowings(): LiveData<List<Showing>>
 
     @Query("DELETE FROM showings")
@@ -32,7 +34,7 @@ abstract class ShowingDao {
     internal abstract fun getMovieIds(): List<Long>
 
     @Transaction
-    open fun updateShowingDb(showings: List<ShowingEntity>) {
+    open fun updateShowingDb(showings: List<ShowingEntity>): Boolean {
         clearShowings()
         val movieIds = getMovieIds()
         val cinemaIds = getCinemaIds()
@@ -40,5 +42,6 @@ abstract class ShowingDao {
         list.addAll(showings)
         list.removeAll { it.cinemaId !in cinemaIds || it.movieId !in movieIds }
         insertShowings(list)
+        return list.size > 0
     }
 }

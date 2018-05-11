@@ -10,7 +10,7 @@ import xyz.arnau.muvicat.viewmodel.cinema.CinemaListViewModel
 import xyz.arnau.muvicat.viewmodel.cinema.CinemaViewModel
 import xyz.arnau.muvicat.viewmodel.movie.MovieListViewModel
 import xyz.arnau.muvicat.viewmodel.movie.MovieViewModel
-import xyz.arnau.muvicat.viewmodel.movie.ShowingListViewModel
+import xyz.arnau.muvicat.viewmodel.showing.ShowingListViewModel
 
 @Suppress("unused")
 @Module

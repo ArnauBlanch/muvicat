@@ -11,7 +11,7 @@ import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
 import org.mockito.Mockito
 import org.mockito.Mockito.*
-import xyz.arnau.muvicat.AppExecutors
+import xyz.arnau.muvicat.utils.AppExecutors
 import xyz.arnau.muvicat.cache.model.MovieEntity
 import xyz.arnau.muvicat.data.model.Movie
 import xyz.arnau.muvicat.data.model.Resource
@@ -25,6 +25,7 @@ import xyz.arnau.muvicat.remote.model.Response
 import xyz.arnau.muvicat.remote.model.ResponseStatus
 import xyz.arnau.muvicat.utils.InstantAppExecutors
 import xyz.arnau.muvicat.utils.getValueBlocking
+import java.util.concurrent.CountDownLatch
 
 @RunWith(JUnit4::class)
 class MovieRepositoryTest {
@@ -35,9 +36,10 @@ class MovieRepositoryTest {
     private val gencatRemote: GencatRemote = mock(GencatRemote::class.java)
     private val appExecutors: AppExecutors = InstantAppExecutors()
     private val preferencesHelper: RepoPreferencesHelper = mock(RepoPreferencesHelper::class.java)
+    private val countDownLatch = mock(CountDownLatch::class.java)
 
     private val movieRepository =
-        MovieRepository(movieCache, gencatRemote, appExecutors, preferencesHelper)
+        MovieRepository(movieCache, gencatRemote, appExecutors, preferencesHelper, countDownLatch)
 
     @Test
     fun getMoviesWhenMoviesAreCachedAndNotExpired() {
@@ -54,6 +56,7 @@ class MovieRepositoryTest {
         movies.observeForever(observer as Observer<Resource<List<Movie>>>)
         verify(observer).onChanged(Resource.success(dbMovies))
         verify(preferencesHelper, never()).moviesUpdated()
+        verify(countDownLatch).countDown()
         verify(gencatRemote, never()).getMovies()
     }
 
@@ -80,11 +83,12 @@ class MovieRepositoryTest {
         dbMovieLiveData.postValue(dbMovies)
         verify(observer).onChanged(Resource.loading(dbMovies))
         remoteMovieLiveData.postValue(
-            Response(remoteMovies, null, ResponseStatus.SUCCESSFUL)
+            Response(remoteMovies, null, ResponseStatus.SUCCESSFUL, null)
         )
         dbMovieLiveData.postValue(MovieMapper.mapFromMovieEntityList(remoteMovies))
         verify(observer).onChanged(Resource.success(MovieMapper.mapFromMovieEntityList(remoteMovies)))
         verify(preferencesHelper).moviesUpdated()
+        verify(countDownLatch).countDown()
         verify(movieCache).updateMovies(remoteMovies)
     }
 
@@ -110,10 +114,11 @@ class MovieRepositoryTest {
         dbMovieLiveData.postValue(dbMovies)
         verify(observer).onChanged(Resource.loading(dbMovies))
         remoteMovieLiveData.postValue(
-            Response(null, null, ResponseStatus.NOT_MODIFIED)
+            Response(null, null, ResponseStatus.NOT_MODIFIED, null)
         )
         verify(observer).onChanged(Resource.success(dbMovies))
         verify(preferencesHelper).moviesUpdated()
+        verify(countDownLatch).countDown()
         verify(movieCache, never()).updateMovies(Mockito.anyList())
     }
 
@@ -135,11 +140,12 @@ class MovieRepositoryTest {
         dbMovieLiveData.postValue(dbMovies)
         verify(observer).onChanged(Resource.loading(dbMovies))
         remoteMovieLiveData.postValue(
-            Response(remoteMovies, null, ResponseStatus.SUCCESSFUL)
+            Response(remoteMovies, null, ResponseStatus.SUCCESSFUL, null)
         )
         dbMovieLiveData.postValue(MovieMapper.mapFromMovieEntityList(remoteMovies))
         verify(observer).onChanged(Resource.success(MovieMapper.mapFromMovieEntityList(remoteMovies)))
         verify(preferencesHelper).moviesUpdated()
+        verify(countDownLatch).countDown()
         verify(movieCache).updateMovies(remoteMovies)
     }
 
@@ -159,11 +165,12 @@ class MovieRepositoryTest {
         movies.observeForever(observer as Observer<Resource<List<Movie>>>)
         verify(observer).onChanged(Resource.loading(null))
         remoteMovieLiveData.postValue(
-            Response(null, null, ResponseStatus.SUCCESSFUL)
+            Response(null, null, ResponseStatus.SUCCESSFUL, null)
         )
         dbMovieLiveData.postValue(dbMovies)
         verify(observer).onChanged(Resource.success(dbMovies))
         verify(preferencesHelper, never()).moviesUpdated()
+        verify(countDownLatch).countDown()
         verify(movieCache, never()).updateMovies(Mockito.anyList())
     }
 

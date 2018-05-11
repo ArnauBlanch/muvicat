@@ -88,8 +88,9 @@ class GencatServiceGetCinemasTest {
         assertEquals(cinemasEntityMapper.mapFromRemote(body), result?.body)
         assertEquals(SUCCESSFUL, result?.type)
         assertEquals(null, result?.errorMessage)
+        verify(preferencesHelper, never()).cinemasETag = eTag
+        result!!.callback!!.onDataUpdated()
         verify(preferencesHelper).cinemasETag = eTag
-
     }
 
     @Test

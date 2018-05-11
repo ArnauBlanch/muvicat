@@ -3,7 +3,7 @@ package xyz.arnau.muvicat.di
 import android.app.Application
 import dagger.Module
 import dagger.Provides
-import xyz.arnau.muvicat.AppExecutors
+import xyz.arnau.muvicat.utils.AppExecutors
 import xyz.arnau.muvicat.cache.CinemaCacheImpl
 import xyz.arnau.muvicat.cache.MovieCacheImpl
 import xyz.arnau.muvicat.cache.ShowingCacheImpl

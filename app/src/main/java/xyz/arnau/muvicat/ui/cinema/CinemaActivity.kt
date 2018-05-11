@@ -135,7 +135,11 @@ class CinemaActivity : LocationAwareActivity() {
     @SuppressLint("SetTextI18n")
     override fun processLastLocation(location: Location) {
         if (cinemaLatitude != null && cinemaLongitude != null) {
-            cinemaDistance.text = "≈ ${LocationUtils.getDistance(location, cinemaLatitude!!, cinemaLongitude!!)} km"
+            cinemaDistance.text = "≈ ${LocationUtils.getDistance(
+                location,
+                cinemaLatitude!!,
+                cinemaLongitude!!
+            )} km"
             cinemaDistance.visibility = View.VISIBLE
         }
         lastLocation = location

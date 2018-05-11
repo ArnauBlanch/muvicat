@@ -6,7 +6,7 @@ import android.arch.persistence.room.RoomDatabase;
 import android.arch.persistence.room.TypeConverters;
 import android.content.Context;
 
-import xyz.arnau.muvicat.AppExecutors;
+import xyz.arnau.muvicat.utils.AppExecutors;
 import xyz.arnau.muvicat.cache.dao.CinemaDao;
 import xyz.arnau.muvicat.cache.dao.MovieDao;
 import xyz.arnau.muvicat.cache.dao.PostalCodeDao;
@@ -29,8 +29,11 @@ public abstract class MuvicatDatabase extends RoomDatabase {
     private static MuvicatDatabase sInstance = null;
 
     public abstract MovieDao movieDao();
+
     public abstract CinemaDao cinemaDao();
+
     public abstract PostalCodeDao postalCodeDao();
+
     public abstract ShowingDao showingDao();
 
     @SuppressWarnings("SynchronizedMethod")

@@ -1,6 +1,7 @@
 package xyz.arnau.muvicat.viewmodel.showing
 
 import android.arch.core.executor.testing.InstantTaskExecutorRule
+import android.arch.lifecycle.LifecycleOwner
 import android.arch.lifecycle.MutableLiveData
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -17,7 +18,6 @@ import xyz.arnau.muvicat.data.model.Status
 import xyz.arnau.muvicat.data.test.ShowingEntityFactory
 import xyz.arnau.muvicat.data.test.ShowingMapper
 import xyz.arnau.muvicat.utils.getValueBlocking
-import xyz.arnau.muvicat.viewmodel.movie.ShowingListViewModel
 
 @RunWith(JUnit4::class)
 class ShowingListViewModelTest {

@@ -1,4 +1,4 @@
-package xyz.arnau.muvicat.viewmodel.movie
+package xyz.arnau.muvicat.viewmodel.showing
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.ViewModel

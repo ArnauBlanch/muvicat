@@ -6,5 +6,5 @@ import xyz.arnau.muvicat.data.model.Showing
 
 interface ShowingCache {
     fun getShowings(): LiveData<List<Showing>>
-    fun updateShowings(showings: List<ShowingEntity>)
+    fun updateShowings(showings: List<ShowingEntity>): Boolean
 }
