@@ -9,6 +9,7 @@ import org.junit.Test
 import org.junit.rules.TestRule
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
+import org.mockito.ArgumentMatchers
 import org.mockito.Mockito.*
 import retrofit2.Response
 import xyz.arnau.muvicat.remote.mapper.*
@@ -62,6 +63,29 @@ class GencatRemoteImplTest {
     }
 
     @Test
+    fun getMoviesReturnsMovieListWithNullETag() {
+        val eTag = "movies-etag1"
+        `when`(preferencesHelper.moviesETag).thenReturn(eTag)
+        val liveData = MutableLiveData<ApiResponse<GencatMovieResponse>>()
+        `when`(gencatService.getMovies(eTag)).thenReturn(liveData)
+        val response = Response.success(
+            GencatRemoteSampleMovieData.body,
+            Headers.of(mapOf())
+        )
+        liveData.postValue(ApiResponse<GencatMovieResponse>(response))
+
+        val result = gencatRemote.getMovies().getValueBlocking()
+        assertEquals(
+            moviesEntityMapper.mapFromRemote(GencatRemoteSampleMovieData.body),
+            result?.body
+        )
+        assertEquals(SUCCESSFUL, result?.type)
+        assertEquals(null, result?.errorMessage)
+        result!!.callback!!.onDataUpdated()
+        verify(preferencesHelper, never()).moviesETag = ArgumentMatchers.anyString()
+    }
+
+    @Test
     fun getMoviesReturnsMovieListWithNullIds() {
         val eTag = "movies-etag1"
         `when`(preferencesHelper.moviesETag).thenReturn(eTag)
@@ -105,6 +129,29 @@ class GencatRemoteImplTest {
         verify(preferencesHelper, never()).cinemasETag = "cinemas-etag2"
         result!!.callback!!.onDataUpdated()
         verify(preferencesHelper).cinemasETag = "cinemas-etag2"
+    }
+
+    @Test
+    fun getCinemasReturnsCinemaListWithNullETag() {
+        val eTag = "cinemas-etag1"
+        `when`(preferencesHelper.cinemasETag).thenReturn(eTag)
+        val liveData = MutableLiveData<ApiResponse<GencatCinemaResponse>>()
+        `when`(gencatService.getCinemas(eTag)).thenReturn(liveData)
+        val response = Response.success(
+            GencatRemoteSampleCinemaData.body,
+            Headers.of(mapOf())
+        )
+        liveData.postValue(ApiResponse<GencatCinemaResponse>(response))
+
+        val result = gencatRemote.getCinemas().getValueBlocking()
+        assertEquals(
+            cinemasEntityMapper.mapFromRemote(GencatRemoteSampleCinemaData.body),
+            result?.body
+        )
+        assertEquals(SUCCESSFUL, result?.type)
+        assertEquals(null, result?.errorMessage)
+        result!!.callback!!.onDataUpdated()
+        verify(preferencesHelper, never()).cinemasETag = ArgumentMatchers.anyString()
     }
 
     @Test
@@ -153,6 +200,29 @@ class GencatRemoteImplTest {
         verify(preferencesHelper, never()).showingsETag = "showings-etag2"
         result!!.callback!!.onDataUpdated()
         verify(preferencesHelper).showingsETag = "showings-etag2"
+    }
+
+    @Test
+    fun getShowingsReturnsShowingListWithNullETag() {
+        val eTag = "showings-etag1"
+        `when`(preferencesHelper.showingsETag).thenReturn(eTag)
+        val liveData = MutableLiveData<ApiResponse<GencatShowingResponse>>()
+        `when`(gencatService.getShowings(eTag)).thenReturn(liveData)
+        val response = Response.success(
+            GencatRemoteSampleShowingData.body,
+            Headers.of(mapOf())
+        )
+        liveData.postValue(ApiResponse<GencatShowingResponse>(response))
+
+        val result = gencatRemote.getShowings().getValueBlocking()
+        assertEquals(
+            showingsEntityMapper.mapFromRemote(GencatRemoteSampleShowingData.body),
+            result?.body
+        )
+        assertEquals(SUCCESSFUL, result?.type)
+        assertEquals(null, result?.errorMessage)
+        result!!.callback!!.onDataUpdated()
+        verify(preferencesHelper, never()).showingsETag = ArgumentMatchers.anyString()
     }
 
     @Test
