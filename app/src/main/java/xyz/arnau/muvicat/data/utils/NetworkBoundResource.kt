@@ -39,7 +39,7 @@ abstract class NetworkBoundResource<ResultType, RequestType> @MainThread constru
             result.removeSource(apiResponse)
             result.removeSource(dbSource)
             when {
-                response?.type == ResponseStatus.SUCCESSFUL ->
+                response?.type == ResponseStatus.SUCCESSFUL && response.body != null ->
                     appExecutors.diskIO().execute {
                         saveResponse(response)
                         appExecutors.mainThread().execute({

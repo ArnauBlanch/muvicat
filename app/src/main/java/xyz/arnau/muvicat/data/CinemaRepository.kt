@@ -39,14 +39,16 @@ class CinemaRepository(
         object : NetworkBoundResource<List<Cinema>, List<CinemaEntity>>(appExecutors) {
             override fun saveResponse(response: Response<List<CinemaEntity>>) {
                 if (response.type == SUCCESSFUL) {
-                    response.body?.let {
+                    response.body!!.let {
                         cinemaCache.updateCinemas(it)
                         preferencesHelper.cinemasUpdated()
                         response.callback?.onDataUpdated()
                     }
-                } else if (response.type == NOT_MODIFIED) {
+                }
+                if (response.type == NOT_MODIFIED) {
                     preferencesHelper.cinemasUpdated()
                 }
+
                 if (!countDownDone) {
                     countDownLatch.countDown()
                     countDownDone = true

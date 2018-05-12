@@ -39,14 +39,16 @@ class MovieRepository(
         object : NetworkBoundResource<List<Movie>, List<MovieEntity>>(appExecutors) {
             override fun saveResponse(response: Response<List<MovieEntity>>) {
                 if (response.type == SUCCESSFUL) {
-                    response.body?.let {
+                    response.body!!.let {
                         movieCache.updateMovies(it)
                         preferencesHelper.moviesUpdated()
                         response.callback?.onDataUpdated()
                     }
-                } else if (response.type == NOT_MODIFIED) {
+                }
+                if (response.type == NOT_MODIFIED) {
                     preferencesHelper.moviesUpdated()
                 }
+
                 if (!countDownDone) {
                     countDownLatch.countDown()
                     countDownDone = true
@@ -83,7 +85,7 @@ class MovieRepository(
         return Transformations.switchMap(movieCache.getMovie(id), { movie ->
             val liveData = MutableLiveData<Resource<Movie>>()
             if (movie == null) {
-                liveData.postValue(Resource.error("MovieEntity not found", null))
+                liveData.postValue(Resource.error("Movie not found", null))
             } else {
                 liveData.postValue(Resource.success(movie))
             }
