@@ -1,9 +1,12 @@
+@file:Suppress("UNCHECKED_CAST")
+
 package xyz.arnau.muvicat.data
 
 import android.arch.core.executor.testing.InstantTaskExecutorRule
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Observer
 import junit.framework.TestCase
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -11,10 +14,11 @@ import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
 import org.mockito.Mockito
 import org.mockito.Mockito.*
-import xyz.arnau.muvicat.utils.AppExecutors
 import xyz.arnau.muvicat.cache.model.ShowingEntity
-import xyz.arnau.muvicat.data.model.Resource
+import xyz.arnau.muvicat.data.ShowingRepository.Companion.EXPIRATION_TIME
 import xyz.arnau.muvicat.data.model.Showing
+import xyz.arnau.muvicat.data.model.Resource
+import xyz.arnau.muvicat.data.model.Status
 import xyz.arnau.muvicat.data.repository.GencatRemote
 import xyz.arnau.muvicat.data.repository.ShowingCache
 import xyz.arnau.muvicat.data.test.ShowingEntityFactory
@@ -22,168 +26,235 @@ import xyz.arnau.muvicat.data.test.ShowingMapper
 import xyz.arnau.muvicat.data.utils.RepoPreferencesHelper
 import xyz.arnau.muvicat.remote.DataUpdateCallback
 import xyz.arnau.muvicat.remote.model.Response
-import xyz.arnau.muvicat.remote.model.ResponseStatus
 import xyz.arnau.muvicat.utils.InstantAppExecutors
+import xyz.arnau.muvicat.utils.getValueBlocking
 import java.util.concurrent.CountDownLatch
 
 @RunWith(JUnit4::class)
 class ShowingRepositoryTest {
     @get:Rule
-    var rule = InstantTaskExecutorRule()
+    val rule = InstantTaskExecutorRule()
 
-    private val showingCache: ShowingCache = mock(ShowingCache::class.java)
-    private val gencatRemote: GencatRemote = mock(GencatRemote::class.java)
-    private val appExecutors: AppExecutors = InstantAppExecutors()
-    private val preferencesHelper: RepoPreferencesHelper = mock(RepoPreferencesHelper::class.java)
-    private lateinit var showingRepository: ShowingRepository
-    private val countDownLatch = CountDownLatch(2)
+    private val showingCache = mock(ShowingCache::class.java)
+    private val gencatRemote = mock(GencatRemote::class.java)
+    private val appExecutors = InstantAppExecutors()
+    private val preferencesHelper = mock(RepoPreferencesHelper::class.java)
+    private val countDownLatch = mock(CountDownLatch::class.java)
+    private val showingRepository = ShowingRepository(showingCache, gencatRemote, appExecutors, preferencesHelper, countDownLatch)
+
+    private val dbShowingLiveData = MutableLiveData<List<Showing>>()
+    private val dbShowings = ShowingMapper.mapFromShowingEntityList(ShowingEntityFactory.makeShowingEntityList(3))
+
+    private val remoteShowingLiveData = MutableLiveData<Response<List<ShowingEntity>>>()
+    private val remoteShowings = ShowingEntityFactory.makeShowingEntityList(3)
+    private val remoteShowingsMapped = ShowingMapper.mapFromShowingEntityList(remoteShowings)
+
+    private val observer: Observer<*>? = mock(Observer::class.java)
+    private val currentTime = System.currentTimeMillis()
+    private val callback = mock(DataUpdateCallback::class.java)
+
 
     @Before
     fun setUp() {
-        showingRepository = ShowingRepository(showingCache, gencatRemote, appExecutors, preferencesHelper, countDownLatch)
+        `when`(showingCache.getShowings()).thenReturn(dbShowingLiveData)
+        `when`(gencatRemote.getShowings()).thenReturn(remoteShowingLiveData)
     }
 
     @Test
     fun getShowingsWhenShowingsAreCachedAndNotExpired() {
-        val dbShowingLiveData = MutableLiveData<List<Showing>>()
-        `when`(showingCache.getShowings()).thenReturn(dbShowingLiveData)
-        val dbShowings = ShowingMapper.mapFromShowingEntityList(ShowingEntityFactory.makeShowingEntityList(3))
         dbShowingLiveData.postValue(dbShowings)
-        val currentTime = System.currentTimeMillis()
         `when`(preferencesHelper.showingslastUpdateTime).thenReturn(currentTime - 5000)
 
         val showings = showingRepository.getShowings()
-        val observer: Observer<*>? = mock(Observer::class.java)
-        @Suppress("UNCHECKED_CAST")
         showings.observeForever(observer as Observer<Resource<List<Showing>>>)
-        Mockito.verify(observer).onChanged(Resource.success(dbShowings))
-        Mockito.verify(preferencesHelper, Mockito.never()).showingsUpdated()
-        Mockito.verify(gencatRemote, Mockito.never()).getShowings()
+
+        verify(observer).onChanged(Resource.success(dbShowings))
+
+        verify(preferencesHelper, never()).showingsUpdated()
+        verify(gencatRemote, never()).getShowings()
+    }
+    
+
+    @Test
+    fun getShowingsWhenShowingsAreCachedButExpiredSuccesfulWithCallback() {
+        `when`(preferencesHelper.showingslastUpdateTime).thenReturn(currentTime - (EXPIRATION_TIME + 500))
+        `when`(showingCache.updateShowings(remoteShowings)).thenReturn(true)
+
+        val showings = showingRepository.getShowings()
+        showings.observeForever(observer as Observer<Resource<List<Showing>>>)
+
+        countDownLatch.countDown()
+        countDownLatch.countDown()
+
+        dbShowingLiveData.postValue(dbShowings)
+        remoteShowingLiveData.postValue(Response.successful(remoteShowings, callback))
+        dbShowingLiveData.postValue(remoteShowingsMapped)
+
+        verify(observer).onChanged(Resource.loading(dbShowings))
+        verify(observer).onChanged(Resource.success(remoteShowingsMapped))
+        verify(callback).onDataUpdated()
+
+        verify(preferencesHelper).showingsUpdated()
+        verify(showingCache).updateShowings(remoteShowings)
     }
 
     @Test
-    fun getShowingsWhenShowingsAreCachedButExpired() {
-        val dbShowingLiveData = MutableLiveData<List<Showing>>()
-        `when`(showingCache.getShowings()).thenReturn(dbShowingLiveData)
-        val dbShowings = ShowingMapper.mapFromShowingEntityList(ShowingEntityFactory.makeShowingEntityList(3))
-
-        val currentTime = System.currentTimeMillis()
-        `when`(preferencesHelper.showingslastUpdateTime)
-            .thenReturn(currentTime - (ShowingRepository.EXPIRATION_TIME + 500))
-
-        val remoteShowingLiveData = MutableLiveData<Response<List<ShowingEntity>>>()
-        val remoteShowings = ShowingEntityFactory.makeShowingEntityList(3)
-        `when`(gencatRemote.getShowings()).thenReturn(remoteShowingLiveData)
+    fun getShowingsWhenShowingsAreCachedButExpiredSuccesfulWithoutCallback() {
+        `when`(preferencesHelper.showingslastUpdateTime).thenReturn(currentTime - (EXPIRATION_TIME + 500))
+        `when`(showingCache.updateShowings(remoteShowings)).thenReturn(true)
 
         val showings = showingRepository.getShowings()
-
-        val observer: Observer<*>? = mock(Observer::class.java)
-        @Suppress("UNCHECKED_CAST")
         showings.observeForever(observer as Observer<Resource<List<Showing>>>)
-        dbShowingLiveData.postValue(dbShowings)
-        Mockito.verify(observer).onChanged(Resource.loading(dbShowings))
-        countDownLatch.countDown()
-        countDownLatch.countDown()
-        `when`(showingCache.updateShowings(remoteShowings)).thenReturn(true)
-        val callback = mock(DataUpdateCallback::class.java)
-        remoteShowingLiveData.postValue(
-            Response(remoteShowings, null, ResponseStatus.SUCCESSFUL, callback)
-        )
 
-        dbShowingLiveData.postValue(ShowingMapper.mapFromShowingEntityList(remoteShowings))
-        Mockito.verify(observer).onChanged(Resource.success(ShowingMapper.mapFromShowingEntityList(remoteShowings)))
-        Mockito.verify(preferencesHelper).showingsUpdated()
-        Mockito.verify(callback).onDataUpdated()
-        Mockito.verify(showingCache).updateShowings(remoteShowings)
+        countDownLatch.countDown()
+        countDownLatch.countDown()
+
+        dbShowingLiveData.postValue(dbShowings)
+        remoteShowingLiveData.postValue(Response.successful(remoteShowings, null))
+        dbShowingLiveData.postValue(remoteShowingsMapped)
+
+        verify(observer).onChanged(Resource.loading(dbShowings))
+        verify(observer).onChanged(Resource.success(remoteShowingsMapped))
+
+        verify(preferencesHelper).showingsUpdated()
+        verify(showingCache).updateShowings(remoteShowings)
     }
 
     @Test
     fun getShowingsWhenShowingsAreCachedButExpiredNotModified() {
-        val dbShowingLiveData = MutableLiveData<List<Showing>>()
-        `when`(showingCache.getShowings()).thenReturn(dbShowingLiveData)
-        val dbShowings = ShowingMapper.mapFromShowingEntityList(ShowingEntityFactory.makeShowingEntityList(3))
-
-        val currentTime = System.currentTimeMillis()
-        `when`(preferencesHelper.showingslastUpdateTime)
-            .thenReturn(currentTime - (ShowingRepository.EXPIRATION_TIME + 500))
-
-        val remoteShowingLiveData = MutableLiveData<Response<List<ShowingEntity>>>()
-        `when`(gencatRemote.getShowings()).thenReturn(remoteShowingLiveData)
-
+        `when`(preferencesHelper.showingslastUpdateTime).thenReturn(currentTime - (EXPIRATION_TIME + 500))
 
         val showings = showingRepository.getShowings()
-
-        val observer: Observer<*>? = mock(Observer::class.java)
-        @Suppress("UNCHECKED_CAST")
         showings.observeForever(observer as Observer<Resource<List<Showing>>>)
+
         dbShowingLiveData.postValue(dbShowings)
-        Mockito.verify(observer).onChanged(Resource.loading(dbShowings))
-        remoteShowingLiveData.postValue(
-            Response(null, null, ResponseStatus.NOT_MODIFIED, null)
-        )
-        Mockito.verify(observer).onChanged(Resource.success(dbShowings))
-        Mockito.verify(preferencesHelper).showingsUpdated()
-        Mockito.verify(showingCache, Mockito.never()).updateShowings(Mockito.anyList())
+        remoteShowingLiveData.postValue(Response.notModified(callback))
+
+        verify(observer).onChanged(Resource.loading(dbShowings))
+        verify(observer).onChanged(Resource.success(dbShowings))
+        verify(callback, never()).onDataUpdated()
+
+        verify(preferencesHelper).showingsUpdated()
+        verify(showingCache, never()).updateShowings(Mockito.anyList())
     }
 
     @Test
-    fun getShowingsWhenShowingsAreNotCached() {
-        val dbShowingLiveData = MutableLiveData<List<Showing>>()
-        `when`(showingCache.getShowings()).thenReturn(dbShowingLiveData)
-        val dbShowings = listOf<Showing>()
-        val remoteShowingLiveData = MutableLiveData<Response<List<ShowingEntity>>>()
-        val remoteShowings = ShowingEntityFactory.makeShowingEntityList(3)
-        `when`(gencatRemote.getShowings()).thenReturn(remoteShowingLiveData)
+    fun getShowingsWhenShowingsAreCachedButExpiredError() {
+        `when`(preferencesHelper.showingslastUpdateTime).thenReturn(currentTime - (EXPIRATION_TIME + 500))
+
+        val showings = showingRepository.getShowings()
+        showings.observeForever(observer as Observer<Resource<List<Showing>>>)
+
+        dbShowingLiveData.postValue(dbShowings)
+        remoteShowingLiveData.postValue(Response.error("error msg", callback))
+
+        verify(observer).onChanged(Resource.loading(dbShowings))
+        verify(observer).onChanged(Resource.error("error msg", dbShowings))
+        verify(callback, never()).onDataUpdated()
+
+        verify(preferencesHelper, never()).showingsUpdated()
+        verify(showingCache, never()).updateShowings(remoteShowings)
+    }
+
+    @Test
+    fun getShowingsWhenShowingsAreNullSuccesful() {
         `when`(showingCache.updateShowings(remoteShowings)).thenReturn(true)
 
         val showings = showingRepository.getShowings()
-
-        val observer: Observer<*>? = mock(Observer::class.java)
-        @Suppress("UNCHECKED_CAST")
         showings.observeForever(observer as Observer<Resource<List<Showing>>>)
-        dbShowingLiveData.postValue(dbShowings)
-        Mockito.verify(observer).onChanged(Resource.loading(dbShowings))
-        countDownLatch.countDown()
-        countDownLatch.countDown()
-        val callback = mock(DataUpdateCallback::class.java)
-        remoteShowingLiveData.postValue(
-            Response(remoteShowings, null, ResponseStatus.SUCCESSFUL, callback)
-        )
 
-        dbShowingLiveData.postValue(ShowingMapper.mapFromShowingEntityList(remoteShowings))
-        Mockito.verify(observer).onChanged(Resource.success(ShowingMapper.mapFromShowingEntityList(remoteShowings)))
-        Mockito.verify(preferencesHelper).showingsUpdated()
-        Mockito.verify(callback).onDataUpdated()
-        Mockito.verify(showingCache).updateShowings(remoteShowings)
+        countDownLatch.countDown()
+        countDownLatch.countDown()
+
+        dbShowingLiveData.postValue(null)
+        remoteShowingLiveData.postValue(Response.successful(remoteShowings, callback))
+        dbShowingLiveData.postValue(remoteShowingsMapped)
+
+        verify(observer).onChanged(Resource.loading(null))
+        verify(observer).onChanged(Resource.success(remoteShowingsMapped))
+        verify(callback).onDataUpdated()
+
+        verify(preferencesHelper).showingsUpdated()
+        verify(showingCache).updateShowings(remoteShowings)
     }
 
     @Test
-    fun getShowingsWhenShowingsAreNotCachedWithNullResponseBody() {
-        val dbShowingLiveData = MutableLiveData<List<Showing>>()
-        `when`(showingCache.getShowings()).thenReturn(dbShowingLiveData)
-        val dbShowings = listOf<Showing>()
-        val remoteShowingLiveData = MutableLiveData<Response<List<ShowingEntity>>>()
-        `when`(gencatRemote.getShowings()).thenReturn(remoteShowingLiveData)
-
+    fun getShowingsWhenShowingsAreNotCachedSuccesful() {
+        `when`(showingCache.updateShowings(remoteShowings)).thenReturn(true)
 
         val showings = showingRepository.getShowings()
-
-        val observer: Observer<*>? = mock(Observer::class.java)
-        @Suppress("UNCHECKED_CAST")
         showings.observeForever(observer as Observer<Resource<List<Showing>>>)
-        Mockito.verify(observer).onChanged(Resource.loading(null))
-        val callback = mock(DataUpdateCallback::class.java)
-        remoteShowingLiveData.postValue(
-            Response(null, null, ResponseStatus.SUCCESSFUL, callback)
-        )
-        dbShowingLiveData.postValue(dbShowings)
-        Mockito.verify(observer).onChanged(Resource.success(dbShowings))
-        Mockito.verify(preferencesHelper, Mockito.never()).showingsUpdated()
-        Mockito.verify(callback, never()).onDataUpdated()
-        Mockito.verify(showingCache, Mockito.never()).updateShowings(Mockito.anyList())
+
+        countDownLatch.countDown()
+        countDownLatch.countDown()
+
+        dbShowingLiveData.postValue(listOf())
+        remoteShowingLiveData.postValue(Response.successful(remoteShowings, callback))
+        dbShowingLiveData.postValue(remoteShowingsMapped)
+
+        verify(observer).onChanged(Resource.loading(listOf()))
+        verify(observer).onChanged(Resource.success(remoteShowingsMapped))
+        verify(callback).onDataUpdated()
+
+        verify(preferencesHelper).showingsUpdated()
+        verify(showingCache).updateShowings(remoteShowings)
     }
-    
-    
+
+    @Test
+    fun getShowingsWhenShowingsAreNotCachedSuccesfulButNotInserted() {
+        `when`(showingCache.updateShowings(remoteShowings)).thenReturn(false)
+
+        val showings = showingRepository.getShowings()
+        showings.observeForever(observer as Observer<Resource<List<Showing>>>)
+
+        countDownLatch.countDown()
+        countDownLatch.countDown()
+
+        dbShowingLiveData.postValue(listOf())
+        remoteShowingLiveData.postValue(Response.successful(remoteShowings, callback))
+        dbShowingLiveData.postValue(remoteShowingsMapped)
+
+        verify(observer).onChanged(Resource.loading(listOf()))
+        verify(observer).onChanged(Resource.success(remoteShowingsMapped))
+        verify(callback, never()).onDataUpdated()
+
+        verify(preferencesHelper, never()).showingsUpdated()
+        verify(showingCache).updateShowings(remoteShowings)
+    }
+
+    @Test
+    fun getShowingsWhenShowingsAreNotCachedSucessfulWithNullResponseBody() {
+        val showings = showingRepository.getShowings()
+        showings.observeForever(observer as Observer<Resource<List<Showing>>>)
+        dbShowingLiveData.postValue(listOf())
+
+        remoteShowingLiveData.postValue(Response.successful(null, callback))
+
+        verify(observer).onChanged(Resource.loading(listOf()))
+        verify(observer).onChanged(Resource.error(null, listOf()))
+        verify(callback, never()).onDataUpdated()
+
+        verify(preferencesHelper, never()).showingsUpdated()
+        verify(showingCache, never()).updateShowings(Mockito.anyList())
+    }
+
+    @Test
+    fun getShowingsWhenShowingsAreNotCachedError() {
+        val showings = showingRepository.getShowings()
+        showings.observeForever(observer as Observer<Resource<List<Showing>>>)
+        dbShowingLiveData.postValue(listOf())
+
+        remoteShowingLiveData.postValue(Response.error("error msg", callback))
+
+        verify(observer).onChanged(Resource.loading(listOf()))
+        verify(observer).onChanged(Resource.error("error msg", listOf()))
+        verify(callback, never()).onDataUpdated()
+
+        verify(preferencesHelper, never()).showingsUpdated()
+        verify(showingCache, never()).updateShowings(remoteShowings)
+    }
+
+
 
     @Test
     fun hasExpiredReturnsTrueIfExpired() {

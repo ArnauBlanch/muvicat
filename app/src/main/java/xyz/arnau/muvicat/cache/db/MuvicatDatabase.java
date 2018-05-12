@@ -6,6 +6,7 @@ import android.arch.persistence.room.RoomDatabase;
 import android.arch.persistence.room.TypeConverters;
 import android.content.Context;
 
+import xyz.arnau.muvicat.cache.db.migrations.DbMigration3to4;
 import xyz.arnau.muvicat.utils.AppExecutors;
 import xyz.arnau.muvicat.cache.dao.CinemaDao;
 import xyz.arnau.muvicat.cache.dao.MovieDao;
@@ -46,7 +47,7 @@ public abstract class MuvicatDatabase extends RoomDatabase {
 
     private static MuvicatDatabase buildDatabase(Context context, AppExecutors appExecutors) {
         return Room.databaseBuilder(context, MuvicatDatabase.class, MUVICAT_DB)
-                .addMigrations(DbMigration1to2.INSTANCE, DbMigration2to3.INSTANCE)
+                .addMigrations(DbMigration1to2.INSTANCE, DbMigration2to3.INSTANCE, DbMigration3to4.INSTANCE)
                 .addCallback(new PostalCodesDbCallback(context, appExecutors, new PostalCodeCsvReader()))
                 .build();
     }

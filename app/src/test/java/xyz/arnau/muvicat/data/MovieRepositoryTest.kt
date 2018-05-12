@@ -1,3 +1,5 @@
+@file:Suppress("UNCHECKED_CAST")
+
 package xyz.arnau.muvicat.data
 
 import android.arch.core.executor.testing.InstantTaskExecutorRule
@@ -5,14 +7,15 @@ import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Observer
 import junit.framework.TestCase
 import org.junit.Assert.assertEquals
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
 import org.mockito.Mockito
 import org.mockito.Mockito.*
-import xyz.arnau.muvicat.utils.AppExecutors
 import xyz.arnau.muvicat.cache.model.MovieEntity
+import xyz.arnau.muvicat.data.MovieRepository.Companion.EXPIRATION_TIME
 import xyz.arnau.muvicat.data.model.Movie
 import xyz.arnau.muvicat.data.model.Resource
 import xyz.arnau.muvicat.data.model.Status
@@ -21,8 +24,8 @@ import xyz.arnau.muvicat.data.repository.MovieCache
 import xyz.arnau.muvicat.data.test.MovieEntityFactory
 import xyz.arnau.muvicat.data.test.MovieMapper
 import xyz.arnau.muvicat.data.utils.RepoPreferencesHelper
+import xyz.arnau.muvicat.remote.DataUpdateCallback
 import xyz.arnau.muvicat.remote.model.Response
-import xyz.arnau.muvicat.remote.model.ResponseStatus
 import xyz.arnau.muvicat.utils.InstantAppExecutors
 import xyz.arnau.muvicat.utils.getValueBlocking
 import java.util.concurrent.CountDownLatch
@@ -32,152 +35,271 @@ class MovieRepositoryTest {
     @get:Rule
     val rule = InstantTaskExecutorRule()
 
-    private val movieCache: MovieCache = mock(MovieCache::class.java)
-    private val gencatRemote: GencatRemote = mock(GencatRemote::class.java)
-    private val appExecutors: AppExecutors = InstantAppExecutors()
-    private val preferencesHelper: RepoPreferencesHelper = mock(RepoPreferencesHelper::class.java)
+    private val movieCache = mock(MovieCache::class.java)
+    private val gencatRemote = mock(GencatRemote::class.java)
+    private val appExecutors = InstantAppExecutors()
+    private val preferencesHelper = mock(RepoPreferencesHelper::class.java)
     private val countDownLatch = mock(CountDownLatch::class.java)
+    private val movieRepository = MovieRepository(movieCache, gencatRemote, appExecutors, preferencesHelper, countDownLatch)
 
-    private val movieRepository =
-        MovieRepository(movieCache, gencatRemote, appExecutors, preferencesHelper, countDownLatch)
+    private val dbMovieLiveData = MutableLiveData<List<Movie>>()
+    private val dbMovies = MovieMapper.mapFromMovieEntityList(MovieEntityFactory.makeMovieEntityList(3))
+
+    private val remoteMovieLiveData = MutableLiveData<Response<List<MovieEntity>>>()
+    private val remoteMovies = MovieEntityFactory.makeMovieEntityList(3)
+    private val remoteMoviesMapped = MovieMapper.mapFromMovieEntityList(remoteMovies)
+
+    private val observer: Observer<*>? = mock(Observer::class.java)
+    private val currentTime = System.currentTimeMillis()
+    private val callback = mock(DataUpdateCallback::class.java)
+
+    private val movie = MovieMapper.mapFromMovieEntity(MovieEntityFactory.makeMovieEntity())
+    private val movieLiveData = MutableLiveData<Movie>()
+
+    @Before
+    fun setUp() {
+        `when`(movieCache.getMovies()).thenReturn(dbMovieLiveData)
+        `when`(gencatRemote.getMovies()).thenReturn(remoteMovieLiveData)
+    }
 
     @Test
     fun getMoviesWhenMoviesAreCachedAndNotExpired() {
-        val dbMovieLiveData = MutableLiveData<List<Movie>>()
-        `when`(movieCache.getMovies()).thenReturn(dbMovieLiveData)
-        val dbMovies = MovieMapper.mapFromMovieEntityList(MovieEntityFactory.makeMovieEntityList(3))
         dbMovieLiveData.postValue(dbMovies)
-        val currentTime = System.currentTimeMillis()
         `when`(preferencesHelper.movieslastUpdateTime).thenReturn(currentTime - 5000)
 
         val movies = movieRepository.getMovies()
-        val observer: Observer<*>? = mock(Observer::class.java)
-        @Suppress("UNCHECKED_CAST")
         movies.observeForever(observer as Observer<Resource<List<Movie>>>)
+
         verify(observer).onChanged(Resource.success(dbMovies))
+
         verify(preferencesHelper, never()).moviesUpdated()
         verify(countDownLatch).countDown()
         verify(gencatRemote, never()).getMovies()
     }
+    
 
     @Test
-    fun getMoviesWhenMoviesAreCachedButExpired() {
-        val dbMovieLiveData = MutableLiveData<List<Movie>>()
-        `when`(movieCache.getMovies()).thenReturn(dbMovieLiveData)
-        val dbMovies = MovieMapper.mapFromMovieEntityList(MovieEntityFactory.makeMovieEntityList(3))
-
-        val currentTime = System.currentTimeMillis()
-        `when`(preferencesHelper.movieslastUpdateTime)
-            .thenReturn(currentTime - (MovieRepository.EXPIRATION_TIME + 500))
-
-        val remoteMovieLiveData = MutableLiveData<Response<List<MovieEntity>>>()
-        val remoteMovies = MovieEntityFactory.makeMovieEntityList(3)
-        `when`(gencatRemote.getMovies()).thenReturn(remoteMovieLiveData)
-
+    fun getMoviesWhenMoviesAreCachedButExpiredSuccesfulWithCallback() {
+        `when`(preferencesHelper.movieslastUpdateTime).thenReturn(currentTime - (EXPIRATION_TIME + 500))
 
         val movies = movieRepository.getMovies()
-
-        val observer: Observer<*>? = mock(Observer::class.java)
-        @Suppress("UNCHECKED_CAST")
         movies.observeForever(observer as Observer<Resource<List<Movie>>>)
+
         dbMovieLiveData.postValue(dbMovies)
+        remoteMovieLiveData.postValue(Response.successful(remoteMovies, callback))
+        dbMovieLiveData.postValue(remoteMoviesMapped)
+
         verify(observer).onChanged(Resource.loading(dbMovies))
-        remoteMovieLiveData.postValue(
-            Response(remoteMovies, null, ResponseStatus.SUCCESSFUL, null)
-        )
-        dbMovieLiveData.postValue(MovieMapper.mapFromMovieEntityList(remoteMovies))
-        verify(observer).onChanged(Resource.success(MovieMapper.mapFromMovieEntityList(remoteMovies)))
+        verify(observer).onChanged(Resource.success(remoteMoviesMapped))
+        verify(callback).onDataUpdated()
+
         verify(preferencesHelper).moviesUpdated()
         verify(countDownLatch).countDown()
         verify(movieCache).updateMovies(remoteMovies)
     }
 
     @Test
-    fun getMoviesWhenMoviesAreCachedButExpiredNotModified() {
-        val dbMovieLiveData = MutableLiveData<List<Movie>>()
-        `when`(movieCache.getMovies()).thenReturn(dbMovieLiveData)
-        val dbMovies = MovieMapper.mapFromMovieEntityList(MovieEntityFactory.makeMovieEntityList(3))
-
-        val currentTime = System.currentTimeMillis()
-        `when`(preferencesHelper.movieslastUpdateTime)
-            .thenReturn(currentTime - (MovieRepository.EXPIRATION_TIME + 500))
-
-        val remoteMovieLiveData = MutableLiveData<Response<List<MovieEntity>>>()
-        `when`(gencatRemote.getMovies()).thenReturn(remoteMovieLiveData)
-
+    fun getMoviesWhenMoviesAreCachedButExpiredSuccesfulWithoutCallback() {
+        `when`(preferencesHelper.movieslastUpdateTime).thenReturn(currentTime - (EXPIRATION_TIME + 500))
 
         val movies = movieRepository.getMovies()
-
-        val observer: Observer<*>? = mock(Observer::class.java)
-        @Suppress("UNCHECKED_CAST")
         movies.observeForever(observer as Observer<Resource<List<Movie>>>)
+
         dbMovieLiveData.postValue(dbMovies)
+        remoteMovieLiveData.postValue(Response.successful(remoteMovies, null))
+        dbMovieLiveData.postValue(remoteMoviesMapped)
+
         verify(observer).onChanged(Resource.loading(dbMovies))
-        remoteMovieLiveData.postValue(
-            Response(null, null, ResponseStatus.NOT_MODIFIED, null)
-        )
+        verify(observer).onChanged(Resource.success(remoteMoviesMapped))
+
+        verify(preferencesHelper).moviesUpdated()
+        verify(countDownLatch).countDown()
+        verify(movieCache).updateMovies(remoteMovies)
+    }
+
+    @Test
+    fun getMoviesWhenMoviesAreCachedButExpiredSuccesfulWithoutCallbackTwice() {
+        `when`(preferencesHelper.movieslastUpdateTime).thenReturn(currentTime - (MovieRepository.EXPIRATION_TIME + 500))
+
+        val movies = movieRepository.getMovies()
+        movies.observeForever(observer as Observer<Resource<List<Movie>>>)
+
+        dbMovieLiveData.postValue(dbMovies)
+        remoteMovieLiveData.postValue(Response.successful(remoteMovies, null))
+        dbMovieLiveData.postValue(remoteMoviesMapped)
+
+        verify(observer).onChanged(Resource.loading(dbMovies))
+        verify(observer).onChanged(Resource.success(remoteMoviesMapped))
+
+
+        val dbMovieLiveData2 = MutableLiveData<List<Movie>>()
+        val remoteMovieLiveData2 = MutableLiveData<Response<List<MovieEntity>>>()
+        `when`(movieCache.getMovies()).thenReturn(dbMovieLiveData2)
+        `when`(gencatRemote.getMovies()).thenReturn(remoteMovieLiveData2)
+
+        val movies2 = movieRepository.getMovies()
+        val observer2: Observer<*>? = mock(Observer::class.java)
+        movies2.observeForever(observer2 as Observer<Resource<List<Movie>>>)
+
+        dbMovieLiveData2.postValue(dbMovies)
+        remoteMovieLiveData2.postValue(Response.successful(remoteMovies, null))
+        dbMovieLiveData2.postValue(remoteMoviesMapped)
+
+        verify(observer2).onChanged(Resource.loading(dbMovies))
+        verify(observer2).onChanged(Resource.success(remoteMoviesMapped))
+
+        verify(preferencesHelper, times(2)).moviesUpdated()
+        verify(countDownLatch, times(1)).countDown()
+        verify(movieCache, times(2)).updateMovies(remoteMovies)
+    }
+
+    @Test
+    fun getMoviesWhenMoviesAreCachedButExpiredNotModified() {
+        `when`(preferencesHelper.movieslastUpdateTime).thenReturn(currentTime - (EXPIRATION_TIME + 500))
+
+        val movies = movieRepository.getMovies()
+        movies.observeForever(observer as Observer<Resource<List<Movie>>>)
+
+        dbMovieLiveData.postValue(dbMovies)
+        remoteMovieLiveData.postValue(Response.notModified(callback))
+
+        verify(observer).onChanged(Resource.loading(dbMovies))
         verify(observer).onChanged(Resource.success(dbMovies))
+        verify(callback, never()).onDataUpdated()
+
         verify(preferencesHelper).moviesUpdated()
         verify(countDownLatch).countDown()
         verify(movieCache, never()).updateMovies(Mockito.anyList())
     }
 
     @Test
-    fun getMoviesWhenMoviesAreNotCached() {
-        val dbMovieLiveData = MutableLiveData<List<Movie>>()
-        `when`(movieCache.getMovies()).thenReturn(dbMovieLiveData)
-        val dbMovies = listOf<Movie>()
-        val remoteMovieLiveData = MutableLiveData<Response<List<MovieEntity>>>()
-        val remoteMovies = MovieEntityFactory.makeMovieEntityList(3)
-        `when`(gencatRemote.getMovies()).thenReturn(remoteMovieLiveData)
-
+    fun getMoviesWhenMoviesAreCachedButExpiredError() {
+        `when`(preferencesHelper.movieslastUpdateTime).thenReturn(currentTime - (EXPIRATION_TIME + 500))
 
         val movies = movieRepository.getMovies()
-
-        val observer: Observer<*>? = mock(Observer::class.java)
-        @Suppress("UNCHECKED_CAST")
         movies.observeForever(observer as Observer<Resource<List<Movie>>>)
+
         dbMovieLiveData.postValue(dbMovies)
+        remoteMovieLiveData.postValue(Response.error("error msg", callback))
+
         verify(observer).onChanged(Resource.loading(dbMovies))
-        remoteMovieLiveData.postValue(
-            Response(remoteMovies, null, ResponseStatus.SUCCESSFUL, null)
-        )
-        dbMovieLiveData.postValue(MovieMapper.mapFromMovieEntityList(remoteMovies))
-        verify(observer).onChanged(Resource.success(MovieMapper.mapFromMovieEntityList(remoteMovies)))
+        verify(observer).onChanged(Resource.error("error msg", dbMovies))
+        verify(callback, never()).onDataUpdated()
+
+        verify(preferencesHelper, never()).moviesUpdated()
+        verify(countDownLatch).countDown()
+        verify(movieCache, never()).updateMovies(remoteMovies)
+    }
+
+    @Test
+    fun getMoviesWhenMoviesAreCachedButExpiredErrorTwice() {
+        `when`(preferencesHelper.movieslastUpdateTime).thenReturn(currentTime - (EXPIRATION_TIME + 500))
+
+        val movies = movieRepository.getMovies()
+        movies.observeForever(observer as Observer<Resource<List<Movie>>>)
+
+        dbMovieLiveData.postValue(dbMovies)
+        remoteMovieLiveData.postValue(Response.error("error msg", callback))
+
+        verify(observer).onChanged(Resource.loading(dbMovies))
+        verify(observer).onChanged(Resource.error("error msg", dbMovies))
+
+
+        val dbMovieLiveData2 = MutableLiveData<List<Movie>>()
+        val remoteMovieLiveData2 = MutableLiveData<Response<List<MovieEntity>>>()
+        `when`(movieCache.getMovies()).thenReturn(dbMovieLiveData2)
+        `when`(gencatRemote.getMovies()).thenReturn(remoteMovieLiveData2)
+
+        val movies2 = movieRepository.getMovies()
+        val observer2: Observer<*>? = mock(Observer::class.java)
+        movies2.observeForever(observer2 as Observer<Resource<List<Movie>>>)
+
+        dbMovieLiveData2.postValue(dbMovies)
+        remoteMovieLiveData2.postValue(Response.error("error msg", callback))
+
+        verify(observer2).onChanged(Resource.loading(dbMovies))
+        verify(observer2).onChanged(Resource.error("error msg", dbMovies))
+
+        verify(callback, never()).onDataUpdated()
+        verify(preferencesHelper, never()).moviesUpdated()
+        verify(countDownLatch, times(1)).countDown()
+        verify(movieCache, never()).updateMovies(remoteMovies)
+    }
+
+    @Test
+    fun getMoviesWhenMoviesAreNullSuccesful() {
+        val movies = movieRepository.getMovies()
+        movies.observeForever(observer as Observer<Resource<List<Movie>>>)
+
+        dbMovieLiveData.postValue(null)
+        remoteMovieLiveData.postValue(Response.successful(remoteMovies, callback))
+        dbMovieLiveData.postValue(remoteMoviesMapped)
+
+        verify(observer).onChanged(Resource.loading(null))
+        verify(observer).onChanged(Resource.success(remoteMoviesMapped))
+        verify(callback).onDataUpdated()
+
         verify(preferencesHelper).moviesUpdated()
         verify(countDownLatch).countDown()
         verify(movieCache).updateMovies(remoteMovies)
     }
 
     @Test
-    fun getMoviesWhenMoviesAreNotCachedWithNullResponseBody() {
-        val dbMovieLiveData = MutableLiveData<List<Movie>>()
-        `when`(movieCache.getMovies()).thenReturn(dbMovieLiveData)
-        val dbMovies = listOf<Movie>()
-        val remoteMovieLiveData = MutableLiveData<Response<List<MovieEntity>>>()
-        `when`(gencatRemote.getMovies()).thenReturn(remoteMovieLiveData)
-
-
+    fun getMoviesWhenMoviesAreNotCachedSuccesful() {
         val movies = movieRepository.getMovies()
-
-        val observer: Observer<*>? = mock(Observer::class.java)
-        @Suppress("UNCHECKED_CAST")
         movies.observeForever(observer as Observer<Resource<List<Movie>>>)
-        verify(observer).onChanged(Resource.loading(null))
-        remoteMovieLiveData.postValue(
-            Response(null, null, ResponseStatus.SUCCESSFUL, null)
-        )
-        dbMovieLiveData.postValue(dbMovies)
-        verify(observer).onChanged(Resource.success(dbMovies))
+
+        dbMovieLiveData.postValue(listOf())
+        remoteMovieLiveData.postValue(Response.successful(remoteMovies, callback))
+        dbMovieLiveData.postValue(remoteMoviesMapped)
+
+        verify(observer).onChanged(Resource.loading(listOf()))
+        verify(observer).onChanged(Resource.success(remoteMoviesMapped))
+        verify(callback).onDataUpdated()
+
+        verify(preferencesHelper).moviesUpdated()
+        verify(countDownLatch).countDown()
+        verify(movieCache).updateMovies(remoteMovies)
+    }
+
+    @Test
+    fun getMoviesWhenMoviesAreNotCachedSucessfulWithNullResponseBody() {
+        val movies = movieRepository.getMovies()
+        movies.observeForever(observer as Observer<Resource<List<Movie>>>)
+        dbMovieLiveData.postValue(listOf())
+
+        remoteMovieLiveData.postValue(Response.successful(null, callback))
+
+        verify(observer).onChanged(Resource.loading(listOf()))
+        verify(observer).onChanged(Resource.error(null, listOf()))
+        verify(callback, never()).onDataUpdated()
+
         verify(preferencesHelper, never()).moviesUpdated()
         verify(countDownLatch).countDown()
         verify(movieCache, never()).updateMovies(Mockito.anyList())
     }
 
     @Test
+    fun getMoviesWhenMoviesAreNotCachedError() {
+        val movies = movieRepository.getMovies()
+        movies.observeForever(observer as Observer<Resource<List<Movie>>>)
+        dbMovieLiveData.postValue(listOf())
+
+        remoteMovieLiveData.postValue(Response.error("error msg", callback))
+
+        verify(observer).onChanged(Resource.loading(listOf()))
+        verify(observer).onChanged(Resource.error("error msg", listOf()))
+        verify(callback, never()).onDataUpdated()
+
+        verify(preferencesHelper, never()).moviesUpdated()
+        verify(countDownLatch).countDown()
+        verify(movieCache, never()).updateMovies(remoteMovies)
+    }
+
+
+
+    @Test
     fun getMovieReturnsMovieLiveDataWithSuccessIfExists() {
-        val movie = MovieMapper.mapFromMovieEntity(MovieEntityFactory.makeMovieEntity())
-        val movieLiveData = MutableLiveData<Movie>()
         `when`(movieCache.getMovie(movie.id)).thenReturn(movieLiveData)
         movieLiveData.postValue(movie)
 
@@ -188,7 +310,6 @@ class MovieRepositoryTest {
 
     @Test
     fun getMovieReturnsMovieLiveDataWithErrorIfDoesNotExist() {
-        val movieLiveData = MutableLiveData<Movie>()
         `when`(movieCache.getMovie(100.toLong())).thenReturn(movieLiveData)
         movieLiveData.postValue(null)
 

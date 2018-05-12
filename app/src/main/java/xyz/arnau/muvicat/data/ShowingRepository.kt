@@ -35,7 +35,7 @@ class ShowingRepository(
         object : NetworkBoundResource<List<Showing>, List<ShowingEntity>>(appExecutors) {
             override fun saveResponse(response: Response<List<ShowingEntity>>) {
                 if (response.type == SUCCESSFUL) {
-                    response.body?.let { showings ->
+                    response.body!!.let { showings ->
                         countDownLatch.await()
                         val hasUpdated = showingCache.updateShowings(showings)
                         if (hasUpdated) {
@@ -43,7 +43,8 @@ class ShowingRepository(
                             response.callback?.onDataUpdated()
                         }
                     }
-                } else if (response.type == NOT_MODIFIED) {
+                }
+                if (response.type == NOT_MODIFIED) {
                     preferencesHelper.showingsUpdated()
                 }
             }
