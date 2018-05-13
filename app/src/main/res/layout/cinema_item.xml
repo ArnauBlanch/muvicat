@@ -47,7 +47,7 @@
     <TextView
         android:id="@+id/cinemaDistance"
         android:visibility="gone"
-        android:fontFamily="@font/nunito_sans_bold_italic"
+        android:fontFamily="@font/nunito_sans_semibold"
         android:text="≈ 3 km"
         android:textSize="15sp"
         android:layout_gravity="center_vertical"
