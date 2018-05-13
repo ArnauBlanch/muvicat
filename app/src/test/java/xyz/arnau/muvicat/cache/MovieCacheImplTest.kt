@@ -3,6 +3,7 @@ package xyz.arnau.muvicat.cache
 import android.arch.core.executor.testing.InstantTaskExecutorRule
 import android.arch.lifecycle.MutableLiveData
 import junit.framework.TestCase.assertEquals
+import org.joda.time.LocalDate
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TestRule
@@ -29,9 +30,22 @@ class MovieCacheImplTest {
         val movies = MovieMapper.mapFromMovieEntityList(MovieEntityFactory.makeMovieEntityList(5))
         val moviesLiveData = MutableLiveData<List<Movie>>()
         moviesLiveData.value = movies
-        `when`(movieDao.getMovies()).thenReturn(moviesLiveData)
+        `when`(movieDao.getCurrentMovies()).thenReturn(moviesLiveData)
         val moviesFromCache = movieCacheImpl.getMovies()
-        verify(movieDao).getMovies()
+        verify(movieDao).getCurrentMovies()
+        assertEquals(movies, moviesFromCache.value)
+    }
+
+    @Test
+    fun getMoviesByCinemaReturnsData() {
+        val cinemaId = 100.toLong()
+        val today = LocalDate.now().toDate().time
+        val movies = MovieMapper.mapFromMovieEntityList(MovieEntityFactory.makeMovieEntityList(5))
+        val moviesLiveData = MutableLiveData<List<Movie>>()
+        moviesLiveData.value = movies
+        `when`(movieDao.getCurrentMoviesByCinema(cinemaId, today)).thenReturn(moviesLiveData)
+        val moviesFromCache = movieCacheImpl.getMoviesByCinema(cinemaId)
+        verify(movieDao).getCurrentMoviesByCinema(cinemaId, today)
         assertEquals(movies, moviesFromCache.value)
     }
 

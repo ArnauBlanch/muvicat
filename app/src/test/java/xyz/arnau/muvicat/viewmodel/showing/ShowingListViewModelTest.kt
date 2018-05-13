@@ -9,12 +9,15 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
+import org.mockito.Mockito
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock
 import xyz.arnau.muvicat.data.ShowingRepository
 import xyz.arnau.muvicat.data.model.Resource
 import xyz.arnau.muvicat.data.model.Showing
 import xyz.arnau.muvicat.data.model.Status
+import xyz.arnau.muvicat.data.test.MovieEntityFactory
+import xyz.arnau.muvicat.data.test.MovieMapper
 import xyz.arnau.muvicat.data.test.ShowingEntityFactory
 import xyz.arnau.muvicat.data.test.ShowingMapper
 import xyz.arnau.muvicat.utils.getValueBlocking
@@ -40,6 +43,21 @@ class ShowingListViewModelTest {
         showingsLiveData.postValue(Resource.success(showings))
 
         val result = showingListViewModel.showings.getValueBlocking()
+        assertEquals(Status.SUCCESS, result!!.status)
+        assertEquals(null, result.message)
+        assertEquals(showings, result.data)
+    }
+
+    @Test
+    fun getShowingsWithCinemaIdReturnsLiveData() {
+        val cinemaId = 100.toLong()
+        showingListViewModel.setCinemaId(cinemaId)
+        val showings = ShowingMapper.mapFromShowingEntityList(ShowingEntityFactory.makeShowingEntityList(5))
+        `when`(showingRepository.getShowingsByCinema(cinemaId)).thenReturn(showingsLiveData)
+        showingsLiveData.postValue(Resource.success(showings))
+
+        val result = showingListViewModel.showings.getValueBlocking()
+        Mockito.verify(showingRepository).getShowingsByCinema(cinemaId)
         assertEquals(Status.SUCCESS, result!!.status)
         assertEquals(null, result.message)
         assertEquals(showings, result.data)

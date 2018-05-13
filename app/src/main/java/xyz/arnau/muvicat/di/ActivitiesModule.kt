@@ -15,6 +15,6 @@ abstract class ActivitiesModule {
     @ContributesAndroidInjector()
     abstract fun contributeMovieActivity(): MovieActivity
 
-    @ContributesAndroidInjector()
+    @ContributesAndroidInjector(modules = [(FragmentBuildersModule::class)])
     abstract fun contributeCinemaActivity(): CinemaActivity
 }

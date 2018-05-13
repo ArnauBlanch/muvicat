@@ -9,7 +9,11 @@ import javax.inject.Inject
 
 class ShowingCacheImpl @Inject constructor(private val showingDao: ShowingDao) : ShowingCache {
     override fun getShowings(): LiveData<List<Showing>> {
-        return showingDao.getShowings()
+        return showingDao.getCurrentShowings()
+    }
+
+    override fun getShowingsByCinema(cinemaId: Long): LiveData<List<Showing>> {
+        return showingDao.getCurrentShowingsByCinema(cinemaId)
     }
 
     override fun updateShowings(showings: List<ShowingEntity>): Boolean {

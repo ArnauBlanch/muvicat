@@ -9,20 +9,36 @@ import android.graphics.PorterDuff
 import android.location.Location
 import android.os.Bundle
 import android.support.design.widget.AppBarLayout
+import android.support.v4.app.Fragment
 import android.support.v4.content.res.ResourcesCompat
+import android.support.v4.view.ViewCompat
 import android.view.View
 import dagger.android.AndroidInjection
+import dagger.android.AndroidInjector
+import dagger.android.DispatchingAndroidInjector
+import dagger.android.support.HasSupportFragmentInjector
 import kotlinx.android.synthetic.main.cinema_info.*
 import xyz.arnau.muvicat.R
+import xyz.arnau.muvicat.R.id.cinemaInfoToolbarLayout
+import xyz.arnau.muvicat.R.id.viewPager
 import xyz.arnau.muvicat.data.model.Cinema
 import xyz.arnau.muvicat.data.model.Resource
 import xyz.arnau.muvicat.data.model.Status
 import xyz.arnau.muvicat.ui.LocationAwareActivity
+import xyz.arnau.muvicat.ui.movie.MovieListFragment
+import xyz.arnau.muvicat.ui.showing.ShowingListFragment
 import xyz.arnau.muvicat.utils.LocationUtils
 import xyz.arnau.muvicat.viewmodel.cinema.CinemaViewModel
 import javax.inject.Inject
 
-class CinemaActivity : LocationAwareActivity() {
+class CinemaActivity : LocationAwareActivity(), HasSupportFragmentInjector {
+    @Inject
+    lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
+
+    override fun supportFragmentInjector(): AndroidInjector<Fragment> {
+        return dispatchingAndroidInjector
+    }
+
     @Inject
     lateinit var cinemaViewModel: CinemaViewModel
 
@@ -31,7 +47,6 @@ class CinemaActivity : LocationAwareActivity() {
 
     private var cinemaLatitude: Double? = null
     private var cinemaLongitude: Double? = null
-    private var lastLocation: Location? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,8 +57,10 @@ class CinemaActivity : LocationAwareActivity() {
         val cinemaId = intent.getLongExtra(CinemaActivity.CINEMA_ID, (-1).toLong())
         if (cinemaId == (-1).toLong())
             throw Exception("Missing cinema identifier")
-        else
+        else {
             cinemaViewModel.setId(cinemaId)
+            setupTabs(cinemaId)
+        }
     }
 
     override fun onStart() {
@@ -53,6 +70,19 @@ class CinemaActivity : LocationAwareActivity() {
             Observer<Resource<Cinema>> {
                 if (it != null) handleDataState(it)
             })
+    }
+
+    private fun setupTabs(cinemaId: Long) {
+        val adapter = TabViewPagerAdapter(
+            listOf(
+                MovieListFragment.prepareMovieListByCinema(cinemaId),
+                ShowingListFragment.prepareShowingListByCinema(cinemaId)
+            ),
+            listOf(R.string.movies, R.string.showings),
+            supportFragmentManager,
+            this)
+        viewPager.adapter = adapter
+        tabLayout.setupWithViewPager(viewPager)
     }
 
     @SuppressLint("SetTextI18n")
@@ -142,6 +172,5 @@ class CinemaActivity : LocationAwareActivity() {
             )} km"
             cinemaDistance.visibility = View.VISIBLE
         }
-        lastLocation = location
     }
 }

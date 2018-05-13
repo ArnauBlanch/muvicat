@@ -9,7 +9,11 @@ import javax.inject.Inject
 
 class MovieCacheImpl @Inject constructor(private val movieDao: MovieDao) : MovieCache {
     override fun getMovies(): LiveData<List<Movie>> {
-        return movieDao.getMovies()
+        return movieDao.getCurrentMovies()
+    }
+
+    override fun getMoviesByCinema(cinemaId: Long): LiveData<List<Movie>> {
+        return movieDao.getCurrentMoviesByCinema(cinemaId)
     }
 
     override fun getMovie(movieId: Long): LiveData<Movie> {

@@ -8,8 +8,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
-import org.mockito.Mockito.`when`
-import org.mockito.Mockito.mock
+import org.mockito.Mockito.*
 import xyz.arnau.muvicat.data.MovieRepository
 import xyz.arnau.muvicat.cache.model.MovieEntity
 import xyz.arnau.muvicat.data.model.Movie
@@ -40,6 +39,22 @@ class MovieListViewModelTest {
         moviesLiveData.postValue(Resource.success(movies))
 
         val result = movieListViewModel.movies.getValueBlocking()
+        verify(movieRepository).getMovies()
+        assertEquals(Status.SUCCESS, result!!.status)
+        assertEquals(null, result.message)
+        assertEquals(movies, result.data)
+    }
+
+    @Test
+    fun getMoviesWithCinemaIdReturnsLiveData() {
+        val cinemaId = 100.toLong()
+        movieListViewModel.setCinemaId(cinemaId)
+        val movies = MovieMapper.mapFromMovieEntityList(MovieEntityFactory.makeMovieEntityList(5))
+        `when`(movieRepository.getMoviesByCinema(cinemaId)).thenReturn(moviesLiveData)
+        moviesLiveData.postValue(Resource.success(movies))
+
+        val result = movieListViewModel.movies.getValueBlocking()
+        verify(movieRepository).getMoviesByCinema(cinemaId)
         assertEquals(Status.SUCCESS, result!!.status)
         assertEquals(null, result.message)
         assertEquals(movies, result.data)

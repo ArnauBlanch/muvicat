@@ -16,6 +16,7 @@ import org.mockito.Mockito
 import org.mockito.Mockito.*
 import xyz.arnau.muvicat.cache.model.ShowingEntity
 import xyz.arnau.muvicat.data.ShowingRepository.Companion.EXPIRATION_TIME
+import xyz.arnau.muvicat.data.model.Movie
 import xyz.arnau.muvicat.data.model.Showing
 import xyz.arnau.muvicat.data.model.Resource
 import xyz.arnau.muvicat.data.model.Status
@@ -252,6 +253,37 @@ class ShowingRepositoryTest {
 
         verify(preferencesHelper, never()).showingsUpdated()
         verify(showingCache, never()).updateShowings(remoteShowings)
+    }
+
+
+    @Test
+    fun getShowingsByCinemaReturnsShowingsLiveDataWithSuccessIfExists() {
+        `when`(showingCache.getShowingsByCinema(100.toLong())).thenReturn(dbShowingLiveData)
+        dbShowingLiveData.postValue(dbShowings)
+
+        val res = showingRepository.getShowingsByCinema(100.toLong()).getValueBlocking()
+        assertEquals(Status.SUCCESS, res?.status)
+        assertEquals(dbShowings, res?.data)
+    }
+
+    @Test
+    fun getShowingsByCinemaReturnsShowingsLiveDataWithErrorIfNullCache() {
+        `when`(showingCache.getShowingsByCinema(100.toLong())).thenReturn(dbShowingLiveData)
+        dbShowingLiveData.postValue(null)
+
+        val res = showingRepository.getShowingsByCinema(100.toLong()).getValueBlocking()
+        assertEquals(Status.ERROR, res?.status)
+        assertEquals(null, res?.data)
+    }
+
+    @Test
+    fun getShowingsByCinemaReturnsShowingsLiveDataWithErrorIfEmptyCache() {
+        `when`(showingCache.getShowingsByCinema(100.toLong())).thenReturn(dbShowingLiveData)
+        dbShowingLiveData.postValue(listOf())
+
+        val res = showingRepository.getShowingsByCinema(100.toLong()).getValueBlocking()
+        assertEquals(Status.ERROR, res?.status)
+        assertEquals(listOf<Showing>(), res?.data)
     }
 
 

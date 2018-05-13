@@ -318,6 +318,36 @@ class MovieRepositoryTest {
         assertEquals(null, res?.data)
     }
 
+    @Test
+    fun getMoviesByCinemaReturnsMovieLiveDataWithSuccessIfExists() {
+        `when`(movieCache.getMoviesByCinema(100.toLong())).thenReturn(dbMovieLiveData)
+        dbMovieLiveData.postValue(dbMovies)
+
+        val res = movieRepository.getMoviesByCinema(100.toLong()).getValueBlocking()
+        assertEquals(Status.SUCCESS, res?.status)
+        assertEquals(dbMovies, res?.data)
+    }
+
+    @Test
+    fun getMoviesByCinemaReturnsMovieLiveDataWithErrorIfNullCache() {
+        `when`(movieCache.getMoviesByCinema(100.toLong())).thenReturn(dbMovieLiveData)
+        dbMovieLiveData.postValue(null)
+
+        val res = movieRepository.getMoviesByCinema(100.toLong()).getValueBlocking()
+        assertEquals(Status.ERROR, res?.status)
+        assertEquals(null, res?.data)
+    }
+
+    @Test
+    fun getMoviesByCinemaReturnsMovieLiveDataWithErrorIfEmptyCache() {
+        `when`(movieCache.getMoviesByCinema(100.toLong())).thenReturn(dbMovieLiveData)
+        dbMovieLiveData.postValue(listOf<Movie>())
+
+        val res = movieRepository.getMoviesByCinema(100.toLong()).getValueBlocking()
+        assertEquals(Status.ERROR, res?.status)
+        assertEquals(listOf<Movie>(), res?.data)
+    }
+
 
     @Test
     fun hasExpiredReturnsTrueIfExpired() {

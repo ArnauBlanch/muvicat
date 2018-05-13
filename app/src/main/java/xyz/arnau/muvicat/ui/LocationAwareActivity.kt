@@ -23,6 +23,9 @@ abstract class LocationAwareActivity : AppCompatActivity() {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private val REQUEST_PERMISSIONS_REQUEST_CODE = 34
 
+    var lastLocation: Location?  = null
+        private set
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
@@ -34,7 +37,7 @@ abstract class LocationAwareActivity : AppCompatActivity() {
         if (!checkPermissions())
             requestPermissions()
         else
-            getLastLocation()
+            getLastLocationFromClient()
     }
 
     override fun onRequestPermissionsResult(
@@ -45,7 +48,7 @@ abstract class LocationAwareActivity : AppCompatActivity() {
         if (requestCode == REQUEST_PERMISSIONS_REQUEST_CODE) {
             when {
                 grantResults.isEmpty() -> Timber.i("User location was cancelled.")
-                (grantResults[0] == PERMISSION_GRANTED) -> getLastLocation()
+                (grantResults[0] == PERMISSION_GRANTED) -> getLastLocationFromClient()
                 else -> {
                     showSnackbar(
                         R.string.permission_denied_explanation,
@@ -66,11 +69,12 @@ abstract class LocationAwareActivity : AppCompatActivity() {
     abstract fun processLastLocation(location: Location)
 
     @SuppressLint("MissingPermission")
-    private fun getLastLocation() {
+    private fun getLastLocationFromClient() {
         fusedLocationClient.lastLocation
             .addOnCompleteListener(this) {
                 if (it.isSuccessful && it.result != null) {
                     processLastLocation(it.result)
+                    lastLocation = it.result
                 } else {
                     Timber.w(it.exception)
                     showSnackbar(R.string.no_location_detected)

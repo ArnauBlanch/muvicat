@@ -3,6 +3,7 @@ package xyz.arnau.muvicat.cache
 import android.arch.core.executor.testing.InstantTaskExecutorRule
 import android.arch.lifecycle.MutableLiveData
 import junit.framework.TestCase.assertEquals
+import org.joda.time.LocalDate
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TestRule
@@ -25,12 +26,13 @@ class CinemaCacheImplTest {
 
     @Test
     fun getCinemasReturnsData() {
+        val today = LocalDate.now().toDate().time
         val cinemas = CinemaFactory.makeCinemaList(5)
         val cinemasLiveData = MutableLiveData<List<Cinema>>()
         cinemasLiveData.value = cinemas
-        `when`(cinemaDao.getCinemas()).thenReturn(cinemasLiveData)
+        `when`(cinemaDao.getCurrentCinemas(today)).thenReturn(cinemasLiveData)
         val cinemasFromCache = cinemaCacheImpl.getCinemas()
-        verify(cinemaDao).getCinemas()
+        verify(cinemaDao).getCurrentCinemas(today)
         assertEquals(cinemas, cinemasFromCache.value)
     }
 
