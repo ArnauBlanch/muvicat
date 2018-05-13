@@ -16,6 +16,10 @@ class MuvicatApplication : MultiDexApplication(), HasActivityInjector {
     @Inject
     lateinit var activityDispatchingAndroidInjector: DispatchingAndroidInjector<Activity>
 
+    var isInFirebaseTestLab: Boolean = false
+        private set
+    var hasRequestedForLocationPermission = false
+
     override fun onCreate() {
         super.onCreate()
         /*if (LeakCanary.isInAnalyzerProcess(this)) {
@@ -32,6 +36,7 @@ class MuvicatApplication : MultiDexApplication(), HasActivityInjector {
         if ("true" == testLabSetting) {
             // Do something when running in Test Lab
             FirebaseAnalytics.getInstance(this).setAnalyticsCollectionEnabled(false)
+            isInFirebaseTestLab = true
         }
     }
 
