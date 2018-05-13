@@ -15,6 +15,7 @@ import com.ethanhua.skeleton.RecyclerViewSkeletonScreen
 import com.ethanhua.skeleton.Skeleton
 import com.google.firebase.analytics.FirebaseAnalytics
 import kotlinx.android.synthetic.main.error_layout.*
+import kotlinx.android.synthetic.main.movie_list_toolbar.*
 import kotlinx.android.synthetic.main.showing_list.*
 import kotlinx.android.synthetic.main.showing_list_toolbar.*
 import xyz.arnau.muvicat.R
@@ -22,9 +23,11 @@ import xyz.arnau.muvicat.data.model.Resource
 import xyz.arnau.muvicat.data.model.Showing
 import xyz.arnau.muvicat.data.model.Status
 import xyz.arnau.muvicat.di.Injectable
+import xyz.arnau.muvicat.ui.LocationAwareActivity
 import xyz.arnau.muvicat.ui.MainActivity
 import xyz.arnau.muvicat.ui.ScrollableFragment
 import xyz.arnau.muvicat.ui.SimpleDividerItemDecoration
+import xyz.arnau.muvicat.ui.movie.MovieListFragment
 import xyz.arnau.muvicat.utils.LocationUtils
 import xyz.arnau.muvicat.viewmodel.showing.ShowingListViewModel
 import javax.inject.Inject
@@ -46,6 +49,18 @@ class ShowingListFragment : ScrollableFragment(), Injectable {
 
         setupRecyclerView()
         setupToolbar()
+        setupSkeletonScreen()
+
+        val cinemaId = arguments?.getLong("cinemaId")
+
+        if (cinemaId == null) {
+            setupToolbar()
+        } else {
+            showingListViewModel.setCinemaId(cinemaId)
+            showingsAdapter.showCinemaInfo = false
+            showingsToolbarLayout.visibility = View.GONE
+        }
+        setupRecyclerView()
         setupSkeletonScreen()
     }
 
@@ -70,7 +85,7 @@ class ShowingListFragment : ScrollableFragment(), Injectable {
         if (!hasLocation && getLastLocation() != null) {
             notifyLastLocation(getLastLocation()!!)
         }
-        if ((activity as MainActivity).isSelectedFragment(FRAG_ID)) context?.let {
+        if (activity is MainActivity && (activity as MainActivity).isSelectedFragment(FRAG_ID)) context?.let {
             FirebaseAnalytics.getInstance(it)
                 .setCurrentScreen(activity as Activity, "Showing list", "Showing list")
             FirebaseAnalytics.getInstance(it)
@@ -163,9 +178,9 @@ class ShowingListFragment : ScrollableFragment(), Injectable {
         showingsRecyclerView.addItemDecoration(SimpleDividerItemDecoration(context!!))
     }
 
-    private fun getLastLocation() = (activity as MainActivity).lastLocation
+    private fun getLastLocation() = (activity as LocationAwareActivity).lastLocation
 
-    fun notifyLastLocation(lastLocation: Location) {
+    private fun notifyLastLocation(lastLocation: Location) {
         if (::showingsAdapter.isInitialized) {
             updateShowingList(showingsAdapter.showings, lastLocation)
         } else {
@@ -192,5 +207,13 @@ class ShowingListFragment : ScrollableFragment(), Injectable {
 
     companion object {
         const val FRAG_ID = 1
+
+        fun prepareShowingListByCinema(cinemaId: Long): ShowingListFragment {
+            return ShowingListFragment().apply {
+                val bundle = Bundle()
+                bundle.putLong("cinemaId", cinemaId)
+                this.arguments = bundle
+            }
+        }
     }
 }

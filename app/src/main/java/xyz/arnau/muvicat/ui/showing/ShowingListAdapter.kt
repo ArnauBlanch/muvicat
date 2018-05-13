@@ -14,6 +14,10 @@ import xyz.arnau.muvicat.data.model.Showing
 import xyz.arnau.muvicat.ui.movie.MovieActivity
 import xyz.arnau.muvicat.utils.DateFormatter
 import javax.inject.Inject
+import android.util.DisplayMetrics
+import android.view.Gravity
+import android.widget.RelativeLayout
+
 
 class ShowingListAdapter @Inject constructor() :
     RecyclerView.Adapter<ShowingListAdapter.ViewHolder>() {
@@ -24,6 +28,8 @@ class ShowingListAdapter @Inject constructor() :
     lateinit var context: Context
 
     var showings: List<Showing> = arrayListOf()
+
+    var showCinemaInfo = true
 
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -36,12 +42,18 @@ class ShowingListAdapter @Inject constructor() :
             .into(holder.moviePoster)
         holder.version.text = longerVersion(showing.version)
         holder.date.text = dateFormatter.shortDate(showing.date)
-        holder.cinemaName.text = showing.cinemaName
-        if (showing.cinemaRegion != null)
-            holder.cinemaPlace.text = "${showing.cinemaTown} (${showing.cinemaRegion})"
-        else
-            holder.cinemaPlace.text = showing.cinemaTown
-        if (showing.cinemaDistance != null) {
+        if (showCinemaInfo) {
+            holder.cinemaName.text = showing.cinemaName
+            if (showing.cinemaRegion != null)
+                holder.cinemaPlace.text = "${showing.cinemaTown} (${showing.cinemaRegion})"
+            else
+                holder.cinemaPlace.text = showing.cinemaTown
+        } else {
+            val posterParams = holder.moviePoster.layoutParams
+            posterParams.height = convertDpToPixel(65F)
+            holder.moviePoster.layoutParams = posterParams
+        }
+        if (showCinemaInfo && showing.cinemaDistance != null) {
             holder.distance.text = "≈ ${showing.cinemaDistance} km"
             holder.distance.visibility = View.VISIBLE
             holder.dateDistanceMargin.visibility = View.VISIBLE
@@ -89,5 +101,11 @@ class ShowingListAdapter @Inject constructor() :
         var cinemaPlace: TextView = view.findViewById(R.id.cinemaPlace)
         var distance: TextView = view.findViewById(R.id.cinemaDistance)
         var dateDistanceMargin: View = view.findViewById(R.id.dateDistanceMargin)
+    }
+
+    private fun convertDpToPixel(dp: Float): Int {
+        val metrics = context.resources.displayMetrics
+        val px = dp * (metrics.densityDpi / 160f)
+        return Math.round(px)
     }
 }

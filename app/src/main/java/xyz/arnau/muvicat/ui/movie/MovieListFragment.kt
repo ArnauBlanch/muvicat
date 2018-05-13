@@ -39,8 +39,15 @@ class MovieListFragment : ScrollableFragment(), Injectable {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
+        val cinemaId = arguments?.getLong("cinemaId")
+
+        if (cinemaId == null) {
+            setupToolbar()
+        } else {
+            movieListViewModel.setCinemaId(cinemaId)
+            moviesToolbarLayout.visibility = View.GONE
+        }
         setupRecyclerView()
-        setupToolbar()
         setupSkeletonScreen()
     }
 
@@ -62,7 +69,7 @@ class MovieListFragment : ScrollableFragment(), Injectable {
 
     override fun onResume() {
         super.onResume()
-        if ((activity as MainActivity).isSelectedFragment(FRAG_ID)) context?.let {
+        if (activity is MainActivity && (activity as MainActivity).isSelectedFragment(FRAG_ID)) context?.let {
             FirebaseAnalytics.getInstance(it)
                 .setCurrentScreen(activity as Activity, "Movie list", "Movie list")
         }
@@ -160,5 +167,13 @@ class MovieListFragment : ScrollableFragment(), Injectable {
 
     companion object {
         const val FRAG_ID = 0
+
+        fun prepareMovieListByCinema(cinemaId: Long): MovieListFragment {
+            return MovieListFragment().apply {
+                val bundle = Bundle()
+                bundle.putLong("cinemaId", cinemaId)
+                this.arguments = bundle
+            }
+        }
     }
 }

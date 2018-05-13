@@ -8,8 +8,8 @@
     android:foreground="?android:selectableItemBackgroundBorderless"
     android:paddingStart="18dp"
     android:paddingEnd="8dp"
-    android:paddingTop="10dp"
-    android:paddingBottom="10dp"
+    android:paddingTop="18dp"
+    android:paddingBottom="18dp"
     android:orientation="horizontal"
     android:focusable="true">
 
@@ -23,6 +23,7 @@
         app:ari_ratio="0.7" />
 
     <RelativeLayout
+        android:id="@+id/showingDetailsLayout"
         android:layout_weight="1"
         android:layout_width="0dp"
         android:layout_marginStart="10dp"

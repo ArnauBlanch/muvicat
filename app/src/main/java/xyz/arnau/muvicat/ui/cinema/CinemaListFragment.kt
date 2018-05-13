@@ -14,6 +14,7 @@ import android.view.ViewGroup
 import com.ethanhua.skeleton.RecyclerViewSkeletonScreen
 import com.ethanhua.skeleton.Skeleton
 import com.google.firebase.analytics.FirebaseAnalytics
+import kotlinx.android.synthetic.main.cinema_info.*
 import kotlinx.android.synthetic.main.cinema_list.*
 import kotlinx.android.synthetic.main.cinema_list_toolbar.*
 import kotlinx.android.synthetic.main.error_layout.*
@@ -22,9 +23,8 @@ import xyz.arnau.muvicat.data.model.Cinema
 import xyz.arnau.muvicat.data.model.Resource
 import xyz.arnau.muvicat.data.model.Status
 import xyz.arnau.muvicat.di.Injectable
-import xyz.arnau.muvicat.ui.MainActivity
-import xyz.arnau.muvicat.ui.ScrollableFragment
-import xyz.arnau.muvicat.ui.SimpleDividerItemDecoration
+import xyz.arnau.muvicat.ui.*
+import xyz.arnau.muvicat.ui.movie.MovieListFragment
 import xyz.arnau.muvicat.utils.LocationUtils
 import xyz.arnau.muvicat.viewmodel.cinema.CinemaListViewModel
 import javax.inject.Inject
@@ -162,7 +162,7 @@ class CinemaListFragment : ScrollableFragment(), Injectable {
         cinemasRecyclerView.addItemDecoration(SimpleDividerItemDecoration(context!!))
     }
 
-    private fun getLastLocation() = (activity as MainActivity).lastLocation
+    private fun getLastLocation() = (activity as LocationAwareActivity).lastLocation
 
     fun notifyLastLocation(lastLocation: Location) {
         if (::cinemasAdapter.isInitialized) {

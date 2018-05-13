@@ -2,6 +2,7 @@ package xyz.arnau.muvicat.cache.dao
 
 import android.arch.lifecycle.LiveData
 import android.arch.persistence.room.*
+import org.joda.time.LocalDate
 import xyz.arnau.muvicat.cache.model.CinemaEntity
 import xyz.arnau.muvicat.data.model.Cinema
 
@@ -13,6 +14,14 @@ abstract class CinemaDao {
         FROM cinemas c LEFT OUTER JOIN postal_codes pc ON c.postalCode != 0 AND c.postalCode = pc.code"""
     )
     abstract fun getCinemas(): LiveData<List<Cinema>>
+
+    @Query(
+        """
+        SELECT c.id, c.name, c.address, c.town, c.region, c.province, pc.latitude, pc.longitude
+        FROM cinemas c LEFT OUTER JOIN postal_codes pc ON c.postalCode != 0 AND c.postalCode = pc.code
+        WHERE id IN (SELECT DISTINCT cinemaId FROM showings WHERE date >= :today)"""
+    )
+    abstract fun getCurrentCinemas(today: Long = LocalDate.now().toDate().time): LiveData<List<Cinema>>
 
     @Query(
         """

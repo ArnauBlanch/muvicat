@@ -17,6 +17,7 @@ import xyz.arnau.muvicat.data.test.MovieEntityFactory
 import xyz.arnau.muvicat.data.test.ShowingEntityFactory
 import xyz.arnau.muvicat.data.test.ShowingMapper
 import xyz.arnau.muvicat.utils.getValueBlocking
+import java.util.*
 
 
 @RunWith(AndroidJUnit4::class)
@@ -50,6 +51,80 @@ class ShowingDaoTest {
 
         val retrievedShowings = muvicatDatabase.showingDao().getShowings().getValueBlocking()
         val convertedOriginalShowings = ShowingMapper.mapFromShowingEntityList(showings)
+        convertedOriginalShowings.forEachIndexed { index, it ->
+            it.id = (index + 1).toLong()
+            it.movieTitle = movies[index].title
+            it.moviePosterUrl = movies[index].posterUrl
+            it.cinemaName = cinemas[index].name
+            it.cinemaTown = cinemas[index].town
+            it.cinemaRegion = cinemas[index].region
+            it.cinemaProvince = cinemas[index].province
+        }
+        assertEquals(
+            convertedOriginalShowings.sortedWith(compareBy<Showing>{ it.date }.thenBy { it.movieId }.thenBy { it.cinemaName }),
+            retrievedShowings
+        )
+    }
+
+    @Test
+    fun getCurrentShowingsDoesNotReturnPastShowings() {
+        val movies = MovieEntityFactory.makeMovieEntityList(3)
+        muvicatDatabase.movieDao().insertMovies(movies)
+        val cinemas = CinemaEntityFactory.makeCinemaEntityList(3)
+        muvicatDatabase.cinemaDao().insertCinemas(cinemas)
+
+        val showings = ShowingEntityFactory.makeShowingEntityList(3)
+        showings.forEachIndexed { index, showingEntity ->
+            showingEntity.cinemaId = cinemas[index].id
+            showingEntity.movieId = movies[index].id
+        }
+        showings[0].date = Date(2018, 5, 13)
+        showings[1].date = Date(2018, 6, 13)
+        showings[2].date = Date(2018, 5, 12)
+        muvicatDatabase.showingDao().insertShowings(showings)
+
+        val today = Date(2018, 5, 13).time
+        val retrievedShowings = muvicatDatabase.showingDao().getCurrentShowings(today).getValueBlocking()
+        val convertedOriginalShowings = ShowingMapper.mapFromShowingEntityList(showings)
+        convertedOriginalShowings.forEachIndexed { index, it ->
+            it.id = (index + 1).toLong()
+            it.movieTitle = movies[index].title
+            it.moviePosterUrl = movies[index].posterUrl
+            it.cinemaName = cinemas[index].name
+            it.cinemaTown = cinemas[index].town
+            it.cinemaRegion = cinemas[index].region
+            it.cinemaProvince = cinemas[index].province
+        }
+        assertEquals(
+            convertedOriginalShowings.subList(0, 2).sortedWith(compareBy<Showing>{ it.date }.thenBy { it.movieId }.thenBy { it.cinemaName }),
+            retrievedShowings
+        )
+    }
+
+    @Test
+    fun getCurrentShowingsByCinemaDoesNotReturnPastShowings() {
+        val movies = MovieEntityFactory.makeMovieEntityList(3)
+        muvicatDatabase.movieDao().insertMovies(movies)
+        val cinemas = CinemaEntityFactory.makeCinemaEntityList(2)
+        muvicatDatabase.cinemaDao().insertCinemas(cinemas)
+
+        val showings = ShowingEntityFactory.makeShowingEntityList(3)
+        showings.forEachIndexed { index, showingEntity ->
+            showingEntity.movieId = movies[index].id
+        }
+        showings[0].cinemaId = cinemas[0].id
+        showings[1].cinemaId = cinemas[1].id
+        showings[2].cinemaId = cinemas[0].id
+
+        showings[0].date = Date(2018, 5, 13)
+        showings[1].date = Date(2018, 6, 13)
+        showings[2].date = Date(2018, 5, 12)
+        muvicatDatabase.showingDao().insertShowings(showings)
+
+        val today = Date(2018, 5, 13).time
+        val retrievedShowings =
+            muvicatDatabase.showingDao().getCurrentShowingsByCinema(cinemas[0].id, today).getValueBlocking()
+        val convertedOriginalShowings = ShowingMapper.mapFromShowingEntityList(showings.subList(0, 1))
         convertedOriginalShowings.forEachIndexed { index, it ->
             it.id = (index + 1).toLong()
             it.movieTitle = movies[index].title

@@ -2,14 +2,35 @@ package xyz.arnau.muvicat.cache.dao
 
 import android.arch.lifecycle.LiveData
 import android.arch.persistence.room.*
+import org.joda.time.LocalDate
 import xyz.arnau.muvicat.cache.model.MovieEntity
 import xyz.arnau.muvicat.data.model.Movie
 import java.util.*
 
 @Dao
 abstract class MovieDao {
+
     @Query("SELECT * FROM movies ORDER BY priority DESC")
     abstract fun getMovies(): LiveData<List<Movie>>
+
+    @Query(
+        """SELECT *
+        FROM movies
+        WHERE id IN (SELECT DISTINCT movieId FROM showings WHERE date >= :today)
+        ORDER BY priority DESC"""
+    )
+    abstract fun getCurrentMovies(today: Long = LocalDate.now().toDate().time): LiveData<List<Movie>>
+
+    @Query(
+        """SELECT *
+        FROM movies
+        WHERE id IN (SELECT DISTINCT movieId FROM showings WHERE cinemaId = :cinemaId AND date >= :today)
+        ORDER BY priority DESC"""
+    )
+    abstract fun getCurrentMoviesByCinema(
+        cinemaId: Long,
+        today: Long = LocalDate.now().toDate().time
+    ): LiveData<List<Movie>>
 
     @Query("SELECT * FROM movies WHERE id = :movieId")
     abstract fun getMovie(movieId: Long): LiveData<Movie>

@@ -16,11 +16,6 @@ class PostalCodesDbCallback @Inject constructor(
     private val csvReader: PostalCodeCsvReader
 ) : RoomDatabase.Callback() {
 
-    fun test(context: Context, appExecutors: AppExecutors) {
-        MuvicatDatabase.getInstance(context, appExecutors)
-    }
-
-
     override fun onCreate(db: SupportSQLiteDatabase) {
         appExecutors.diskIO().execute {
             initPostalCodes(MuvicatDatabase.getInstance(context, appExecutors).postalCodeDao())

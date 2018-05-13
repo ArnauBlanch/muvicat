@@ -21,9 +21,6 @@ class MainActivity : LocationAwareActivity(), HasSupportFragmentInjector {
 
     private lateinit var firebaseAnalytics: FirebaseAnalytics
 
-    var lastLocation: Location? = null
-        private set
-
     private val viewPagerAdapter = ViewPagerAdapter(
         listOf(
             MovieListFragment(),
@@ -86,7 +83,6 @@ class MainActivity : LocationAwareActivity(), HasSupportFragmentInjector {
     }
 
     override fun processLastLocation(location: Location) {
-        lastLocation = location
         (viewPagerAdapter.getItem(CinemaListFragment.FRAG_ID) as CinemaListFragment)
             .notifyLastLocation(location)
     }

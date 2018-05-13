@@ -8,10 +8,9 @@ import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.junit.runner.RunWith
 import xyz.arnau.muvicat.cache.db.MuvicatDatabase
-import xyz.arnau.muvicat.data.test.CinemaEntityFactory
-import xyz.arnau.muvicat.data.test.CinemaMapper
-import xyz.arnau.muvicat.data.test.PostalCodeEntityFactory
+import xyz.arnau.muvicat.data.test.*
 import xyz.arnau.muvicat.utils.getValueBlocking
+import java.util.*
 
 
 @RunWith(AndroidJUnit4::class)
@@ -49,6 +48,34 @@ class CinemaDaoTest {
         val retrievedCinemas = muvicatDatabase.cinemaDao().getCinemas().getValueBlocking()
         assertEquals(
             CinemaMapper.mapFromCinemaEntityList(cinemas.sortedWith(compareBy({ it.id }, { it.id }))),
+            retrievedCinemas
+        )
+    }
+
+    @Test
+    fun getCurrentCinemasRetrievesData() {
+        val movies = MovieEntityFactory.makeMovieEntityList(3)
+        muvicatDatabase.movieDao().insertMovies(movies)
+        val cinemas = CinemaEntityFactory.makeCinemaEntityList(3)
+        muvicatDatabase.cinemaDao().insertCinemas(cinemas)
+
+        val showings = ShowingEntityFactory.makeShowingEntityList(3)
+        showings.forEachIndexed { index, showingEntity ->
+            showingEntity.movieId = movies[index].id
+            showingEntity.cinemaId = cinemas[index].id
+        }
+        showings[0].date = Date(2018, 5, 13)
+        showings[1].date = Date(2018, 6, 13)
+        showings[2].date = Date(2018, 5, 12)
+        muvicatDatabase.showingDao().insertShowings(showings)
+
+        val currentCinemaIds = listOf(showings[0].cinemaId, showings[1].cinemaId)
+
+        val today = Date(2018, 5, 13).time
+        val retrievedCinemas = muvicatDatabase.cinemaDao().getCurrentCinemas(today).getValueBlocking()
+        assertEquals(
+            CinemaMapper.mapFromCinemaEntityList(cinemas.sortedWith(compareBy({ it.id }, { it.id })))
+                .filter { it.id in currentCinemaIds },
             retrievedCinemas
         )
     }

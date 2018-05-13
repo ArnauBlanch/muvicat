@@ -3,6 +3,7 @@ package xyz.arnau.muvicat.cache
 import android.arch.core.executor.testing.InstantTaskExecutorRule
 import android.arch.lifecycle.MutableLiveData
 import junit.framework.TestCase.assertEquals
+import org.joda.time.LocalDate
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TestRule
@@ -26,12 +27,13 @@ class ShowingCacheImplTest {
 
     @Test
     fun getShowingsReturnsData() {
+        val today = LocalDate.now().toDate().time
         val showings = ShowingEntityFactory.makeShowingEntityList(5)
         val showingsLiveData = MutableLiveData<List<Showing>>()
         showingsLiveData.value = ShowingMapper.mapFromShowingEntityList(showings)
-        `when`(showingDao.getShowings()).thenReturn(showingsLiveData)
+        `when`(showingDao.getCurrentShowings(today)).thenReturn(showingsLiveData)
         val showingsFromCache = showingCacheImpl.getShowings()
-        verify(showingDao).getShowings()
+        verify(showingDao).getCurrentShowings(today)
         assertEquals(ShowingMapper.mapFromShowingEntityList(showings), showingsFromCache.value)
     }
 

@@ -6,5 +6,6 @@ import xyz.arnau.muvicat.data.model.Showing
 
 interface ShowingCache {
     fun getShowings(): LiveData<List<Showing>>
+    fun getShowingsByCinema(cinemaId: Long): LiveData<List<Showing>>
     fun updateShowings(showings: List<ShowingEntity>): Boolean
 }

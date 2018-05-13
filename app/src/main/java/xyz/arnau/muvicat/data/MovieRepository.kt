@@ -81,6 +81,18 @@ class MovieRepository(
 
         }.asLiveData()
 
+    fun getMoviesByCinema(cinemaId: Long): LiveData<Resource<List<Movie>>> {
+        return Transformations.switchMap(movieCache.getMoviesByCinema(cinemaId), {
+            val liveData = MutableLiveData<Resource<List<Movie>>>()
+            if (it == null || it.isEmpty()) {
+                liveData.postValue(Resource.error("Movies not found", it))
+            } else {
+                liveData.postValue(Resource.success(it))
+            }
+            liveData
+        })
+    }
+
     fun getMovie(id: Long): LiveData<Resource<Movie>> {
         return Transformations.switchMap(movieCache.getMovie(id), { movie ->
             val liveData = MutableLiveData<Resource<Movie>>()
