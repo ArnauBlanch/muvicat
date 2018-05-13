@@ -19,4 +19,5 @@
     <string name="permission_denied_explanation">S\'ha denegat el permís de localització, activa\'l per a personalitzar la visualització de la cartellera.</string>
     <string name="no_location_detected">No s\'ha pogut aconseguir la localització, la cartellera no es personalitzarà segons la teva ubicació</string>
     <string name="showings">Sessions</string>
+    <string name="view_map">Mostra mapa</string>
 </resources>

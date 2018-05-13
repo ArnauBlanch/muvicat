@@ -7,6 +7,7 @@ import android.content.Intent
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.location.Location
+import android.net.Uri
 import android.os.Bundle
 import android.support.design.widget.AppBarLayout
 import android.support.v4.app.Fragment
@@ -106,6 +107,12 @@ class CinemaActivity : LocationAwareActivity(), HasSupportFragmentInjector {
                     cinemaLongitude = cinema.longitude
                     if (lastLocation != null)
                         processLastLocation(lastLocation!!)
+                    cinemaMapButton.setOnClickListener {
+                        val intent = Intent(android.content.Intent.ACTION_VIEW,
+                            Uri.parse("https://www.google.com/maps/search/?api=1&query=" +
+                                    "${cinema.name}, ${cinema.address}"))
+                        startActivity(intent)
+                    }
                 }
             }
             Status.ERROR -> throw Exception("The cinema could not be retrieved")
