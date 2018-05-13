@@ -17,11 +17,13 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import timber.log.Timber
 import xyz.arnau.muvicat.BuildConfig.APPLICATION_ID
+import xyz.arnau.muvicat.MuvicatApplication
 import xyz.arnau.muvicat.R
 
 abstract class LocationAwareActivity : AppCompatActivity() {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private val REQUEST_PERMISSIONS_REQUEST_CODE = 34
+    lateinit var app: MuvicatApplication
 
     var lastLocation: Location?  = null
         private set
@@ -29,15 +31,18 @@ abstract class LocationAwareActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+        app = application as MuvicatApplication
     }
 
     override fun onStart() {
         super.onStart()
 
-        if (!checkPermissions())
-            requestPermissions()
-        else
-            getLastLocationFromClient()
+        if (!app.isInFirebaseTestLab) {
+            if (!checkPermissions())
+                requestPermissions()
+            else
+                getLastLocationFromClient()
+        }
     }
 
     override fun onRequestPermissionsResult(
@@ -60,6 +65,7 @@ abstract class LocationAwareActivity : AppCompatActivity() {
                                 flags = Intent.FLAG_ACTIVITY_NEW_TASK
                             }
                             startActivity(intent)
+                            app.hasRequestedForLocationPermission = true
                         })
                 }
             }
@@ -93,12 +99,17 @@ abstract class LocationAwareActivity : AppCompatActivity() {
     }
 
     private fun requestPermissions() {
-        if (ActivityCompat.shouldShowRequestPermissionRationale(this, ACCESS_COARSE_LOCATION)) {
-            showSnackbar(R.string.permission_rationale, android.R.string.ok, View.OnClickListener {
+        if (!app.hasRequestedForLocationPermission) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, ACCESS_COARSE_LOCATION)) {
+                showSnackbar(
+                    R.string.permission_rationale,
+                    android.R.string.ok,
+                    View.OnClickListener {
+                        startLocationPermissionRequest()
+                    })
+            } else {
                 startLocationPermissionRequest()
-            })
-        } else {
-            startLocationPermissionRequest()
+            }
         }
     }
 
