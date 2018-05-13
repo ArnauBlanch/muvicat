@@ -4,7 +4,7 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Transformations
 import xyz.arnau.muvicat.cache.model.ShowingEntity
-import xyz.arnau.muvicat.data.model.Movie
+import xyz.arnau.muvicat.data.model.CinemaShowing
 import xyz.arnau.muvicat.data.model.Resource
 import xyz.arnau.muvicat.data.model.Showing
 import xyz.arnau.muvicat.data.repository.GencatRemote
@@ -17,7 +17,6 @@ import xyz.arnau.muvicat.remote.model.ResponseStatus.SUCCESSFUL
 import xyz.arnau.muvicat.utils.AfterCountDownLatch
 import xyz.arnau.muvicat.utils.AppExecutors
 import xyz.arnau.muvicat.utils.BeforeCountDownLatch
-import java.util.concurrent.CountDownLatch
 
 class ShowingRepository(
     private val showingCache: ShowingCache,
@@ -87,9 +86,9 @@ class ShowingRepository(
 
         }.asLiveData()
 
-    fun getShowingsByCinema(cinemaId: Long): LiveData<Resource<List<Showing>>> {
+    fun getShowingsByCinema(cinemaId: Long): LiveData<Resource<List<CinemaShowing>>> {
         return Transformations.switchMap(showingCache.getShowingsByCinema(cinemaId), {
-            val liveData = MutableLiveData<Resource<List<Showing>>>()
+            val liveData = MutableLiveData<Resource<List<CinemaShowing>>>()
             if (it == null || it.isEmpty()) {
                 liveData.postValue(Resource.error("Showing not found", it))
             } else {

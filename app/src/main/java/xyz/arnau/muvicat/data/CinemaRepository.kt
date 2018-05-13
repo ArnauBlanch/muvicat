@@ -16,7 +16,6 @@ import xyz.arnau.muvicat.remote.model.ResponseStatus.SUCCESSFUL
 import xyz.arnau.muvicat.utils.AfterCountDownLatch
 import xyz.arnau.muvicat.utils.AppExecutors
 import xyz.arnau.muvicat.utils.BeforeCountDownLatch
-import java.util.concurrent.CountDownLatch
 
 class CinemaRepository(
     private val cinemaCache: CinemaCache,

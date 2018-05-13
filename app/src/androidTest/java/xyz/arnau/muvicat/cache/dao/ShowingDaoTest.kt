@@ -11,11 +11,10 @@ import org.junit.Test
 import org.junit.rules.TestRule
 import org.junit.runner.RunWith
 import xyz.arnau.muvicat.cache.db.MuvicatDatabase
+import xyz.arnau.muvicat.data.model.CinemaShowing
+import xyz.arnau.muvicat.data.model.MovieShowing
 import xyz.arnau.muvicat.data.model.Showing
-import xyz.arnau.muvicat.data.test.CinemaEntityFactory
-import xyz.arnau.muvicat.data.test.MovieEntityFactory
-import xyz.arnau.muvicat.data.test.ShowingEntityFactory
-import xyz.arnau.muvicat.data.test.ShowingMapper
+import xyz.arnau.muvicat.data.test.*
 import xyz.arnau.muvicat.utils.getValueBlocking
 import java.util.*
 
@@ -124,18 +123,53 @@ class ShowingDaoTest {
         val today = Date(2018, 5, 13).time
         val retrievedShowings =
             muvicatDatabase.showingDao().getCurrentShowingsByCinema(cinemas[0].id, today).getValueBlocking()
-        val convertedOriginalShowings = ShowingMapper.mapFromShowingEntityList(showings.subList(0, 1))
+        val convertedOriginalShowings = CinemaShowingMapper.mapFromShowingEntityList(showings.subList(0, 1))
         convertedOriginalShowings.forEachIndexed { index, it ->
             it.id = (index + 1).toLong()
             it.movieTitle = movies[index].title
             it.moviePosterUrl = movies[index].posterUrl
+        }
+        assertEquals(
+            convertedOriginalShowings.sortedWith(compareBy<CinemaShowing>{ it.date }.thenBy { it.movieId }),
+            retrievedShowings
+        )
+    }
+
+    @Test
+    fun getCurrentShowingsByMovieDoesNotReturnPastShowings() {
+        val movies = MovieEntityFactory.makeMovieEntityList(2)
+        muvicatDatabase.movieDao().insertMovies(movies)
+        val cinemas = CinemaEntityFactory.makeCinemaEntityList(4)
+        muvicatDatabase.cinemaDao().insertCinemas(cinemas)
+
+        val showings = ShowingEntityFactory.makeShowingEntityList(4)
+        showings.forEachIndexed { index, showingEntity ->
+            showingEntity.cinemaId = cinemas[index].id
+        }
+        showings[0].movieId = movies[0].id
+        showings[1].movieId = movies[0].id
+        showings[2].movieId = movies[0].id
+        showings[3].movieId = movies[1].id
+
+        showings[0].date = Date(2018, 5, 13)
+        showings[1].date = Date(2018, 6, 13)
+        showings[2].date = Date(2018, 5, 12)
+        showings[3].date = Date(2018, 5, 22)
+        muvicatDatabase.showingDao().insertShowings(showings)
+
+        val today = Date(2018, 5, 13).time
+        val retrievedShowings =
+            muvicatDatabase.showingDao().getCurrentShowingsByMovie(movies[0].id, today).getValueBlocking()
+        val convertedOriginalShowings = MovieShowingMapper.mapFromShowingEntityList(showings.subList(0, 2))
+        convertedOriginalShowings.forEachIndexed { index, it ->
+            it.id = (index + 1).toLong()
             it.cinemaName = cinemas[index].name
             it.cinemaTown = cinemas[index].town
             it.cinemaRegion = cinemas[index].region
             it.cinemaProvince = cinemas[index].province
         }
         assertEquals(
-            convertedOriginalShowings.sortedWith(compareBy<Showing>{ it.date }.thenBy { it.movieId }.thenBy { it.cinemaName }),
+            convertedOriginalShowings.sortedWith(compareBy<MovieShowing>{ it.date }.thenBy { it.cinemaId }),
             retrievedShowings
         )
     }

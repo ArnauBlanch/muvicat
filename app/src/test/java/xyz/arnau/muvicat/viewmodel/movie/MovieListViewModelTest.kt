@@ -44,19 +44,4 @@ class MovieListViewModelTest {
         assertEquals(null, result.message)
         assertEquals(movies, result.data)
     }
-
-    @Test
-    fun getMoviesWithCinemaIdReturnsLiveData() {
-        val cinemaId = 100.toLong()
-        movieListViewModel.setCinemaId(cinemaId)
-        val movies = MovieMapper.mapFromMovieEntityList(MovieEntityFactory.makeMovieEntityList(5))
-        `when`(movieRepository.getMoviesByCinema(cinemaId)).thenReturn(moviesLiveData)
-        moviesLiveData.postValue(Resource.success(movies))
-
-        val result = movieListViewModel.movies.getValueBlocking()
-        verify(movieRepository).getMoviesByCinema(cinemaId)
-        assertEquals(Status.SUCCESS, result!!.status)
-        assertEquals(null, result.message)
-        assertEquals(movies, result.data)
-    }
 }

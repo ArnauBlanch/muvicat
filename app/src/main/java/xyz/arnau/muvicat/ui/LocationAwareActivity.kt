@@ -25,7 +25,7 @@ abstract class LocationAwareActivity : AppCompatActivity() {
     private val REQUEST_PERMISSIONS_REQUEST_CODE = 34
     lateinit var app: MuvicatApplication
 
-    var lastLocation: Location?  = null
+    var lastLocation: Location? = null
         private set
 
     override fun onCreate(savedInstanceState: Bundle?) {

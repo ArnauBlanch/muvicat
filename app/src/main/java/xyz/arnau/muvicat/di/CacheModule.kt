@@ -3,7 +3,6 @@ package xyz.arnau.muvicat.di
 import android.app.Application
 import dagger.Module
 import dagger.Provides
-import xyz.arnau.muvicat.utils.AppExecutors
 import xyz.arnau.muvicat.cache.CinemaCacheImpl
 import xyz.arnau.muvicat.cache.MovieCacheImpl
 import xyz.arnau.muvicat.cache.ShowingCacheImpl
@@ -14,6 +13,7 @@ import xyz.arnau.muvicat.cache.db.MuvicatDatabase
 import xyz.arnau.muvicat.data.repository.CinemaCache
 import xyz.arnau.muvicat.data.repository.MovieCache
 import xyz.arnau.muvicat.data.repository.ShowingCache
+import xyz.arnau.muvicat.utils.AppExecutors
 import javax.inject.Singleton
 
 @Module
