@@ -26,6 +26,8 @@ import xyz.arnau.muvicat.data.test.CinemaMapper
 import xyz.arnau.muvicat.data.utils.RepoPreferencesHelper
 import xyz.arnau.muvicat.remote.DataUpdateCallback
 import xyz.arnau.muvicat.remote.model.Response
+import xyz.arnau.muvicat.utils.AfterCountDownLatch
+import xyz.arnau.muvicat.utils.BeforeCountDownLatch
 import xyz.arnau.muvicat.utils.InstantAppExecutors
 import xyz.arnau.muvicat.utils.getValueBlocking
 import java.util.concurrent.CountDownLatch
@@ -39,8 +41,9 @@ class CinemaRepositoryTest {
     private val gencatRemote = mock(GencatRemote::class.java)
     private val appExecutors = InstantAppExecutors()
     private val preferencesHelper = mock(RepoPreferencesHelper::class.java)
-    private val countDownLatch = mock(CountDownLatch::class.java)
-    private val cinemaRepository = CinemaRepository(cinemaCache, gencatRemote, appExecutors, preferencesHelper, countDownLatch)
+    private val beforeLatch = mock(BeforeCountDownLatch::class.java)
+    private val afterLatch = mock(AfterCountDownLatch::class.java)
+    private val cinemaRepository = CinemaRepository(cinemaCache, gencatRemote, appExecutors, preferencesHelper, beforeLatch, afterLatch)
 
     private val dbCinemaLiveData = MutableLiveData<List<Cinema>>()
     private val dbCinemas = CinemaMapper.mapFromCinemaEntityList(CinemaEntityFactory.makeCinemaEntityList(3))
@@ -73,7 +76,7 @@ class CinemaRepositoryTest {
         verify(observer).onChanged(Resource.success(dbCinemas))
 
         verify(preferencesHelper, never()).cinemasUpdated()
-        verify(countDownLatch).countDown()
+        verify(beforeLatch).countDown()
         verify(gencatRemote, never()).getCinemas()
     }
 
@@ -93,7 +96,7 @@ class CinemaRepositoryTest {
         verify(callback).onDataUpdated()
 
         verify(preferencesHelper).cinemasUpdated()
-        verify(countDownLatch).countDown()
+        verify(beforeLatch).countDown()
         verify(cinemaCache).updateCinemas(remoteCinemas)
     }
 
@@ -112,7 +115,7 @@ class CinemaRepositoryTest {
         verify(observer).onChanged(Resource.success(remoteCinemasMapped))
 
         verify(preferencesHelper).cinemasUpdated()
-        verify(countDownLatch).countDown()
+        verify(beforeLatch).countDown()
         verify(cinemaCache).updateCinemas(remoteCinemas)
     }
 
@@ -148,7 +151,7 @@ class CinemaRepositoryTest {
         verify(observer2).onChanged(Resource.success(remoteCinemasMapped))
 
         verify(preferencesHelper, times(2)).cinemasUpdated()
-        verify(countDownLatch, times(1)).countDown()
+        verify(beforeLatch, times(1)).countDown()
         verify(cinemaCache, times(2)).updateCinemas(remoteCinemas)
     }
 
@@ -167,7 +170,7 @@ class CinemaRepositoryTest {
         verify(callback, never()).onDataUpdated()
 
         verify(preferencesHelper).cinemasUpdated()
-        verify(countDownLatch).countDown()
+        verify(beforeLatch).countDown()
         verify(cinemaCache, never()).updateCinemas(Mockito.anyList())
     }
 
@@ -186,7 +189,7 @@ class CinemaRepositoryTest {
         verify(callback, never()).onDataUpdated()
 
         verify(preferencesHelper, never()).cinemasUpdated()
-        verify(countDownLatch).countDown()
+        verify(beforeLatch).countDown()
         verify(cinemaCache, never()).updateCinemas(remoteCinemas)
     }
 
@@ -221,7 +224,7 @@ class CinemaRepositoryTest {
 
         verify(callback, never()).onDataUpdated()
         verify(preferencesHelper, never()).cinemasUpdated()
-        verify(countDownLatch, times(1)).countDown()
+        verify(beforeLatch, times(1)).countDown()
         verify(cinemaCache, never()).updateCinemas(remoteCinemas)
     }
 
@@ -239,7 +242,7 @@ class CinemaRepositoryTest {
         verify(callback).onDataUpdated()
 
         verify(preferencesHelper).cinemasUpdated()
-        verify(countDownLatch).countDown()
+        verify(beforeLatch).countDown()
         verify(cinemaCache).updateCinemas(remoteCinemas)
     }
 
@@ -257,7 +260,7 @@ class CinemaRepositoryTest {
         verify(callback).onDataUpdated()
 
         verify(preferencesHelper).cinemasUpdated()
-        verify(countDownLatch).countDown()
+        verify(beforeLatch).countDown()
         verify(cinemaCache).updateCinemas(remoteCinemas)
     }
 
@@ -274,7 +277,7 @@ class CinemaRepositoryTest {
         verify(callback, never()).onDataUpdated()
 
         verify(preferencesHelper, never()).cinemasUpdated()
-        verify(countDownLatch).countDown()
+        verify(beforeLatch).countDown()
         verify(cinemaCache, never()).updateCinemas(Mockito.anyList())
     }
 
@@ -291,7 +294,7 @@ class CinemaRepositoryTest {
         verify(callback, never()).onDataUpdated()
 
         verify(preferencesHelper, never()).cinemasUpdated()
-        verify(countDownLatch).countDown()
+        verify(beforeLatch).countDown()
         verify(cinemaCache, never()).updateCinemas(remoteCinemas)
     }
 

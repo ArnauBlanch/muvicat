@@ -14,7 +14,9 @@ import xyz.arnau.muvicat.data.utils.RepoPreferencesHelper
 import xyz.arnau.muvicat.remote.model.Response
 import xyz.arnau.muvicat.remote.model.ResponseStatus.NOT_MODIFIED
 import xyz.arnau.muvicat.remote.model.ResponseStatus.SUCCESSFUL
+import xyz.arnau.muvicat.utils.AfterCountDownLatch
 import xyz.arnau.muvicat.utils.AppExecutors
+import xyz.arnau.muvicat.utils.BeforeCountDownLatch
 import java.util.concurrent.CountDownLatch
 
 class ShowingRepository(
@@ -22,11 +24,14 @@ class ShowingRepository(
     private val gencatRemote: GencatRemote,
     private val appExecutors: AppExecutors,
     private val preferencesHelper: RepoPreferencesHelper,
-    private val countDownLatch: CountDownLatch
+    private val beforeLatch: BeforeCountDownLatch,
+    private val afterLatch: AfterCountDownLatch
 ) {
     companion object {
         const val EXPIRATION_TIME: Long = (3 * 60 * 60 * 1000).toLong()
     }
+
+    private var countDownDone = false
 
     internal fun hasExpired(): Boolean {
         val currentTime = System.currentTimeMillis()
@@ -39,7 +44,7 @@ class ShowingRepository(
             override fun saveResponse(response: Response<List<ShowingEntity>>) {
                 if (response.type == SUCCESSFUL) {
                     response.body!!.let { showings ->
-                        countDownLatch.await()
+                        beforeLatch.await()
                         val hasUpdated = showingCache.updateShowings(showings)
                         if (hasUpdated) {
                             preferencesHelper.showingsUpdated()
@@ -50,9 +55,18 @@ class ShowingRepository(
                 if (response.type == NOT_MODIFIED) {
                     preferencesHelper.showingsUpdated()
                 }
+                if (!countDownDone) {
+                    afterLatch.countDown()
+                    countDownDone = true
+                }
             }
 
-            override fun onFetchFailed() {}
+            override fun onFetchFailed() {
+                if (!countDownDone) {
+                    afterLatch.countDown()
+                    countDownDone = true
+                }
+            }
 
             override fun createCall(): LiveData<Response<List<ShowingEntity>>> {
                 return gencatRemote.getShowings()
@@ -63,7 +77,12 @@ class ShowingRepository(
             }
 
             override fun shouldFetch(data: List<Showing>?): Boolean {
-                return data == null || data.isEmpty() || hasExpired()
+                val shouldFetch = data == null || data.isEmpty() || hasExpired()
+                if (!shouldFetch && !countDownDone) {
+                    afterLatch.countDown()
+                    countDownDone = true
+                }
+                return shouldFetch
             }
 
         }.asLiveData()
