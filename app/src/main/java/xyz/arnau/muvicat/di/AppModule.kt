@@ -16,6 +16,8 @@ import xyz.arnau.muvicat.data.repository.GencatRemote
 import xyz.arnau.muvicat.data.repository.MovieCache
 import xyz.arnau.muvicat.data.repository.ShowingCache
 import xyz.arnau.muvicat.data.utils.RepoPreferencesHelper
+import xyz.arnau.muvicat.utils.AfterCountDownLatch
+import xyz.arnau.muvicat.utils.BeforeCountDownLatch
 import xyz.arnau.muvicat.utils.DateFormatter
 import java.util.concurrent.CountDownLatch
 import javax.inject.Singleton
@@ -42,31 +44,37 @@ class AppModule {
 
     @Singleton
     @Provides
-    fun provideSyncCountDownLatch(): CountDownLatch {
-        return CountDownLatch(2)
+    fun provideBeforeShowingsCountDownLatch(): BeforeCountDownLatch {
+        return BeforeCountDownLatch(2)
+    }
+
+    @Singleton
+    @Provides
+    fun provideAfterShowingsCountDownLatch(): AfterCountDownLatch {
+        return AfterCountDownLatch(1)
     }
 
     @Singleton
     @Provides
     fun provideMovieRepository(movieCache: MovieCache, gencatRemote: GencatRemote,
                                appExecutors: AppExecutors, preferencesHelper: RepoPreferencesHelper,
-                               countDownLatch: CountDownLatch): MovieRepository {
-        return MovieRepository(movieCache, gencatRemote, appExecutors, preferencesHelper, countDownLatch)
+                               beforeLatch: BeforeCountDownLatch, afterLatch: AfterCountDownLatch): MovieRepository {
+        return MovieRepository(movieCache, gencatRemote, appExecutors, preferencesHelper, beforeLatch, afterLatch)
     }
 
     @Singleton
     @Provides
     fun provideCinemaRepository(cinemaCache: CinemaCache, gencatRemote: GencatRemote,
                                 appExecutors: AppExecutors, preferencesHelper: RepoPreferencesHelper,
-                                countDownLatch: CountDownLatch): CinemaRepository {
-        return CinemaRepository(cinemaCache, gencatRemote, appExecutors, preferencesHelper, countDownLatch)
+                                beforeLatch: BeforeCountDownLatch, afterLatch: AfterCountDownLatch): CinemaRepository {
+        return CinemaRepository(cinemaCache, gencatRemote, appExecutors, preferencesHelper, beforeLatch, afterLatch)
     }
 
     @Singleton
     @Provides
     fun provideShowingRepository(showingCache: ShowingCache, gencatRemote: GencatRemote,
                                  appExecutors: AppExecutors, preferencesHelper: RepoPreferencesHelper,
-                                 countDownLatch: CountDownLatch): ShowingRepository {
-        return ShowingRepository(showingCache, gencatRemote, appExecutors, preferencesHelper, countDownLatch)
+                                 beforeLatch: BeforeCountDownLatch, afterLatch: AfterCountDownLatch): ShowingRepository {
+        return ShowingRepository(showingCache, gencatRemote, appExecutors, preferencesHelper, beforeLatch, afterLatch)
     }
 }

@@ -13,7 +13,9 @@ import xyz.arnau.muvicat.data.utils.RepoPreferencesHelper
 import xyz.arnau.muvicat.remote.model.Response
 import xyz.arnau.muvicat.remote.model.ResponseStatus.NOT_MODIFIED
 import xyz.arnau.muvicat.remote.model.ResponseStatus.SUCCESSFUL
+import xyz.arnau.muvicat.utils.AfterCountDownLatch
 import xyz.arnau.muvicat.utils.AppExecutors
+import xyz.arnau.muvicat.utils.BeforeCountDownLatch
 import java.util.concurrent.CountDownLatch
 
 class CinemaRepository(
@@ -21,7 +23,8 @@ class CinemaRepository(
     private val gencatRemote: GencatRemote,
     private val appExecutors: AppExecutors,
     private val preferencesHelper: RepoPreferencesHelper,
-    private val countDownLatch: CountDownLatch
+    private val beforeLatch: BeforeCountDownLatch,
+    private val afterLatch: AfterCountDownLatch
 ) {
     companion object {
         const val EXPIRATION_TIME: Long = (3 * 60 * 60 * 1000).toLong()
@@ -50,16 +53,18 @@ class CinemaRepository(
                 }
 
                 if (!countDownDone) {
-                    countDownLatch.countDown()
+                    beforeLatch.countDown()
                     countDownDone = true
                 }
+                afterLatch.await()
             }
 
             override fun onFetchFailed() {
                 if (!countDownDone) {
-                    countDownLatch.countDown()
+                    beforeLatch.countDown()
                     countDownDone = true
                 }
+                afterLatch.await()
             }
 
             override fun createCall(): LiveData<Response<List<CinemaEntity>>> {
@@ -73,7 +78,7 @@ class CinemaRepository(
             override fun shouldFetch(data: List<Cinema>?): Boolean {
                 val shouldFetch = data == null || data.isEmpty() || hasExpired()
                 if (!shouldFetch && !countDownDone) {
-                    countDownLatch.countDown()
+                    beforeLatch.countDown()
                     countDownDone = true
                 }
                 return shouldFetch

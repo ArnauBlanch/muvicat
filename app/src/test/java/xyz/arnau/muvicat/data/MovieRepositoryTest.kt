@@ -26,6 +26,8 @@ import xyz.arnau.muvicat.data.test.MovieMapper
 import xyz.arnau.muvicat.data.utils.RepoPreferencesHelper
 import xyz.arnau.muvicat.remote.DataUpdateCallback
 import xyz.arnau.muvicat.remote.model.Response
+import xyz.arnau.muvicat.utils.AfterCountDownLatch
+import xyz.arnau.muvicat.utils.BeforeCountDownLatch
 import xyz.arnau.muvicat.utils.InstantAppExecutors
 import xyz.arnau.muvicat.utils.getValueBlocking
 import java.util.concurrent.CountDownLatch
@@ -39,8 +41,9 @@ class MovieRepositoryTest {
     private val gencatRemote = mock(GencatRemote::class.java)
     private val appExecutors = InstantAppExecutors()
     private val preferencesHelper = mock(RepoPreferencesHelper::class.java)
-    private val countDownLatch = mock(CountDownLatch::class.java)
-    private val movieRepository = MovieRepository(movieCache, gencatRemote, appExecutors, preferencesHelper, countDownLatch)
+    private val beforeLatch = mock(BeforeCountDownLatch::class.java)
+    private val afterLatch = mock(AfterCountDownLatch::class.java)
+    private val movieRepository = MovieRepository(movieCache, gencatRemote, appExecutors, preferencesHelper, beforeLatch, afterLatch)
 
     private val dbMovieLiveData = MutableLiveData<List<Movie>>()
     private val dbMovies = MovieMapper.mapFromMovieEntityList(MovieEntityFactory.makeMovieEntityList(3))
@@ -73,7 +76,7 @@ class MovieRepositoryTest {
         verify(observer).onChanged(Resource.success(dbMovies))
 
         verify(preferencesHelper, never()).moviesUpdated()
-        verify(countDownLatch).countDown()
+        verify(beforeLatch).countDown()
         verify(gencatRemote, never()).getMovies()
     }
     
@@ -94,7 +97,7 @@ class MovieRepositoryTest {
         verify(callback).onDataUpdated()
 
         verify(preferencesHelper).moviesUpdated()
-        verify(countDownLatch).countDown()
+        verify(beforeLatch).countDown()
         verify(movieCache).updateMovies(remoteMovies)
     }
 
@@ -113,7 +116,7 @@ class MovieRepositoryTest {
         verify(observer).onChanged(Resource.success(remoteMoviesMapped))
 
         verify(preferencesHelper).moviesUpdated()
-        verify(countDownLatch).countDown()
+        verify(beforeLatch).countDown()
         verify(movieCache).updateMovies(remoteMovies)
     }
 
@@ -149,7 +152,7 @@ class MovieRepositoryTest {
         verify(observer2).onChanged(Resource.success(remoteMoviesMapped))
 
         verify(preferencesHelper, times(2)).moviesUpdated()
-        verify(countDownLatch, times(1)).countDown()
+        verify(beforeLatch, times(1)).countDown()
         verify(movieCache, times(2)).updateMovies(remoteMovies)
     }
 
@@ -168,7 +171,7 @@ class MovieRepositoryTest {
         verify(callback, never()).onDataUpdated()
 
         verify(preferencesHelper).moviesUpdated()
-        verify(countDownLatch).countDown()
+        verify(beforeLatch).countDown()
         verify(movieCache, never()).updateMovies(Mockito.anyList())
     }
 
@@ -187,7 +190,7 @@ class MovieRepositoryTest {
         verify(callback, never()).onDataUpdated()
 
         verify(preferencesHelper, never()).moviesUpdated()
-        verify(countDownLatch).countDown()
+        verify(beforeLatch).countDown()
         verify(movieCache, never()).updateMovies(remoteMovies)
     }
 
@@ -222,7 +225,7 @@ class MovieRepositoryTest {
 
         verify(callback, never()).onDataUpdated()
         verify(preferencesHelper, never()).moviesUpdated()
-        verify(countDownLatch, times(1)).countDown()
+        verify(beforeLatch, times(1)).countDown()
         verify(movieCache, never()).updateMovies(remoteMovies)
     }
 
@@ -240,7 +243,7 @@ class MovieRepositoryTest {
         verify(callback).onDataUpdated()
 
         verify(preferencesHelper).moviesUpdated()
-        verify(countDownLatch).countDown()
+        verify(beforeLatch).countDown()
         verify(movieCache).updateMovies(remoteMovies)
     }
 
@@ -258,7 +261,7 @@ class MovieRepositoryTest {
         verify(callback).onDataUpdated()
 
         verify(preferencesHelper).moviesUpdated()
-        verify(countDownLatch).countDown()
+        verify(beforeLatch).countDown()
         verify(movieCache).updateMovies(remoteMovies)
     }
 
@@ -275,7 +278,7 @@ class MovieRepositoryTest {
         verify(callback, never()).onDataUpdated()
 
         verify(preferencesHelper, never()).moviesUpdated()
-        verify(countDownLatch).countDown()
+        verify(beforeLatch).countDown()
         verify(movieCache, never()).updateMovies(Mockito.anyList())
     }
 
@@ -292,7 +295,7 @@ class MovieRepositoryTest {
         verify(callback, never()).onDataUpdated()
 
         verify(preferencesHelper, never()).moviesUpdated()
-        verify(countDownLatch).countDown()
+        verify(beforeLatch).countDown()
         verify(movieCache, never()).updateMovies(remoteMovies)
     }
 

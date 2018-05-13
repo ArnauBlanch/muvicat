@@ -16,7 +16,6 @@ import org.mockito.Mockito
 import org.mockito.Mockito.*
 import xyz.arnau.muvicat.cache.model.ShowingEntity
 import xyz.arnau.muvicat.data.ShowingRepository.Companion.EXPIRATION_TIME
-import xyz.arnau.muvicat.data.model.Movie
 import xyz.arnau.muvicat.data.model.Showing
 import xyz.arnau.muvicat.data.model.Resource
 import xyz.arnau.muvicat.data.model.Status
@@ -27,6 +26,8 @@ import xyz.arnau.muvicat.data.test.ShowingMapper
 import xyz.arnau.muvicat.data.utils.RepoPreferencesHelper
 import xyz.arnau.muvicat.remote.DataUpdateCallback
 import xyz.arnau.muvicat.remote.model.Response
+import xyz.arnau.muvicat.utils.AfterCountDownLatch
+import xyz.arnau.muvicat.utils.BeforeCountDownLatch
 import xyz.arnau.muvicat.utils.InstantAppExecutors
 import xyz.arnau.muvicat.utils.getValueBlocking
 import java.util.concurrent.CountDownLatch
@@ -40,8 +41,9 @@ class ShowingRepositoryTest {
     private val gencatRemote = mock(GencatRemote::class.java)
     private val appExecutors = InstantAppExecutors()
     private val preferencesHelper = mock(RepoPreferencesHelper::class.java)
-    private val countDownLatch = mock(CountDownLatch::class.java)
-    private val showingRepository = ShowingRepository(showingCache, gencatRemote, appExecutors, preferencesHelper, countDownLatch)
+    private val beforeLatch = mock(BeforeCountDownLatch::class.java)
+    private val afterLatch = mock(AfterCountDownLatch::class.java)
+    private val showingRepository = ShowingRepository(showingCache, gencatRemote, appExecutors, preferencesHelper, beforeLatch, afterLatch)
 
     private val dbShowingLiveData = MutableLiveData<List<Showing>>()
     private val dbShowings = ShowingMapper.mapFromShowingEntityList(ShowingEntityFactory.makeShowingEntityList(3))
@@ -84,8 +86,8 @@ class ShowingRepositoryTest {
         val showings = showingRepository.getShowings()
         showings.observeForever(observer as Observer<Resource<List<Showing>>>)
 
-        countDownLatch.countDown()
-        countDownLatch.countDown()
+        beforeLatch.countDown()
+        beforeLatch.countDown()
 
         dbShowingLiveData.postValue(dbShowings)
         remoteShowingLiveData.postValue(Response.successful(remoteShowings, callback))
@@ -107,8 +109,8 @@ class ShowingRepositoryTest {
         val showings = showingRepository.getShowings()
         showings.observeForever(observer as Observer<Resource<List<Showing>>>)
 
-        countDownLatch.countDown()
-        countDownLatch.countDown()
+        beforeLatch.countDown()
+        beforeLatch.countDown()
 
         dbShowingLiveData.postValue(dbShowings)
         remoteShowingLiveData.postValue(Response.successful(remoteShowings, null))
@@ -164,8 +166,8 @@ class ShowingRepositoryTest {
         val showings = showingRepository.getShowings()
         showings.observeForever(observer as Observer<Resource<List<Showing>>>)
 
-        countDownLatch.countDown()
-        countDownLatch.countDown()
+        beforeLatch.countDown()
+        beforeLatch.countDown()
 
         dbShowingLiveData.postValue(null)
         remoteShowingLiveData.postValue(Response.successful(remoteShowings, callback))
@@ -186,8 +188,8 @@ class ShowingRepositoryTest {
         val showings = showingRepository.getShowings()
         showings.observeForever(observer as Observer<Resource<List<Showing>>>)
 
-        countDownLatch.countDown()
-        countDownLatch.countDown()
+        beforeLatch.countDown()
+        beforeLatch.countDown()
 
         dbShowingLiveData.postValue(listOf())
         remoteShowingLiveData.postValue(Response.successful(remoteShowings, callback))
@@ -208,8 +210,8 @@ class ShowingRepositoryTest {
         val showings = showingRepository.getShowings()
         showings.observeForever(observer as Observer<Resource<List<Showing>>>)
 
-        countDownLatch.countDown()
-        countDownLatch.countDown()
+        beforeLatch.countDown()
+        beforeLatch.countDown()
 
         dbShowingLiveData.postValue(listOf())
         remoteShowingLiveData.postValue(Response.successful(remoteShowings, callback))
