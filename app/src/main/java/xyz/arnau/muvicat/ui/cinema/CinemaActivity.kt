@@ -12,7 +12,6 @@ import android.os.Bundle
 import android.support.design.widget.AppBarLayout
 import android.support.v4.app.Fragment
 import android.support.v4.content.res.ResourcesCompat
-import android.support.v4.view.ViewCompat
 import android.view.View
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
@@ -20,14 +19,13 @@ import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
 import kotlinx.android.synthetic.main.cinema_info.*
 import xyz.arnau.muvicat.R
-import xyz.arnau.muvicat.R.id.cinemaInfoToolbarLayout
-import xyz.arnau.muvicat.R.id.viewPager
 import xyz.arnau.muvicat.data.model.Cinema
 import xyz.arnau.muvicat.data.model.Resource
 import xyz.arnau.muvicat.data.model.Status
 import xyz.arnau.muvicat.ui.LocationAwareActivity
+import xyz.arnau.muvicat.ui.movie.CinemaMovieListFragment
 import xyz.arnau.muvicat.ui.movie.MovieListFragment
-import xyz.arnau.muvicat.ui.showing.ShowingListFragment
+import xyz.arnau.muvicat.ui.showing.CinemaShowingListFragment
 import xyz.arnau.muvicat.utils.LocationUtils
 import xyz.arnau.muvicat.viewmodel.cinema.CinemaViewModel
 import javax.inject.Inject
@@ -41,7 +39,7 @@ class CinemaActivity : LocationAwareActivity(), HasSupportFragmentInjector {
     }
 
     @Inject
-    lateinit var cinemaViewModel: CinemaViewModel
+    lateinit var viewModel: CinemaViewModel
 
     @Inject
     lateinit var context: Context
@@ -59,7 +57,7 @@ class CinemaActivity : LocationAwareActivity(), HasSupportFragmentInjector {
         if (cinemaId == (-1).toLong())
             throw Exception("Missing cinema identifier")
         else {
-            cinemaViewModel.setId(cinemaId)
+            viewModel.setId(cinemaId)
             setupTabs(cinemaId)
         }
     }
@@ -67,7 +65,7 @@ class CinemaActivity : LocationAwareActivity(), HasSupportFragmentInjector {
     override fun onStart() {
         super.onStart()
 
-        cinemaViewModel.cinema.observe(this,
+        viewModel.cinema.observe(this,
             Observer<Resource<Cinema>> {
                 if (it != null) handleDataState(it)
             })
@@ -76,12 +74,13 @@ class CinemaActivity : LocationAwareActivity(), HasSupportFragmentInjector {
     private fun setupTabs(cinemaId: Long) {
         val adapter = TabViewPagerAdapter(
             listOf(
-                MovieListFragment.prepareMovieListByCinema(cinemaId),
-                ShowingListFragment.prepareShowingListByCinema(cinemaId)
+                CinemaMovieListFragment(),
+                CinemaShowingListFragment()
             ),
             listOf(R.string.movies, R.string.showings),
             supportFragmentManager,
-            this)
+            this
+        )
         viewPager.adapter = adapter
         tabLayout.setupWithViewPager(viewPager)
     }
@@ -108,9 +107,13 @@ class CinemaActivity : LocationAwareActivity(), HasSupportFragmentInjector {
                     if (lastLocation != null)
                         processLastLocation(lastLocation!!)
                     cinemaMapButton.setOnClickListener {
-                        val intent = Intent(android.content.Intent.ACTION_VIEW,
-                            Uri.parse("https://www.google.com/maps/search/?api=1&query=" +
-                                    "${cinema.name}, ${cinema.address}"))
+                        val intent = Intent(
+                            android.content.Intent.ACTION_VIEW,
+                            Uri.parse(
+                                "https://www.google.com/maps/search/?api=1&query=" +
+                                        "${cinema.name}, ${cinema.address}"
+                            )
+                        )
                         startActivity(intent)
                     }
                 }

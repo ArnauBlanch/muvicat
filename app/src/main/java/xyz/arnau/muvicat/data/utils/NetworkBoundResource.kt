@@ -4,10 +4,10 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MediatorLiveData
 import android.support.annotation.MainThread
 import android.support.annotation.WorkerThread
-import xyz.arnau.muvicat.utils.AppExecutors
 import xyz.arnau.muvicat.data.model.Resource
 import xyz.arnau.muvicat.remote.model.Response
 import xyz.arnau.muvicat.remote.model.ResponseStatus
+import xyz.arnau.muvicat.utils.AppExecutors
 
 abstract class NetworkBoundResource<ResultType, RequestType> @MainThread constructor(private val appExecutors: AppExecutors) {
     private val result = MediatorLiveData<Resource<ResultType>>()

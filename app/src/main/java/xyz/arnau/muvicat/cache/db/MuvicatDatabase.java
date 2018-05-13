@@ -6,19 +6,19 @@ import android.arch.persistence.room.RoomDatabase;
 import android.arch.persistence.room.TypeConverters;
 import android.content.Context;
 
-import xyz.arnau.muvicat.cache.db.migrations.DbMigration3to4;
-import xyz.arnau.muvicat.utils.AppExecutors;
 import xyz.arnau.muvicat.cache.dao.CinemaDao;
 import xyz.arnau.muvicat.cache.dao.MovieDao;
 import xyz.arnau.muvicat.cache.dao.PostalCodeDao;
 import xyz.arnau.muvicat.cache.dao.ShowingDao;
 import xyz.arnau.muvicat.cache.db.migrations.DbMigration1to2;
 import xyz.arnau.muvicat.cache.db.migrations.DbMigration2to3;
+import xyz.arnau.muvicat.cache.db.migrations.DbMigration3to4;
 import xyz.arnau.muvicat.cache.model.CinemaEntity;
 import xyz.arnau.muvicat.cache.model.MovieEntity;
 import xyz.arnau.muvicat.cache.model.PostalCodeEntity;
 import xyz.arnau.muvicat.cache.model.ShowingEntity;
 import xyz.arnau.muvicat.cache.utils.PostalCodeCsvReader;
+import xyz.arnau.muvicat.utils.AppExecutors;
 
 @Database(
         entities = {MovieEntity.class, CinemaEntity.class, PostalCodeEntity.class, ShowingEntity.class},

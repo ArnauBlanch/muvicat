@@ -9,22 +9,22 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import xyz.arnau.muvicat.R
-import xyz.arnau.muvicat.data.model.Showing
+import xyz.arnau.muvicat.data.model.CinemaShowing
 import xyz.arnau.muvicat.ui.movie.MovieActivity
 import xyz.arnau.muvicat.utils.DateFormatter
 import xyz.arnau.muvicat.utils.GlideApp
 import javax.inject.Inject
 
 
-class ShowingListAdapter @Inject constructor() :
-    RecyclerView.Adapter<ShowingListAdapter.ViewHolder>() {
+class CinemaShowingListAdapter @Inject constructor() :
+    RecyclerView.Adapter<CinemaShowingListAdapter.ViewHolder>() {
     @Inject
     lateinit var dateFormatter: DateFormatter
 
     @Inject
     lateinit var context: Context
 
-    var showings: List<Showing> = arrayListOf()
+    var showings: List<CinemaShowing> = arrayListOf()
 
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -37,21 +37,14 @@ class ShowingListAdapter @Inject constructor() :
             .into(holder.moviePoster)
         holder.version.text = longerVersion(showing.version)
         holder.date.text = dateFormatter.shortDate(showing.date)
-        holder.cinemaName.text = showing.cinemaName
-        if (showing.cinemaRegion != null)
-            holder.cinemaPlace.text = "${showing.cinemaTown} (${showing.cinemaRegion})"
-        else
-            holder.cinemaPlace.text = showing.cinemaTown
 
-        if (showing.cinemaDistance != null) {
-            holder.distance.text = "≈ ${showing.cinemaDistance} km"
-            holder.distance.visibility = View.VISIBLE
-            holder.dateDistanceMargin.visibility = View.VISIBLE
-        } else {
-            holder.distance.text = " "
-            holder.dateDistanceMargin.visibility = View.GONE
-            holder.distance.visibility = View.GONE
-        }
+        val posterParams = holder.moviePoster.layoutParams
+        posterParams.height = convertDpToPixel(65F)
+        holder.moviePoster.layoutParams = posterParams
+
+        holder.distance.text = " "
+        holder.dateDistanceMargin.visibility = View.GONE
+        holder.distance.visibility = View.GONE
 
         holder.itemView.setOnClickListener {
             context.startActivity(
@@ -87,8 +80,6 @@ class ShowingListAdapter @Inject constructor() :
         var moviePoster: ImageView = view.findViewById(R.id.moviePoster)
         var version: TextView = view.findViewById(R.id.showingVersion)
         var date: TextView = view.findViewById(R.id.date)
-        var cinemaName: TextView = view.findViewById(R.id.cinemaName)
-        var cinemaPlace: TextView = view.findViewById(R.id.cinemaPlace)
         var distance: TextView = view.findViewById(R.id.cinemaDistance)
         var dateDistanceMargin: View = view.findViewById(R.id.dateDistanceMargin)
     }
