@@ -16,11 +16,11 @@ import org.mockito.Mockito
 import org.mockito.Mockito.*
 import xyz.arnau.muvicat.cache.model.ShowingEntity
 import xyz.arnau.muvicat.data.ShowingRepository.Companion.EXPIRATION_TIME
-import xyz.arnau.muvicat.data.model.Showing
-import xyz.arnau.muvicat.data.model.Resource
-import xyz.arnau.muvicat.data.model.Status
+import xyz.arnau.muvicat.data.model.*
 import xyz.arnau.muvicat.data.repository.GencatRemote
 import xyz.arnau.muvicat.data.repository.ShowingCache
+import xyz.arnau.muvicat.data.test.CinemaShowingMapper
+import xyz.arnau.muvicat.data.test.MovieShowingMapper
 import xyz.arnau.muvicat.data.test.ShowingEntityFactory
 import xyz.arnau.muvicat.data.test.ShowingMapper
 import xyz.arnau.muvicat.data.utils.RepoPreferencesHelper
@@ -30,7 +30,6 @@ import xyz.arnau.muvicat.utils.AfterCountDownLatch
 import xyz.arnau.muvicat.utils.BeforeCountDownLatch
 import xyz.arnau.muvicat.utils.InstantAppExecutors
 import xyz.arnau.muvicat.utils.getValueBlocking
-import java.util.concurrent.CountDownLatch
 
 @RunWith(JUnit4::class)
 class ShowingRepositoryTest {
@@ -45,8 +44,14 @@ class ShowingRepositoryTest {
     private val afterLatch = mock(AfterCountDownLatch::class.java)
     private val showingRepository = ShowingRepository(showingCache, gencatRemote, appExecutors, preferencesHelper, beforeLatch, afterLatch)
 
+    private val showings = ShowingEntityFactory.makeShowingEntityList(3)
+
     private val dbShowingLiveData = MutableLiveData<List<Showing>>()
-    private val dbShowings = ShowingMapper.mapFromShowingEntityList(ShowingEntityFactory.makeShowingEntityList(3))
+    private val dbCinemaShowingLiveData = MutableLiveData<List<CinemaShowing>>()
+    private val dbMovieShowingLiveData = MutableLiveData<List<MovieShowing>>()
+    private val dbShowings = ShowingMapper.mapFromShowingEntityList(showings)
+    private val dbCinemaShowings = CinemaShowingMapper.mapFromShowingEntityList(showings)
+    private val dbMovieShowings = MovieShowingMapper.mapFromShowingEntityList(showings)
 
     private val remoteShowingLiveData = MutableLiveData<Response<List<ShowingEntity>>>()
     private val remoteShowings = ShowingEntityFactory.makeShowingEntityList(3)
@@ -260,18 +265,18 @@ class ShowingRepositoryTest {
 
     @Test
     fun getShowingsByCinemaReturnsShowingsLiveDataWithSuccessIfExists() {
-        `when`(showingCache.getShowingsByCinema(100.toLong())).thenReturn(dbShowingLiveData)
-        dbShowingLiveData.postValue(dbShowings)
+        `when`(showingCache.getShowingsByCinema(100.toLong())).thenReturn(dbCinemaShowingLiveData)
+        dbCinemaShowingLiveData.postValue(dbCinemaShowings)
 
         val res = showingRepository.getShowingsByCinema(100.toLong()).getValueBlocking()
         assertEquals(Status.SUCCESS, res?.status)
-        assertEquals(dbShowings, res?.data)
+        assertEquals(dbCinemaShowings, res?.data)
     }
 
     @Test
     fun getShowingsByCinemaReturnsShowingsLiveDataWithErrorIfNullCache() {
-        `when`(showingCache.getShowingsByCinema(100.toLong())).thenReturn(dbShowingLiveData)
-        dbShowingLiveData.postValue(null)
+        `when`(showingCache.getShowingsByCinema(100.toLong())).thenReturn(dbCinemaShowingLiveData)
+        dbCinemaShowingLiveData.postValue(null)
 
         val res = showingRepository.getShowingsByCinema(100.toLong()).getValueBlocking()
         assertEquals(Status.ERROR, res?.status)
@@ -280,12 +285,43 @@ class ShowingRepositoryTest {
 
     @Test
     fun getShowingsByCinemaReturnsShowingsLiveDataWithErrorIfEmptyCache() {
-        `when`(showingCache.getShowingsByCinema(100.toLong())).thenReturn(dbShowingLiveData)
-        dbShowingLiveData.postValue(listOf())
+        `when`(showingCache.getShowingsByCinema(100.toLong())).thenReturn(dbCinemaShowingLiveData)
+        dbCinemaShowingLiveData.postValue(listOf())
 
         val res = showingRepository.getShowingsByCinema(100.toLong()).getValueBlocking()
         assertEquals(Status.ERROR, res?.status)
-        assertEquals(listOf<Showing>(), res?.data)
+        assertEquals(listOf<CinemaShowing>(), res?.data)
+    }
+
+
+    @Test
+    fun getShowingsByMovieReturnsShowingsLiveDataWithSuccessIfExists() {
+        `when`(showingCache.getShowingsByMovie(100.toLong())).thenReturn(dbMovieShowingLiveData)
+        dbMovieShowingLiveData.postValue(dbMovieShowings)
+
+        val res = showingRepository.getShowingsByMovie(100.toLong()).getValueBlocking()
+        assertEquals(Status.SUCCESS, res?.status)
+        assertEquals(dbMovieShowings, res?.data)
+    }
+
+    @Test
+    fun getShowingsByMovieReturnsShowingsLiveDataWithErrorIfNullCache() {
+        `when`(showingCache.getShowingsByMovie(100.toLong())).thenReturn(dbMovieShowingLiveData)
+        dbMovieShowingLiveData.postValue(null)
+
+        val res = showingRepository.getShowingsByMovie(100.toLong()).getValueBlocking()
+        assertEquals(Status.ERROR, res?.status)
+        assertEquals(null, res?.data)
+    }
+
+    @Test
+    fun getShowingsByMovieReturnsShowingsLiveDataWithErrorIfEmptyCache() {
+        `when`(showingCache.getShowingsByMovie(100.toLong())).thenReturn(dbMovieShowingLiveData)
+        dbMovieShowingLiveData.postValue(listOf())
+
+        val res = showingRepository.getShowingsByMovie(100.toLong()).getValueBlocking()
+        assertEquals(Status.ERROR, res?.status)
+        assertEquals(listOf<MovieShowing>(), res?.data)
     }
 
 

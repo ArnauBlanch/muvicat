@@ -10,24 +10,25 @@ import android.location.Location
 import android.net.Uri
 import android.os.Bundle
 import android.support.design.widget.AppBarLayout
+import android.support.design.widget.TabLayout
 import android.support.v4.app.Fragment
 import android.support.v4.content.res.ResourcesCompat
-import android.support.v4.view.ViewCompat
 import android.view.View
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
 import kotlinx.android.synthetic.main.cinema_info.*
+import kotlinx.android.synthetic.main.cinema_list_toolbar.*
+import kotlinx.android.synthetic.main.movie_list.*
+import kotlinx.android.synthetic.main.showing_list.*
 import xyz.arnau.muvicat.R
-import xyz.arnau.muvicat.R.id.cinemaInfoToolbarLayout
-import xyz.arnau.muvicat.R.id.viewPager
 import xyz.arnau.muvicat.data.model.Cinema
 import xyz.arnau.muvicat.data.model.Resource
 import xyz.arnau.muvicat.data.model.Status
 import xyz.arnau.muvicat.ui.LocationAwareActivity
-import xyz.arnau.muvicat.ui.movie.MovieListFragment
-import xyz.arnau.muvicat.ui.showing.ShowingListFragment
+import xyz.arnau.muvicat.ui.movie.CinemaMovieListFragment
+import xyz.arnau.muvicat.ui.showing.CinemaShowingListFragment
 import xyz.arnau.muvicat.utils.LocationUtils
 import xyz.arnau.muvicat.viewmodel.cinema.CinemaViewModel
 import javax.inject.Inject
@@ -41,7 +42,7 @@ class CinemaActivity : LocationAwareActivity(), HasSupportFragmentInjector {
     }
 
     @Inject
-    lateinit var cinemaViewModel: CinemaViewModel
+    lateinit var viewModel: CinemaViewModel
 
     @Inject
     lateinit var context: Context
@@ -59,29 +60,52 @@ class CinemaActivity : LocationAwareActivity(), HasSupportFragmentInjector {
         if (cinemaId == (-1).toLong())
             throw Exception("Missing cinema identifier")
         else {
-            cinemaViewModel.setId(cinemaId)
-            setupTabs(cinemaId)
+            viewModel.setId(cinemaId)
+            setupTabs()
         }
+        cinemaInfoToolbar.setOnClickListener {
+            cinemaInfoToolbarLayout.setExpanded(true)
+            moviesRecyclerView.scrollToPosition(0)
+            showingsRecyclerView.scrollToPosition(0)
+        }
+        cinemaInfoToolbarLayout.addOnOffsetChangedListener { _, verticalOffset ->
+            if (verticalOffset == 0) {
+                moviesRecyclerView.scrollToPosition(0)
+                showingsRecyclerView.scrollToPosition(0)
+            }
+        }
+        tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab?) {}
+            override fun onTabUnselected(tab: TabLayout.Tab?) {}
+            override fun onTabReselected(tab: TabLayout.Tab?) {
+                if (tab?.position == 0) {
+                    moviesRecyclerView.scrollToPosition(0)
+                } else {
+                    showingsRecyclerView.scrollToPosition(0)
+                }
+            }
+        })
     }
 
     override fun onStart() {
         super.onStart()
 
-        cinemaViewModel.cinema.observe(this,
+        viewModel.cinema.observe(this,
             Observer<Resource<Cinema>> {
                 if (it != null) handleDataState(it)
             })
     }
 
-    private fun setupTabs(cinemaId: Long) {
+    private fun setupTabs() {
         val adapter = TabViewPagerAdapter(
             listOf(
-                MovieListFragment.prepareMovieListByCinema(cinemaId),
-                ShowingListFragment.prepareShowingListByCinema(cinemaId)
+                CinemaMovieListFragment(),
+                CinemaShowingListFragment()
             ),
             listOf(R.string.movies, R.string.showings),
             supportFragmentManager,
-            this)
+            this
+        )
         viewPager.adapter = adapter
         tabLayout.setupWithViewPager(viewPager)
     }
@@ -108,9 +132,13 @@ class CinemaActivity : LocationAwareActivity(), HasSupportFragmentInjector {
                     if (lastLocation != null)
                         processLastLocation(lastLocation!!)
                     cinemaMapButton.setOnClickListener {
-                        val intent = Intent(android.content.Intent.ACTION_VIEW,
-                            Uri.parse("https://www.google.com/maps/search/?api=1&query=" +
-                                    "${cinema.name}, ${cinema.address}"))
+                        val intent = Intent(
+                            android.content.Intent.ACTION_VIEW,
+                            Uri.parse(
+                                "https://www.google.com/maps/search/?api=1&query=" +
+                                        "${cinema.name}, ${cinema.address}"
+                            )
+                        )
                         startActivity(intent)
                     }
                 }
@@ -159,16 +187,6 @@ class CinemaActivity : LocationAwareActivity(), HasSupportFragmentInjector {
         })
     }
 
-
-    companion object {
-        private const val CINEMA_ID = "cinema_id"
-
-        fun createIntent(context: Context, cinemaId: Long): Intent {
-            return Intent(context, CinemaActivity::class.java).putExtra(CINEMA_ID, cinemaId)
-                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        }
-    }
-
     @SuppressLint("SetTextI18n")
     override fun processLastLocation(location: Location) {
         if (cinemaLatitude != null && cinemaLongitude != null) {
@@ -178,6 +196,15 @@ class CinemaActivity : LocationAwareActivity(), HasSupportFragmentInjector {
                 cinemaLongitude!!
             )} km"
             cinemaDistance.visibility = View.VISIBLE
+        }
+    }
+
+    companion object {
+        private const val CINEMA_ID = "cinema_id"
+
+        fun createIntent(context: Context, cinemaId: Long): Intent {
+            return Intent(context, CinemaActivity::class.java).putExtra(CINEMA_ID, cinemaId)
+                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         }
     }
 }

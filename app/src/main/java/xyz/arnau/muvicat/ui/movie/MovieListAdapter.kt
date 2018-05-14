@@ -7,10 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import xyz.arnau.muvicat.utils.GlideApp
 import xyz.arnau.muvicat.R
 import xyz.arnau.muvicat.data.model.Movie
 import xyz.arnau.muvicat.utils.DateFormatter
+import xyz.arnau.muvicat.utils.GlideApp
 import javax.inject.Inject
 
 class MovieListAdapter @Inject constructor() : RecyclerView.Adapter<MovieListAdapter.ViewHolder>() {

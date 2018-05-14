@@ -31,7 +31,7 @@ class GencatRemoteImpl(
                     moviesEntityMapper.mapFromRemote(apiResponse.body),
                     apiResponse.errorMessage,
                     apiResponse.status,
-                    object: DataUpdateCallback {
+                    object : DataUpdateCallback {
                         override fun onDataUpdated() {
                             if (apiResponse.eTag != null) {
                                 preferencesHelper.moviesETag = apiResponse.eTag
@@ -54,7 +54,7 @@ class GencatRemoteImpl(
                     cinemasEntityMapper.mapFromRemote(apiResponse.body),
                     apiResponse.errorMessage,
                     apiResponse.status,
-                    object: DataUpdateCallback {
+                    object : DataUpdateCallback {
                         override fun onDataUpdated() {
                             if (apiResponse.eTag != null) {
                                 preferencesHelper.cinemasETag = apiResponse.eTag
@@ -77,7 +77,7 @@ class GencatRemoteImpl(
                     showingsEntityMapper.mapFromRemote(apiResponse.body),
                     apiResponse.errorMessage,
                     apiResponse.status,
-                    object: DataUpdateCallback {
+                    object : DataUpdateCallback {
                         override fun onDataUpdated() {
                             if (apiResponse.eTag != null) {
                                 preferencesHelper.showingsETag = apiResponse.eTag
