@@ -48,10 +48,7 @@ abstract class ShowingDao {
         WHERE s.cinemaId = :cinemaId AND s.date >= :today
         ORDER BY s.date, s.movieId"""
     )
-    abstract fun getCurrentShowingsByCinema(
-        cinemaId: Long,
-        today: Long = LocalDate.now().toDate().time
-    ): LiveData<List<CinemaShowing>>
+    abstract fun getCurrentShowingsByCinema(cinemaId: Long, today: Long = LocalDate.now().toDate().time): LiveData<List<CinemaShowing>>
 
     @Query(
         """SELECT
@@ -64,10 +61,7 @@ abstract class ShowingDao {
         WHERE s.movieId = :movieId AND s.date >= :today
         ORDER BY s.date, s.cinemaId"""
     )
-    abstract fun getCurrentShowingsByMovie(
-        movieId: Long,
-        today: Long = LocalDate.now().toDate().time
-    ): LiveData<List<MovieShowing>>
+    abstract fun getCurrentShowingsByMovie(movieId: Long, today: Long = LocalDate.now().toDate().time): LiveData<List<MovieShowing>>
 
     @Query("DELETE FROM showings")
     abstract fun clearShowings()

@@ -10,6 +10,7 @@ import android.location.Location
 import android.net.Uri
 import android.os.Bundle
 import android.support.design.widget.AppBarLayout
+import android.support.design.widget.TabLayout
 import android.support.v4.app.Fragment
 import android.support.v4.content.res.ResourcesCompat
 import android.view.View
@@ -18,13 +19,15 @@ import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
 import kotlinx.android.synthetic.main.cinema_info.*
+import kotlinx.android.synthetic.main.cinema_list_toolbar.*
+import kotlinx.android.synthetic.main.movie_list.*
+import kotlinx.android.synthetic.main.showing_list.*
 import xyz.arnau.muvicat.R
 import xyz.arnau.muvicat.data.model.Cinema
 import xyz.arnau.muvicat.data.model.Resource
 import xyz.arnau.muvicat.data.model.Status
 import xyz.arnau.muvicat.ui.LocationAwareActivity
 import xyz.arnau.muvicat.ui.movie.CinemaMovieListFragment
-import xyz.arnau.muvicat.ui.movie.MovieListFragment
 import xyz.arnau.muvicat.ui.showing.CinemaShowingListFragment
 import xyz.arnau.muvicat.utils.LocationUtils
 import xyz.arnau.muvicat.viewmodel.cinema.CinemaViewModel
@@ -58,8 +61,30 @@ class CinemaActivity : LocationAwareActivity(), HasSupportFragmentInjector {
             throw Exception("Missing cinema identifier")
         else {
             viewModel.setId(cinemaId)
-            setupTabs(cinemaId)
+            setupTabs()
         }
+        cinemaInfoToolbar.setOnClickListener {
+            cinemaInfoToolbarLayout.setExpanded(true)
+            moviesRecyclerView.scrollToPosition(0)
+            showingsRecyclerView.scrollToPosition(0)
+        }
+        cinemaInfoToolbarLayout.addOnOffsetChangedListener { _, verticalOffset ->
+            if (verticalOffset == 0) {
+                moviesRecyclerView.scrollToPosition(0)
+                showingsRecyclerView.scrollToPosition(0)
+            }
+        }
+        tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab?) {}
+            override fun onTabUnselected(tab: TabLayout.Tab?) {}
+            override fun onTabReselected(tab: TabLayout.Tab?) {
+                if (tab?.position == 0) {
+                    moviesRecyclerView.scrollToPosition(0)
+                } else {
+                    showingsRecyclerView.scrollToPosition(0)
+                }
+            }
+        })
     }
 
     override fun onStart() {
@@ -71,7 +96,7 @@ class CinemaActivity : LocationAwareActivity(), HasSupportFragmentInjector {
             })
     }
 
-    private fun setupTabs(cinemaId: Long) {
+    private fun setupTabs() {
         val adapter = TabViewPagerAdapter(
             listOf(
                 CinemaMovieListFragment(),
@@ -162,16 +187,6 @@ class CinemaActivity : LocationAwareActivity(), HasSupportFragmentInjector {
         })
     }
 
-
-    companion object {
-        private const val CINEMA_ID = "cinema_id"
-
-        fun createIntent(context: Context, cinemaId: Long): Intent {
-            return Intent(context, CinemaActivity::class.java).putExtra(CINEMA_ID, cinemaId)
-                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        }
-    }
-
     @SuppressLint("SetTextI18n")
     override fun processLastLocation(location: Location) {
         if (cinemaLatitude != null && cinemaLongitude != null) {
@@ -181,6 +196,15 @@ class CinemaActivity : LocationAwareActivity(), HasSupportFragmentInjector {
                 cinemaLongitude!!
             )} km"
             cinemaDistance.visibility = View.VISIBLE
+        }
+    }
+
+    companion object {
+        private const val CINEMA_ID = "cinema_id"
+
+        fun createIntent(context: Context, cinemaId: Long): Intent {
+            return Intent(context, CinemaActivity::class.java).putExtra(CINEMA_ID, cinemaId)
+                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         }
     }
 }

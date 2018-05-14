@@ -20,4 +20,5 @@
     <string name="no_location_detected">No s\'ha pogut aconseguir la localització, la cartellera no es personalitzarà segons la teva ubicació</string>
     <string name="showings">Sessions</string>
     <string name="view_map">Mostra mapa</string>
+    <string name="dot_separator">•</string>
 </resources>
