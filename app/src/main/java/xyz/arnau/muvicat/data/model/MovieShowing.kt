@@ -6,17 +6,13 @@ import android.arch.persistence.room.PrimaryKey
 import java.util.*
 
 @Entity
-data class Showing(
+data class MovieShowing(
     @PrimaryKey
     var id: Long?,
     var date: Date,
     var version: String?,
-    var seasonId: Long?,
 
-    var movieId: Long,
-    var movieTitle: String?,
-    var moviePosterUrl: String?,
-
+    var cinemaId: Long,
     var cinemaName: String,
     var cinemaTown: String?,
     var cinemaRegion: String?,

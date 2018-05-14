@@ -1,8 +1,10 @@
 package xyz.arnau.muvicat.data.model
 
 import android.arch.persistence.room.ColumnInfo
+import android.arch.persistence.room.Entity
 import java.util.*
 
+@Entity
 data class Movie(
     var id: Long,
     var title: String?,
