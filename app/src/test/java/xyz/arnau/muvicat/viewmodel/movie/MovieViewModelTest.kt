@@ -2,20 +2,23 @@ package xyz.arnau.muvicat.viewmodel.movie
 
 import android.arch.core.executor.testing.InstantTaskExecutorRule
 import android.arch.lifecycle.MutableLiveData
+import junit.framework.TestCase
 import org.junit.Assert.assertEquals
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
+import org.mockito.Mockito
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock
 import xyz.arnau.muvicat.data.MovieRepository
 import xyz.arnau.muvicat.cache.model.MovieEntity
+import xyz.arnau.muvicat.data.ShowingRepository
 import xyz.arnau.muvicat.data.model.Movie
+import xyz.arnau.muvicat.data.model.MovieShowing
 import xyz.arnau.muvicat.data.model.Resource
 import xyz.arnau.muvicat.data.model.Status
-import xyz.arnau.muvicat.data.test.MovieEntityFactory
-import xyz.arnau.muvicat.data.test.MovieMapper
+import xyz.arnau.muvicat.data.test.*
 import xyz.arnau.muvicat.utils.getValueBlocking
 
 @RunWith(JUnit4::class)
@@ -24,11 +27,15 @@ class MovieViewModelTest {
     val rule = InstantTaskExecutorRule()
 
     private val movieRepository = mock(MovieRepository::class.java)
-    private val movieViewModel = MovieViewModel(movieRepository)
+    private val showingRepository = mock(ShowingRepository::class.java)
+    private val movieViewModel = MovieViewModel(movieRepository, showingRepository)
+
+    private val movie = MovieMapper.mapFromMovieEntity(MovieEntityFactory.makeMovieEntity())
+    private val movieShowingsLiveData = MutableLiveData<Resource<List<MovieShowing>>>()
+    private val movieShowings = MovieShowingMapper.mapFromShowingEntityList(ShowingEntityFactory.makeShowingEntityList(5))
 
     @Test
     fun getMovieReturnsLiveData() {
-        val movie = MovieMapper.mapFromMovieEntity(MovieEntityFactory.makeMovieEntity())
         movieViewModel.setId(movie.id)
 
         val movieLiveData = MutableLiveData<Resource<Movie>>()
@@ -39,5 +46,18 @@ class MovieViewModelTest {
         assertEquals(Status.SUCCESS, result!!.status)
         assertEquals(null, result.message)
         assertEquals(movie, result.data)
+    }
+
+    @Test
+    fun getShowingsReturnsLiveData() {
+        movieViewModel.setId(movie.id)
+        `when`(showingRepository.getShowingsByMovie(movie.id)).thenReturn(movieShowingsLiveData)
+        movieShowingsLiveData.postValue(Resource.success(movieShowings))
+
+        val result = movieViewModel.showings.getValueBlocking()
+        Mockito.verify(showingRepository).getShowingsByMovie(movie.id)
+        TestCase.assertEquals(Status.SUCCESS, result!!.status)
+        TestCase.assertEquals(null, result.message)
+        TestCase.assertEquals(movieShowings, result.data)
     }
 }

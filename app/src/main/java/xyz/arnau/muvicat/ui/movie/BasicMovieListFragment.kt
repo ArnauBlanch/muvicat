@@ -33,7 +33,7 @@ abstract class BasicMovieListFragment<T, V : RecyclerView.ViewHolder?> : ListFra
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.movie_fragment, container, false)
+        return inflater.inflate(R.layout.movies_fragment, container, false)
     }
 
     override fun onStart() {
