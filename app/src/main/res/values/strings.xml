@@ -25,4 +25,7 @@
     <string name="scheduled_showing">sessió programada</string>
     <string name="view_map">Mostra mapa</string>
     <string name="dot_separator">•</string>
+    <string name="showing">Sessió</string>
+    <string name="more_showings">  més sessions</string>
+    <string name="less_showings">menys sessions</string>
 </resources>

@@ -11,8 +11,11 @@ import android.support.design.widget.AppBarLayout
 import android.support.design.widget.Snackbar
 import android.support.v4.content.res.ResourcesCompat
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
+import android.widget.ToggleButton
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.movie_info.*
+import kotlinx.android.synthetic.main.movie_info_header.*
 import xyz.arnau.muvicat.R
 import xyz.arnau.muvicat.data.model.Movie
 import xyz.arnau.muvicat.data.model.MovieShowing
@@ -49,6 +52,12 @@ class MovieActivity : LocationAwareActivity() {
             throw Exception("Missing movie identifier")
         else
             movieViewModel.setId(movieId)
+
+        val showingId = intent.getLongExtra(SHOWING_ID, (-1).toLong())
+        if (showingId != (-1).toLong()) {
+            infoAndShowingsAdapter.showingId = showingId
+            infoAndShowingsAdapter.expanded = false
+        }
 
         movieInfoAndShowingsRecyclerView.adapter = infoAndShowingsAdapter
         movieInfoAndShowingsRecyclerView.layoutManager = LinearLayoutManager(this)
@@ -194,10 +203,14 @@ class MovieActivity : LocationAwareActivity() {
 
     companion object {
         private const val MOVIE_ID = "movie_id"
+        private const val SHOWING_ID = "showing_id"
 
-        fun createIntent(context: Context, movieId: Long): Intent {
-            return Intent(context, MovieActivity::class.java).putExtra(MOVIE_ID, movieId)
-                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        fun createIntent(context: Context, movieId: Long, showingId: Long? = null): Intent {
+            return Intent(context, MovieActivity::class.java).apply {
+                putExtra(MOVIE_ID, movieId)
+                showingId?.let { putExtra(SHOWING_ID, showingId) }
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            }
         }
     }
 }

@@ -4,9 +4,12 @@ import android.view.View
 import android.widget.TextView
 
 fun TextView.setVisibleText(text: String?) {
-    text?.let {
+    if (text != null) {
         this.text = text
         this.setVisible()
+    } else {
+        this.text = " "
+        this.setGone()
     }
 }
 

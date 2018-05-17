@@ -44,7 +44,7 @@ class CinemaShowingListAdapter @Inject constructor() :
         holder.moviePoster.layoutParams = posterParams
 
         holder.itemView.setOnClickListener {
-            context.startActivity(MovieActivity.createIntent(context, showing.movieId))
+            context.startActivity(MovieActivity.createIntent(context, showing.movieId, showing.id))
         }
     }
 

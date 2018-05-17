@@ -24,17 +24,20 @@ class SimpleDividerItemDecoration(private val context: Context, private val star
             )
         )
 
+
         val childCount = parent.childCount
-        for (i in start until childCount - 1) {
-            val child = parent.getChildAt(i)
+        for (i in 0 until childCount - 1) {
+            if (i >= start || parent.getChildLayoutPosition(parent.getChildAt(i)) != 0) {
+                val child = parent.getChildAt(i)
 
-            val params = child.layoutParams as RecyclerView.LayoutParams
+                val params = child.layoutParams as RecyclerView.LayoutParams
 
-            val top = child.bottom + params.bottomMargin
-            val bottom = top + mDivider.intrinsicHeight
+                val top = child.bottom + params.bottomMargin
+                val bottom = top + mDivider.intrinsicHeight
 
-            mDivider.setBounds(left, top, right, bottom)
-            mDivider.draw(c)
+                mDivider.setBounds(left, top, right, bottom)
+                mDivider.draw(c)
+            }
         }
     }
 }
