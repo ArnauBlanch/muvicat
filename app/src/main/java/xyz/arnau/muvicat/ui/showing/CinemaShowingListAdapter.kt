@@ -13,6 +13,7 @@ import xyz.arnau.muvicat.data.model.CinemaShowing
 import xyz.arnau.muvicat.ui.movie.MovieActivity
 import xyz.arnau.muvicat.utils.DateFormatter
 import xyz.arnau.muvicat.utils.GlideApp
+import xyz.arnau.muvicat.utils.longerVersion
 import javax.inject.Inject
 
 
@@ -42,27 +43,8 @@ class CinemaShowingListAdapter @Inject constructor() :
         posterParams.height = convertDpToPixel(65F)
         holder.moviePoster.layoutParams = posterParams
 
-        holder.distance.text = " "
-        holder.dateDistanceMargin.visibility = View.GONE
-        holder.distance.visibility = View.GONE
-
         holder.itemView.setOnClickListener {
-            context.startActivity(
-                MovieActivity.createIntent(
-                    context,
-                    showing.movieId
-                )
-            )
-        }
-    }
-
-    private fun longerVersion(version: String?): CharSequence? {
-        return when (version) {
-            "VD" -> "Versió doblada al català"
-            "VO" -> "Versió original en català"
-            "VOSC" -> "VO subtitulada en català"
-            "VOSE" -> "VO en català subt. al castellà"
-            else -> null
+            context.startActivity(MovieActivity.createIntent(context, showing.movieId))
         }
     }
 
@@ -80,7 +62,6 @@ class CinemaShowingListAdapter @Inject constructor() :
         var moviePoster: ImageView = view.findViewById(R.id.moviePoster)
         var version: TextView = view.findViewById(R.id.showingVersion)
         var date: TextView = view.findViewById(R.id.date)
-        var distance: TextView = view.findViewById(R.id.cinemaDistance)
         var dateDistanceMargin: View = view.findViewById(R.id.dateDistanceMargin)
     }
 

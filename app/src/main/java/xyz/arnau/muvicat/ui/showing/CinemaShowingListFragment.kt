@@ -5,6 +5,7 @@ import android.view.View
 import kotlinx.android.synthetic.main.showing_list_toolbar.*
 import xyz.arnau.muvicat.data.model.CinemaShowing
 import xyz.arnau.muvicat.ui.cinema.CinemaActivity
+import xyz.arnau.muvicat.utils.setGone
 import xyz.arnau.muvicat.viewmodel.cinema.CinemaViewModel
 import javax.inject.Inject
 
@@ -18,7 +19,7 @@ class CinemaShowingListFragment : BasicShowingListFragment<CinemaShowing>() {
         super.onActivityCreated(savedInstanceState)
 
         viewModel = (activity as CinemaActivity).viewModel
-        showingsToolbarLayout.visibility = View.GONE
+        showingsToolbarLayout.setGone()
     }
 
 

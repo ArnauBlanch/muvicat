@@ -11,10 +11,8 @@ import android.support.design.widget.AppBarLayout
 import android.support.design.widget.Snackbar
 import android.support.v4.content.res.ResourcesCompat
 import android.support.v7.widget.LinearLayoutManager
-import android.view.View
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.movie_info.*
-import kotlinx.android.synthetic.main.showing_list_toolbar.*
 import xyz.arnau.muvicat.R
 import xyz.arnau.muvicat.data.model.Movie
 import xyz.arnau.muvicat.data.model.MovieShowing
@@ -23,9 +21,7 @@ import xyz.arnau.muvicat.data.model.Status
 import xyz.arnau.muvicat.ui.LocationAwareActivity
 import xyz.arnau.muvicat.ui.SimpleDividerItemDecoration
 import xyz.arnau.muvicat.ui.showing.MovieShowingsAdapter
-import xyz.arnau.muvicat.utils.DateFormatter
-import xyz.arnau.muvicat.utils.GlideApp
-import xyz.arnau.muvicat.utils.LocationUtils
+import xyz.arnau.muvicat.utils.*
 import xyz.arnau.muvicat.viewmodel.movie.MovieViewModel
 import javax.inject.Inject
 
@@ -38,7 +34,7 @@ class MovieActivity : LocationAwareActivity() {
     @Inject
     lateinit var context: Context
     @Inject
-    lateinit var showingsAdapter: MovieShowingsAdapter
+    lateinit var infoAndShowingsAdapter: MovieShowingsAdapter
 
     private var hasLocation = false
 
@@ -51,16 +47,16 @@ class MovieActivity : LocationAwareActivity() {
         val movieId = intent.getLongExtra(MOVIE_ID, (-1).toLong())
         if (movieId == (-1).toLong())
             throw Exception("Missing movie identifier")
-        else {
+        else
             movieViewModel.setId(movieId)
-        }
-        moviesShowingsRecyclerView.adapter = showingsAdapter
-        moviesShowingsRecyclerView.layoutManager = LinearLayoutManager(this)
-        moviesShowingsRecyclerView.addItemDecoration(SimpleDividerItemDecoration(context!!))
+
+        movieInfoAndShowingsRecyclerView.adapter = infoAndShowingsAdapter
+        movieInfoAndShowingsRecyclerView.layoutManager = LinearLayoutManager(this)
+        movieInfoAndShowingsRecyclerView.addItemDecoration(SimpleDividerItemDecoration(context, 1))
 
         movieInfoToolbar.setOnClickListener {
             movieInfoToolbarLayout.setExpanded(true)
-            nestedScrollView.scrollY = 0
+            movieInfoAndShowingsRecyclerView.scrollToPosition(0)
         }
     }
 
@@ -88,47 +84,13 @@ class MovieActivity : LocationAwareActivity() {
                     movieTitle.text = movie.title
 
                     if (movie.ageRating != null && movie.year != null)
-                        movieYearAgeRatingSeparator.visibility = View.VISIBLE
+                        movieYearAgeRatingSeparator.setVisible()
 
-                    if (movie.ageRating != null) {
-                        movieAgeRating.text = movie.ageRating
-                        movieAgeRating.visibility = View.VISIBLE
-                    }
+                    movieAgeRating.setVisibleText(movie.ageRating)
+                    movieYear.setVisibleText(movie.year?.toString())
 
-                    if (movie.year != null) {
-                        movieYear.text = movie.year.toString()
-                        movieYear.visibility = View.VISIBLE
-                    }
-
-                    if (movie.plot != null) {
-                        moviePlot.text = movie.plot
-                        moviePlot.visibility = View.VISIBLE
-                    }
-
-                    if (movie.originalTitle != null) {
-                        movieOriginalTitle.text = movie.originalTitle
-                        movieOriginalTitleLayout.visibility = View.VISIBLE
-                    }
-
-                    if (movie.direction != null) {
-                        movieDirection.text = movie.direction
-                        movieDirectionLayout.visibility = View.VISIBLE
-                    }
-
-                    if (movie.releaseDate != null) {
-                        movieReleaseDate.text = dateFormatter.longDate(movie.releaseDate!!)
-                        movieReleaseDateLayout.visibility = View.VISIBLE
-                    }
-
-                    if (movie.originalLanguage != null) {
-                        movieOriginalLanguage.text = movie.originalLanguage
-                        movieOriginalLanguageLayout.visibility = View.VISIBLE
-                    }
-
-                    if (movie.cast != null) {
-                        movieCast.text = movie.cast
-                        movieCastLayout.visibility = View.VISIBLE
-                    }
+                    infoAndShowingsAdapter.movie = movieRes.data
+                    infoAndShowingsAdapter.notifyDataSetChanged()
                 }
             }
             Status.ERROR -> throw Exception("The movie could not be retrieved")
@@ -139,11 +101,9 @@ class MovieActivity : LocationAwareActivity() {
     private fun handleShowingsDateState(status: Status, showings: List<MovieShowing>?) {
         if (status == Status.SUCCESS) showings?.let {
             updateShowingsList(it, lastLocation)
-            movieShowingsList.visibility = View.VISIBLE
         } else if (status == Status.ERROR) {
             if (showings != null && !showings.isEmpty()) {
                 updateShowingsList(showings, lastLocation)
-                movieShowingsList.visibility = View.VISIBLE
                 Snackbar.make(
                     findViewById(android.R.id.content),
                     getString(R.string.couldnt_update_data),
@@ -203,13 +163,13 @@ class MovieActivity : LocationAwareActivity() {
             setLocationToShowings(showings, lastLocation)
             hasLocation = true
         }
-        showingsAdapter.showings =
+        infoAndShowingsAdapter.showings =
                 showings.sortedWith(
                     compareBy<MovieShowing> { it.date }.thenBy(
                         nullsLast(),
                         { it.cinemaDistance })
                 )
-        showingsAdapter.notifyDataSetChanged()
+        infoAndShowingsAdapter.notifyDataSetChanged()
     }
 
     private fun setLocationToShowings(showings: List<MovieShowing>, location: Location) {
@@ -225,8 +185,8 @@ class MovieActivity : LocationAwareActivity() {
     }
 
     override fun processLastLocation(location: Location) {
-        if (::showingsAdapter.isInitialized) {
-            updateShowingsList(showingsAdapter.showings, lastLocation)
+        if (::infoAndShowingsAdapter.isInitialized) {
+            updateShowingsList(infoAndShowingsAdapter.showings, lastLocation)
         } else {
             hasLocation = false
         }

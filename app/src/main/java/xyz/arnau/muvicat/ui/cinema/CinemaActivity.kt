@@ -30,6 +30,8 @@ import xyz.arnau.muvicat.ui.LocationAwareActivity
 import xyz.arnau.muvicat.ui.movie.CinemaMovieListFragment
 import xyz.arnau.muvicat.ui.showing.CinemaShowingListFragment
 import xyz.arnau.muvicat.utils.LocationUtils
+import xyz.arnau.muvicat.utils.setVisible
+import xyz.arnau.muvicat.utils.setVisibleText
 import xyz.arnau.muvicat.viewmodel.cinema.CinemaViewModel
 import javax.inject.Inject
 
@@ -190,12 +192,11 @@ class CinemaActivity : LocationAwareActivity(), HasSupportFragmentInjector {
     @SuppressLint("SetTextI18n")
     override fun processLastLocation(location: Location) {
         if (cinemaLatitude != null && cinemaLongitude != null) {
-            cinemaDistance.text = "≈ ${LocationUtils.getDistance(
+            cinemaDistance.setVisibleText("≈ ${LocationUtils.getDistance(
                 location,
                 cinemaLatitude!!,
                 cinemaLongitude!!
-            )} km"
-            cinemaDistance.visibility = View.VISIBLE
+            )} km")
         }
     }
 

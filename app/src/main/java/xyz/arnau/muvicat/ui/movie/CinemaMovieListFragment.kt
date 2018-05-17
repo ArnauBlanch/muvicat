@@ -6,6 +6,7 @@ import kotlinx.android.synthetic.main.movie_list_toolbar.*
 import xyz.arnau.muvicat.data.model.Movie
 import xyz.arnau.muvicat.di.Injectable
 import xyz.arnau.muvicat.ui.cinema.CinemaActivity
+import xyz.arnau.muvicat.utils.setGone
 import xyz.arnau.muvicat.viewmodel.cinema.CinemaViewModel
 import javax.inject.Inject
 
@@ -20,7 +21,7 @@ class CinemaMovieListFragment : BasicMovieListFragment<Movie, MovieListAdapter.V
         super.onActivityCreated(savedInstanceState)
 
         viewModel = (activity as CinemaActivity).viewModel
-        moviesToolbarLayout.visibility = View.GONE
+        moviesToolbarLayout.setGone()
     }
 
     override fun getMoviesLiveData() = viewModel.movies
