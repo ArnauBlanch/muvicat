@@ -18,6 +18,8 @@ import xyz.arnau.muvicat.data.model.Resource
 import xyz.arnau.muvicat.data.model.Status
 import xyz.arnau.muvicat.di.Injectable
 import xyz.arnau.muvicat.ui.ListFragment
+import xyz.arnau.muvicat.utils.setGone
+import xyz.arnau.muvicat.utils.setVisible
 
 abstract class BasicMovieListFragment<T, V : RecyclerView.ViewHolder?> : ListFragment(),
     Injectable {
@@ -52,8 +54,8 @@ abstract class BasicMovieListFragment<T, V : RecyclerView.ViewHolder?> : ListFra
             skeleton.hide()
             restoreRecyclerViewState()
             if (data.isEmpty()) {
-                moviesRecyclerView.visibility = View.GONE
-                errorMessage.visibility = View.VISIBLE
+                moviesRecyclerView.setGone()
+                errorMessage.setVisible()
             }
         }
         else if (status == Status.ERROR) {
@@ -66,8 +68,8 @@ abstract class BasicMovieListFragment<T, V : RecyclerView.ViewHolder?> : ListFra
                         .show()
                 }
             } else {
-                moviesRecyclerView.visibility = View.GONE
-                errorMessage.visibility = View.VISIBLE
+                moviesRecyclerView.setGone()
+                errorMessage.setVisible()
             }
         }
     }

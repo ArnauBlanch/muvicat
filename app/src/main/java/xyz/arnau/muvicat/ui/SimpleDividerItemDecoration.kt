@@ -9,7 +9,7 @@ import android.util.TypedValue
 import xyz.arnau.muvicat.R
 
 
-class SimpleDividerItemDecoration(private val context: Context) : RecyclerView.ItemDecoration() {
+class SimpleDividerItemDecoration(private val context: Context, private val start: Int = 0) : RecyclerView.ItemDecoration() {
     private val mDivider: Drawable = ContextCompat.getDrawable(context, R.drawable.line_divider)!!
 
     override fun onDrawOver(c: Canvas, parent: RecyclerView, state: RecyclerView.State) {
@@ -25,7 +25,7 @@ class SimpleDividerItemDecoration(private val context: Context) : RecyclerView.I
         )
 
         val childCount = parent.childCount
-        for (i in 0 until childCount) {
+        for (i in start until childCount - 1) {
             val child = parent.getChildAt(i)
 
             val params = child.layoutParams as RecyclerView.LayoutParams

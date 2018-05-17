@@ -11,8 +11,7 @@ import android.widget.TextView
 import xyz.arnau.muvicat.R
 import xyz.arnau.muvicat.data.model.Showing
 import xyz.arnau.muvicat.ui.movie.MovieActivity
-import xyz.arnau.muvicat.utils.DateFormatter
-import xyz.arnau.muvicat.utils.GlideApp
+import xyz.arnau.muvicat.utils.*
 import javax.inject.Inject
 
 
@@ -38,46 +37,26 @@ class ShowingListAdapter @Inject constructor() :
         holder.version.text = longerVersion(showing.version)
         holder.date.text = dateFormatter.shortDate(showing.date)
         holder.cinemaName.text = showing.cinemaName
-        if (showing.cinemaRegion != null)
-            holder.cinemaPlace.text = "${showing.cinemaTown} (${showing.cinemaRegion})"
+        holder.cinemaPlace.text = if (showing.cinemaRegion != null)
+            "${showing.cinemaTown} (${showing.cinemaRegion})"
         else
-            holder.cinemaPlace.text = showing.cinemaTown
+            showing.cinemaTown
 
-        if (showing.cinemaDistance != null) {
-            holder.distance.text = "≈ ${showing.cinemaDistance} km"
-            holder.distance.visibility = View.VISIBLE
-            holder.dateDistanceMargin.visibility = View.VISIBLE
-        } else {
-            holder.distance.text = " "
-            holder.dateDistanceMargin.visibility = View.GONE
-            holder.distance.visibility = View.GONE
+
+        showing.cinemaDistance?.let {
+            holder.distance.setVisibleText("≈ ${showing.cinemaDistance} km")
+            holder.dateDistanceMargin.setVisible()
         }
 
         holder.itemView.setOnClickListener {
-            context.startActivity(
-                MovieActivity.createIntent(
-                    context,
-                    showing.movieId
-                )
-            )
-        }
-    }
-
-    private fun longerVersion(version: String?): CharSequence? {
-        return when (version) {
-            "VD" -> "Versió doblada al català"
-            "VO" -> "Versió original en català"
-            "VOSC" -> "VO subtitulada en català"
-            "VOSE" -> "VO en català subt. al castellà"
-            else -> null
+            context.startActivity(MovieActivity.createIntent(context, showing.movieId))
         }
     }
 
     override fun getItemCount() = showings.size
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val itemView = LayoutInflater
-            .from(parent.context)
+        val itemView = LayoutInflater.from(parent.context)
             .inflate(R.layout.showing_item, parent, false)
         return ViewHolder(itemView)
     }

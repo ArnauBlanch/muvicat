@@ -19,6 +19,8 @@ import xyz.arnau.muvicat.data.model.Status
 import xyz.arnau.muvicat.di.Injectable
 import xyz.arnau.muvicat.ui.ListFragment
 import xyz.arnau.muvicat.ui.SimpleDividerItemDecoration
+import xyz.arnau.muvicat.utils.setGone
+import xyz.arnau.muvicat.utils.setVisible
 
 abstract class BasicShowingListFragment<T> : ListFragment(), Injectable {
     private lateinit var skeleton: RecyclerViewSkeletonScreen
@@ -53,8 +55,8 @@ abstract class BasicShowingListFragment<T> : ListFragment(), Injectable {
             skeleton.hide()
             restoreRecyclerViewState()
             if (data.isEmpty()) {
-                showingsRecyclerView.visibility = View.GONE
-                errorMessage.visibility = View.VISIBLE
+                showingsRecyclerView.setGone()
+                errorMessage.setVisible()
             }
         } else if (status == Status.ERROR) {
             if (data != null && !data.isEmpty()) {
@@ -66,8 +68,8 @@ abstract class BasicShowingListFragment<T> : ListFragment(), Injectable {
                 }
             } else {
                 skeleton.hide()
-                showingsRecyclerView.visibility = View.GONE
-                errorMessage.visibility = View.VISIBLE
+                showingsRecyclerView.setGone()
+                errorMessage.setVisible()
             }
         }
     }
