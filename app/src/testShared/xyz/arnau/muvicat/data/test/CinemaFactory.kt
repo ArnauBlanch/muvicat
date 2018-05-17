@@ -15,7 +15,9 @@ class CinemaFactory {
                 randomString(),
                 randomString(),
                 null,
-                null
+                null,
+                0,
+                0
             )
 
         fun makeCinemaList(count: Int): List<Cinema> {

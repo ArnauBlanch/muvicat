@@ -12,12 +12,16 @@ class TabViewPagerAdapter constructor(
     private val context: Context
 ) :
     FragmentPagerAdapter(fm) {
+    var fragmentElementsCount = List(fragmentList.size, { 0 })
 
     override fun getCount(): Int = fragmentList.size
 
     override fun getItem(position: Int): Fragment = fragmentList[position]
 
     override fun getPageTitle(position: Int): CharSequence? {
-        return context.getString(fragmentTitleList[position])
+        return if (fragmentElementsCount[position] > 0)
+            "${context.getString(fragmentTitleList[position])} (${fragmentElementsCount[position]})"
+        else
+            context.getString(fragmentTitleList[position])
     }
 }

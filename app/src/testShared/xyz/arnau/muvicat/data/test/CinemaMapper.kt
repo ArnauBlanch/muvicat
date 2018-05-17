@@ -13,7 +13,9 @@ object CinemaMapper {
             cinema.region,
             cinema.province,
             null,
-            null
+            null,
+            0,
+            0
         )
 
     fun mapFromCinemaEntityList(cinemaList: List<CinemaEntity>) =
