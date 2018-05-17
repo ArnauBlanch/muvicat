@@ -19,6 +19,7 @@ import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
 import kotlinx.android.synthetic.main.cinema_info.*
+import kotlinx.android.synthetic.main.cinema_info.view.*
 import kotlinx.android.synthetic.main.cinema_list_toolbar.*
 import kotlinx.android.synthetic.main.movie_list.*
 import kotlinx.android.synthetic.main.showing_list.*
@@ -48,6 +49,16 @@ class CinemaActivity : LocationAwareActivity(), HasSupportFragmentInjector {
 
     @Inject
     lateinit var context: Context
+
+    private val tabAdapter = TabViewPagerAdapter(
+        listOf(
+            CinemaMovieListFragment(),
+            CinemaShowingListFragment()
+        ),
+        listOf(R.string.movies, R.string.showings),
+        supportFragmentManager,
+        this
+    )
 
     private var cinemaLatitude: Double? = null
     private var cinemaLongitude: Double? = null
@@ -99,17 +110,8 @@ class CinemaActivity : LocationAwareActivity(), HasSupportFragmentInjector {
     }
 
     private fun setupTabs() {
-        val adapter = TabViewPagerAdapter(
-            listOf(
-                CinemaMovieListFragment(),
-                CinemaShowingListFragment()
-            ),
-            listOf(R.string.movies, R.string.showings),
-            supportFragmentManager,
-            this
-        )
-        viewPager.adapter = adapter
-        tabLayout.setupWithViewPager(viewPager)
+        viewPager.adapter = tabAdapter
+        tabLayout.setupWithViewPager(viewPager, true)
     }
 
     @SuppressLint("SetTextI18n")
@@ -117,8 +119,10 @@ class CinemaActivity : LocationAwareActivity(), HasSupportFragmentInjector {
         when (cinemaRes.status) {
             Status.SUCCESS -> {
                 val cinema = cinemaRes.data
-                if (cinema != null) {
+                cinema?.let {
                     setupToolbar(cinema)
+                    tabAdapter.fragmentElementsCount = listOf(cinema.numMovies, cinema.numShowings)
+                    tabAdapter.notifyDataSetChanged()
                     cinemaName.text = cinema.name
                     cinemaAddress.text = cinema.address
                     cinemaTown.text = cinema.town

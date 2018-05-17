@@ -27,6 +27,7 @@ class CinemaListAdapter @Inject constructor() :
             cinema.town
 
         holder.distance.setVisibleText("≈ ${cinema.distance} km")
+        holder.stats.text = formatStats(cinema.numMovies, cinema.numShowings)
 
         holder.itemView.setOnClickListener {
             context.startActivity(CinemaActivity.createIntent(context, cinema.id))
@@ -45,5 +46,20 @@ class CinemaListAdapter @Inject constructor() :
         var name: TextView = view.findViewById(R.id.cinemaName)
         var address: TextView = view.findViewById(R.id.cinemaAddress)
         var distance: TextView = view.findViewById(R.id.cinemaDistance)
+        var stats: TextView = view.findViewById(R.id.cinemaStats)
+    }
+
+    fun formatStats(numMovies: Int, numShowings: Int): String {
+        val string = ""
+        val movies = if (numMovies > 1)
+            context.getString(R.string.movies_lower)
+        else
+            context.getString(R.string.movie_lower)
+        val scheduledShowings = if (numShowings > 1)
+            context.getString(R.string.scheduled_showings)
+        else
+            context.getString(R.string.scheduled_showing)
+
+        return "$numMovies $movies, $numShowings $scheduledShowings"
     }
 }
