@@ -7,6 +7,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.ToggleButton
+import kotlinx.android.synthetic.main.movie_info_header.*
 import xyz.arnau.muvicat.R
 import xyz.arnau.muvicat.data.model.Movie
 import xyz.arnau.muvicat.data.model.MovieShowing
@@ -26,6 +28,8 @@ class MovieShowingsAdapter @Inject constructor() : RecyclerView.Adapter<Recycler
 
     var movie: Movie? = null
     var showings: List<MovieShowing> = listOf()
+    var showingId: Long? = null
+    var expanded = true
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         if (viewType == TYPE_INFO_HEADER) {
@@ -59,31 +63,56 @@ class MovieShowingsAdapter @Inject constructor() : RecyclerView.Adapter<Recycler
                     movie?.originalLanguage, holder.originalLanguageLayout
                 )
                 holder.cast.setTextAndVisibleLayout(movie?.cast, holder.castLayout)
-                if (showings.isNotEmpty())
-                    holder.showingsTitle.setVisible()
+                if (showings.isNotEmpty()) {
+                    if (expanded)
+                        holder.showingsTitle.setVisibleText(context.getString(R.string.showings))
+                    else
+                        holder.showingsTitle.setVisibleText(context.getString(R.string.showing))
+                }
+
+                if (showingId != null) {
+                    holder.moreShowingsButton.setVisible()
+                    holder.moreShowingsButton.setOnCheckedChangeListener({ _, isChecked ->
+                        expanded = isChecked
+                        notifyDataSetChanged()
+                    })
+                }
             }
         } else if (holder is ShowingViewHolder) {
-            val showing = showings[position - 1]
-
-            holder.version.text = longerVersion(showing.version)
-            holder.date.text = dateFormatter.shortDate(showing.date)
-            holder.cinemaName.text = showing.cinemaName
-            holder.cinemaPlace.text = if (showing.cinemaRegion != null)
-                "${showing.cinemaTown} (${showing.cinemaRegion})"
+            val showing = if (expanded)
+                showings[position - 1]
+            else if (!expanded && position == 1)
+                if (showings.any { it.id == showingId })
+                    showings.first { it.id == showingId }
+                else null
             else
-                showing.cinemaTown
-            showing.cinemaDistance?.let {
-                holder.distance.setVisibleText("≈ ${showing.cinemaDistance} km")
-                holder.dateDistanceMargin.setVisible()
-            }
+                null
 
-            holder.itemView.setOnClickListener {
-                context.startActivity(CinemaActivity.createIntent(context, showing.cinemaId))
+            showing?.let {
+                holder.version.text = longerVersion(showing.version)
+                holder.date.text = dateFormatter.shortDate(showing.date)
+                holder.cinemaName.text = showing.cinemaName
+                holder.cinemaPlace.text = if (showing.cinemaRegion != null)
+                    "${showing.cinemaTown} (${showing.cinemaRegion})"
+                else
+                    showing.cinemaTown
+                showing.cinemaDistance?.let {
+                    holder.distance.setVisibleText("≈ ${showing.cinemaDistance} km")
+                    holder.dateDistanceMargin.setVisible()
+                }
+
+                holder.itemView.setOnClickListener {
+                    context.startActivity(CinemaActivity.createIntent(context, showing.cinemaId))
+                }
             }
         }
     }
 
-    override fun getItemCount(): Int = showings.size + 1
+    override fun getItemCount(): Int =
+        if (expanded)
+            showings.size + 1
+        else
+            2
 
     override fun getItemViewType(position: Int): Int {
         return if (position == 0)
@@ -104,7 +133,8 @@ class MovieShowingsAdapter @Inject constructor() : RecyclerView.Adapter<Recycler
         var originalLanguageLayout: View = view.findViewById(R.id.movieOriginalLanguageLayout)
         var cast: TextView = view.findViewById(R.id.movieCast)
         var castLayout: View = view.findViewById(R.id.movieCastLayout)
-        var showingsTitle: View = view.findViewById(R.id.movieShowingsTitle)
+        var showingsTitle: TextView = view.findViewById(R.id.movieShowingsTitle)
+        var moreShowingsButton: ToggleButton = view.findViewById(R.id.moreShowingsButton)
     }
 
     inner class ShowingViewHolder(view: View) : RecyclerView.ViewHolder(view) {

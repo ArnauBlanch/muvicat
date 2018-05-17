@@ -49,7 +49,7 @@ class ShowingListAdapter @Inject constructor() :
         }
 
         holder.itemView.setOnClickListener {
-            context.startActivity(MovieActivity.createIntent(context, showing.movieId))
+            context.startActivity(MovieActivity.createIntent(context, showing.movieId, showing.id))
         }
     }
 
