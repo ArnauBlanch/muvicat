@@ -3,9 +3,9 @@ package xyz.arnau.muvicat.remote.mapper
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
-import xyz.arnau.muvicat.data.model.Movie
+import xyz.arnau.muvicat.cache.model.MovieEntity
 import xyz.arnau.muvicat.remote.model.GencatMovie
-import xyz.arnau.muvicat.remote.test.MovieFactory
+import xyz.arnau.muvicat.remote.test.GencatMovieFactory
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -19,7 +19,7 @@ class GencatMovieEntityMapperTest {
 
     @Test
     fun mapFromRemoteMapsData() {
-        val movieModel = MovieFactory.makeGencatMovieModel()
+        val movieModel = GencatMovieFactory.makeGencatMovieModel()
         movieModel.year = "2000"
         movieModel.releaseDate = "01/02/2003"
         val movieEntity = movieEntityMapper.mapFromRemote(movieModel)
@@ -31,7 +31,7 @@ class GencatMovieEntityMapperTest {
 
     @Test
     fun mapFromRemoteThrowsExceptionIfReleaseDateIsUnparseable() {
-        val movieModel = MovieFactory.makeGencatMovieModel()
+        val movieModel = GencatMovieFactory.makeGencatMovieModel()
         movieModel.year = "2000"
         movieModel.releaseDate = "01/02/----"
         val movieEntity = movieEntityMapper.mapFromRemote(movieModel)
@@ -41,7 +41,7 @@ class GencatMovieEntityMapperTest {
 
     @Test
     fun mapFromRemoteReturnsNullIfNullId() {
-        val movieModel = MovieFactory.makeGencatMovieModelWithNullId()
+        val movieModel = GencatMovieFactory.makeGencatMovieModelWithNullId()
         val movieEntity = movieEntityMapper.mapFromRemote(movieModel)
 
         assertEquals(null, movieEntity)
@@ -49,7 +49,7 @@ class GencatMovieEntityMapperTest {
 
     @Test
     fun mapFromRemoteMapsDataAndSetsNullIfUnknown() {
-        val movieModel = MovieFactory.makeGencatMovieModelWithUnknownValues()
+        val movieModel = GencatMovieFactory.makeGencatMovieModelWithUnknownValues()
         val movieEntity = movieEntityMapper.mapFromRemote(movieModel)
 
         assertMovieEquality(movieEntity!!, movieModel, null, null)
@@ -57,7 +57,7 @@ class GencatMovieEntityMapperTest {
 
     @Test
     fun mapFromRemoteMapsDataAndSetsNullIfEmpty() {
-        val movieModel = MovieFactory.makeGencatMovieModelWithEmptyValues()
+        val movieModel = GencatMovieFactory.makeGencatMovieModelWithEmptyValues()
         val movieEntity = movieEntityMapper.mapFromRemote(movieModel)
 
         assertMovieEquality(movieEntity!!, movieModel, null, null)
@@ -65,7 +65,7 @@ class GencatMovieEntityMapperTest {
 
     @Test
     fun mapFromRemoteMapsDataWithRareYear() {
-        val movieModel = MovieFactory.makeGencatMovieModel()
+        val movieModel = GencatMovieFactory.makeGencatMovieModel()
         movieModel.year = "2014-2015"
         movieModel.releaseDate = "--"
         val movieEntity = movieEntityMapper.mapFromRemote(movieModel)
@@ -75,7 +75,7 @@ class GencatMovieEntityMapperTest {
 
     @Test()
     fun mapFromRemoteMapsDataWithUnparseableYear() {
-        val movieModel = MovieFactory.makeGencatMovieModel()
+        val movieModel = GencatMovieFactory.makeGencatMovieModel()
         movieModel.year = "201a4-2015"
         movieModel.releaseDate = "--"
         val movieEntity = movieEntityMapper.mapFromRemote(movieModel)
@@ -84,7 +84,7 @@ class GencatMovieEntityMapperTest {
     }
 
     private fun assertMovieEquality(
-        movie: Movie, movieModel: GencatMovie, year: Int?, releaseDate: Date?
+        movie: MovieEntity, movieModel: GencatMovie, year: Int?, releaseDate: Date?
     ) {
         assertEquals(movieModel.id?.toLong(), movie.id)
         assertEquals(movieModel.title, movie.title)

@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">Muvicat</string>
     <string name="movies">Pel·lícules</string>
+    <string name="movies_lower">pel·lícules</string>
+    <string name="movie_lower">pel·lícula</string>
     <string name="couldnt_update_data">No s\'han pogut actualitzar les dades. Torna-ho a provar més endavant...</string>
     <string name="couldnt_get_data">No s\'ha pogut descarregar les dades. Torna-ho a provar més endavant...</string>
     <string name="try_again">Torna a provar</string>
@@ -18,4 +20,12 @@
     <string name="settings">Configuració</string>
     <string name="permission_denied_explanation">S\'ha denegat el permís de localització, activa\'l per a personalitzar la visualització de la cartellera.</string>
     <string name="no_location_detected">No s\'ha pogut aconseguir la localització, la cartellera no es personalitzarà segons la teva ubicació</string>
+    <string name="showings">Sessions</string>
+    <string name="scheduled_showings">sessions programades</string>
+    <string name="scheduled_showing">sessió programada</string>
+    <string name="view_map">Mostra mapa</string>
+    <string name="dot_separator">•</string>
+    <string name="showing">Sessió</string>
+    <string name="more_showings">  més sessions</string>
+    <string name="less_showings">menys sessions</string>
 </resources>

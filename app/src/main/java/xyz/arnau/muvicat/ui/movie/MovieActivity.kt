@@ -5,32 +5,41 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.PorterDuff
+import android.location.Location
 import android.os.Bundle
 import android.support.design.widget.AppBarLayout
+import android.support.design.widget.Snackbar
 import android.support.v4.content.res.ResourcesCompat
-import android.support.v7.app.AppCompatActivity
-import android.view.View
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
+import android.widget.ToggleButton
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.movie_info.*
-import xyz.arnau.muvicat.GlideApp
+import kotlinx.android.synthetic.main.movie_info_header.*
 import xyz.arnau.muvicat.R
-import xyz.arnau.muvicat.data.model.Movie
-import xyz.arnau.muvicat.data.model.Resource
-import xyz.arnau.muvicat.data.model.Status
-import xyz.arnau.muvicat.utils.DateFormatter
+import xyz.arnau.muvicat.repository.model.Movie
+import xyz.arnau.muvicat.repository.model.MovieShowing
+import xyz.arnau.muvicat.repository.model.Resource
+import xyz.arnau.muvicat.repository.model.Status
+import xyz.arnau.muvicat.ui.LocationAwareActivity
+import xyz.arnau.muvicat.ui.SimpleDividerItemDecoration
+import xyz.arnau.muvicat.ui.showing.MovieShowingsAdapter
+import xyz.arnau.muvicat.utils.*
 import xyz.arnau.muvicat.viewmodel.movie.MovieViewModel
 import javax.inject.Inject
 
 
-class MovieActivity : AppCompatActivity() {
+class MovieActivity : LocationAwareActivity() {
     @Inject
     lateinit var movieViewModel: MovieViewModel
-
     @Inject
     lateinit var dateFormatter: DateFormatter
-
     @Inject
     lateinit var context: Context
+    @Inject
+    lateinit var infoAndShowingsAdapter: MovieShowingsAdapter
+
+    private var hasLocation = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,6 +52,75 @@ class MovieActivity : AppCompatActivity() {
             throw Exception("Missing movie identifier")
         else
             movieViewModel.setId(movieId)
+
+        val showingId = intent.getLongExtra(SHOWING_ID, (-1).toLong())
+        if (showingId != (-1).toLong()) {
+            infoAndShowingsAdapter.showingId = showingId
+            infoAndShowingsAdapter.expanded = false
+        }
+
+        movieInfoAndShowingsRecyclerView.adapter = infoAndShowingsAdapter
+        movieInfoAndShowingsRecyclerView.layoutManager = LinearLayoutManager(this)
+        movieInfoAndShowingsRecyclerView.addItemDecoration(SimpleDividerItemDecoration(context, 1))
+
+        movieInfoToolbar.setOnClickListener {
+            movieInfoToolbarLayout.setExpanded(true)
+            movieInfoAndShowingsRecyclerView.scrollToPosition(0)
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        movieViewModel.movie
+            .observe(this, Observer { if (it != null) handleMovieDataState(it) })
+        movieViewModel.showings
+            .observe(this, Observer { if (it != null) handleShowingsDateState(it.status, it.data) })
+    }
+
+    private fun handleMovieDataState(movieRes: Resource<Movie>) {
+        when (movieRes.status) {
+            Status.SUCCESS -> {
+                val movie = movieRes.data
+                if (movie != null) {
+                    setupToolbar(movie)
+
+                    GlideApp.with(context)
+                        .load("http://www.gencat.cat/llengua/cinema/${movieRes.data.posterUrl}")
+                        .error(R.drawable.poster_placeholder)
+                        .centerCrop()
+                        .into(moviePoster)
+                    movieTitle.text = movie.title
+
+                    if (movie.ageRating != null && movie.year != null)
+                        movieYearAgeRatingSeparator.setVisible()
+
+                    movieAgeRating.setVisibleText(movie.ageRating)
+                    movieYear.setVisibleText(movie.year?.toString())
+
+                    infoAndShowingsAdapter.movie = movieRes.data
+                    infoAndShowingsAdapter.notifyDataSetChanged()
+                }
+            }
+            Status.ERROR -> throw Exception("The movie could not be retrieved")
+            Status.LOADING -> return
+        }
+    }
+
+    private fun handleShowingsDateState(status: Status, showings: List<MovieShowing>?) {
+        if (status == Status.SUCCESS) showings?.let {
+            updateShowingsList(it, lastLocation)
+        } else if (status == Status.ERROR) {
+            if (showings != null && !showings.isEmpty()) {
+                updateShowingsList(showings, lastLocation)
+                Snackbar.make(
+                    findViewById(android.R.id.content),
+                    getString(R.string.couldnt_update_data),
+                    6000
+                )
+                    .show()
+            }
+        }
     }
 
     private fun setupToolbar(movie: Movie?) {
@@ -89,84 +167,50 @@ class MovieActivity : AppCompatActivity() {
         })
     }
 
-    override fun onStart() {
-        super.onStart()
-
-        movieViewModel.movie.observe(this,
-            Observer<Resource<Movie>> {
-                if (it != null) handleDataState(it)
-            })
+    private fun updateShowingsList(showings: List<MovieShowing>, lastLocation: Location?) {
+        if (lastLocation != null) {
+            setLocationToShowings(showings, lastLocation)
+            hasLocation = true
+        }
+        infoAndShowingsAdapter.showings =
+                showings.sortedWith(
+                    compareBy<MovieShowing> { it.date }.thenBy(
+                        nullsLast(),
+                        { it.cinemaDistance })
+                )
+        infoAndShowingsAdapter.notifyDataSetChanged()
     }
 
-    private fun handleDataState(movieRes: Resource<Movie>) {
-        when (movieRes.status) {
-            Status.SUCCESS -> {
-                val movie = movieRes.data
-                if (movie != null) {
-                    setupToolbar(movie)
-
-                    GlideApp.with(context)
-                        .load("http://www.gencat.cat/llengua/cinema/${movieRes.data.posterUrl}")
-                        .error(R.drawable.poster_placeholder)
-                        .centerCrop()
-                        .into(moviePoster)
-                    movieTitle.text = movie.title
-
-                    if (movie.ageRating != null && movie.year != null)
-                        movieYearAgeRatingSeparator.visibility = View.VISIBLE
-
-                    if (movie.ageRating != null) {
-                        movieAgeRating.text = movie.ageRating
-                        movieAgeRating.visibility = View.VISIBLE
-                    }
-
-                    if (movie.year != null) {
-                        movieYear.text = movie.year.toString()
-                        movieYear.visibility = View.VISIBLE
-                    }
-
-                    if (movie.plot != null) {
-                        moviePlot.text = movie.plot
-                        moviePlot.visibility = View.VISIBLE
-                    }
-
-                    if (movie.originalTitle != null) {
-                        movieOriginalTitle.text = movie.originalTitle
-                        movieOriginalTitleLayout.visibility = View.VISIBLE
-                    }
-
-                    if (movie.direction != null) {
-                        movieDirection.text = movie.direction
-                        movieDirectionLayout.visibility = View.VISIBLE
-                    }
-
-                    if (movie.releaseDate != null) {
-                        movieReleaseDate.text = dateFormatter.longDate(movie.releaseDate!!)
-                        movieReleaseDateLayout.visibility = View.VISIBLE
-                    }
-
-                    if (movie.originalLanguage != null) {
-                        movieOriginalLanguage.text = movie.originalLanguage
-                        movieOriginalLanguageLayout.visibility = View.VISIBLE
-                    }
-
-                    if (movie.cast != null) {
-                        movieCast.text = movie.cast
-                        movieCastLayout.visibility = View.VISIBLE
-                    }
-                }
+    private fun setLocationToShowings(showings: List<MovieShowing>, location: Location) {
+        showings.forEach {
+            if (it.cinemaLatitude != null && it.cinemaLongitude != null) {
+                it.cinemaDistance = LocationUtils.getDistance(
+                    location,
+                    it.cinemaLatitude!!,
+                    it.cinemaLongitude!!
+                )
             }
-            Status.ERROR -> throw Exception("The movie could not be retrieved")
-            Status.LOADING -> return
+        }
+    }
+
+    override fun processLastLocation(location: Location) {
+        if (::infoAndShowingsAdapter.isInitialized) {
+            updateShowingsList(infoAndShowingsAdapter.showings, lastLocation)
+        } else {
+            hasLocation = false
         }
     }
 
     companion object {
         private const val MOVIE_ID = "movie_id"
+        private const val SHOWING_ID = "showing_id"
 
-        fun createIntent(context: Context, movieId: Long): Intent {
-            return Intent(context, MovieActivity::class.java).putExtra(MOVIE_ID, movieId)
-                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        fun createIntent(context: Context, movieId: Long, showingId: Long? = null): Intent {
+            return Intent(context, MovieActivity::class.java).apply {
+                putExtra(MOVIE_ID, movieId)
+                showingId?.let { putExtra(SHOWING_ID, showingId) }
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            }
         }
     }
 }

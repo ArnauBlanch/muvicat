@@ -11,6 +11,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import xyz.arnau.muvicat.R
 import xyz.arnau.muvicat.ui.cinema.CinemaListFragment
 import xyz.arnau.muvicat.ui.movie.MovieListFragment
+import xyz.arnau.muvicat.ui.showing.ShowingListFragment
 import javax.inject.Inject
 
 
@@ -20,12 +21,10 @@ class MainActivity : LocationAwareActivity(), HasSupportFragmentInjector {
 
     private lateinit var firebaseAnalytics: FirebaseAnalytics
 
-    var lastLocation: Location? = null
-        private set
-
     private val viewPagerAdapter = ViewPagerAdapter(
         listOf(
             MovieListFragment(),
+            ShowingListFragment(),
             CinemaListFragment()
         ), supportFragmentManager
     )
@@ -39,6 +38,7 @@ class MainActivity : LocationAwareActivity(), HasSupportFragmentInjector {
         setupBottomNavigation()
 
         fragmentsViewPager.adapter = viewPagerAdapter
+        fragmentsViewPager.offscreenPageLimit = 4
     }
 
     private fun setupBottomNavigation() {
@@ -51,8 +51,21 @@ class MainActivity : LocationAwareActivity(), HasSupportFragmentInjector {
                         .setCurrentScreen(this, "Movie list", "Movie list")
                     true
                 }
+                R.id.action_showings -> {
+                    fragmentsViewPager.setCurrentItemOrScrollToTop(
+                        ShowingListFragment.FRAG_ID,
+                        false
+                    )
+
+                    FirebaseAnalytics.getInstance(this)
+                        .setCurrentScreen(this, "Showing list", "Showing list")
+                    true
+                }
                 R.id.action_cinemas -> {
-                    fragmentsViewPager.setCurrentItemOrScrollToTop(CinemaListFragment.FRAG_ID, false)
+                    fragmentsViewPager.setCurrentItemOrScrollToTop(
+                        CinemaListFragment.FRAG_ID,
+                        false
+                    )
                     FirebaseAnalytics.getInstance(this)
                         .setCurrentScreen(this, "Cinema list", "Cinema list")
                     true
@@ -70,7 +83,6 @@ class MainActivity : LocationAwareActivity(), HasSupportFragmentInjector {
     }
 
     override fun processLastLocation(location: Location) {
-        lastLocation = location
         (viewPagerAdapter.getItem(CinemaListFragment.FRAG_ID) as CinemaListFragment)
             .notifyLastLocation(location)
     }
