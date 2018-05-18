@@ -18,9 +18,9 @@ import kotlinx.android.synthetic.main.cinema_list.*
 import kotlinx.android.synthetic.main.cinema_list_toolbar.*
 import kotlinx.android.synthetic.main.error_layout.*
 import xyz.arnau.muvicat.R
-import xyz.arnau.muvicat.data.model.Cinema
-import xyz.arnau.muvicat.data.model.Resource
-import xyz.arnau.muvicat.data.model.Status
+import xyz.arnau.muvicat.repository.model.Cinema
+import xyz.arnau.muvicat.repository.model.Resource
+import xyz.arnau.muvicat.repository.model.Status
 import xyz.arnau.muvicat.di.Injectable
 import xyz.arnau.muvicat.ui.*
 import xyz.arnau.muvicat.utils.LocationUtils

@@ -7,7 +7,7 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import kotlinx.android.synthetic.main.movie_list.*
 import kotlinx.android.synthetic.main.movie_list_toolbar.*
 import xyz.arnau.muvicat.R
-import xyz.arnau.muvicat.data.model.Movie
+import xyz.arnau.muvicat.repository.model.Movie
 import xyz.arnau.muvicat.ui.MainActivity
 import xyz.arnau.muvicat.ui.ScrollableToTop
 import xyz.arnau.muvicat.viewmodel.movie.MovieListViewModel

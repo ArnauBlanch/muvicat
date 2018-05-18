@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import xyz.arnau.muvicat.R
-import xyz.arnau.muvicat.data.model.Movie
+import xyz.arnau.muvicat.repository.model.Movie
 import xyz.arnau.muvicat.utils.DateFormatter
 import xyz.arnau.muvicat.utils.GlideApp
 import xyz.arnau.muvicat.utils.setVisibleText

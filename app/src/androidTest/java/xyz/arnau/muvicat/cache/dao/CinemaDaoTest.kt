@@ -8,7 +8,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.junit.runner.RunWith
 import xyz.arnau.muvicat.cache.db.MuvicatDatabase
-import xyz.arnau.muvicat.data.test.*
+import xyz.arnau.muvicat.repository.test.*
 import xyz.arnau.muvicat.utils.getValueBlocking
 import java.util.*
 

@@ -10,9 +10,9 @@ import xyz.arnau.muvicat.cache.dao.CinemaDao
 import xyz.arnau.muvicat.cache.dao.MovieDao
 import xyz.arnau.muvicat.cache.dao.ShowingDao
 import xyz.arnau.muvicat.cache.db.MuvicatDatabase
-import xyz.arnau.muvicat.data.repository.CinemaCache
-import xyz.arnau.muvicat.data.repository.MovieCache
-import xyz.arnau.muvicat.data.repository.ShowingCache
+import xyz.arnau.muvicat.repository.data.CinemaCache
+import xyz.arnau.muvicat.repository.data.MovieCache
+import xyz.arnau.muvicat.repository.data.ShowingCache
 import xyz.arnau.muvicat.utils.AppExecutors
 import javax.inject.Singleton
 

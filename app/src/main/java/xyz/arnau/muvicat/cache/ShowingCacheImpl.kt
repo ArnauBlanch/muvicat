@@ -3,10 +3,10 @@ package xyz.arnau.muvicat.cache
 import android.arch.lifecycle.LiveData
 import xyz.arnau.muvicat.cache.dao.ShowingDao
 import xyz.arnau.muvicat.cache.model.ShowingEntity
-import xyz.arnau.muvicat.data.model.CinemaShowing
-import xyz.arnau.muvicat.data.model.MovieShowing
-import xyz.arnau.muvicat.data.model.Showing
-import xyz.arnau.muvicat.data.repository.ShowingCache
+import xyz.arnau.muvicat.repository.model.CinemaShowing
+import xyz.arnau.muvicat.repository.model.MovieShowing
+import xyz.arnau.muvicat.repository.model.Showing
+import xyz.arnau.muvicat.repository.data.ShowingCache
 import javax.inject.Inject
 
 class ShowingCacheImpl @Inject constructor(private val showingDao: ShowingDao) : ShowingCache {

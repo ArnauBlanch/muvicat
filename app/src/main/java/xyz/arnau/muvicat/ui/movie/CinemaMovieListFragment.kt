@@ -3,7 +3,7 @@ package xyz.arnau.muvicat.ui.movie
 import android.os.Bundle
 import android.view.View
 import kotlinx.android.synthetic.main.movie_list_toolbar.*
-import xyz.arnau.muvicat.data.model.Movie
+import xyz.arnau.muvicat.repository.model.Movie
 import xyz.arnau.muvicat.di.Injectable
 import xyz.arnau.muvicat.ui.cinema.CinemaActivity
 import xyz.arnau.muvicat.utils.setGone

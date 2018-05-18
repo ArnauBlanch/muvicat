@@ -9,7 +9,7 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.simplexml.SimpleXmlConverterFactory
-import xyz.arnau.muvicat.data.repository.GencatRemote
+import xyz.arnau.muvicat.repository.data.GencatRemote
 import xyz.arnau.muvicat.remote.GencatRemoteImpl
 import xyz.arnau.muvicat.remote.mapper.*
 import xyz.arnau.muvicat.remote.service.GencatService

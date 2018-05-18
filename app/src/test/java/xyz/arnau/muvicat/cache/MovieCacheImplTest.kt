@@ -11,9 +11,9 @@ import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
 import org.mockito.Mockito.*
 import xyz.arnau.muvicat.cache.dao.MovieDao
-import xyz.arnau.muvicat.data.model.Movie
-import xyz.arnau.muvicat.data.test.MovieEntityFactory
-import xyz.arnau.muvicat.data.test.MovieMapper
+import xyz.arnau.muvicat.repository.model.Movie
+import xyz.arnau.muvicat.repository.test.MovieEntityFactory
+import xyz.arnau.muvicat.repository.test.MovieMapper
 
 
 @RunWith(JUnit4::class)

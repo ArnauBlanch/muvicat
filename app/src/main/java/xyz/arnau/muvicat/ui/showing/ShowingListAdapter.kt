@@ -9,7 +9,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import xyz.arnau.muvicat.R
-import xyz.arnau.muvicat.data.model.Showing
+import xyz.arnau.muvicat.repository.model.Showing
 import xyz.arnau.muvicat.ui.movie.MovieActivity
 import xyz.arnau.muvicat.utils.*
 import javax.inject.Inject

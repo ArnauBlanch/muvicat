@@ -4,13 +4,13 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Transformations
 import android.arch.lifecycle.ViewModel
-import xyz.arnau.muvicat.data.CinemaRepository
-import xyz.arnau.muvicat.data.MovieRepository
-import xyz.arnau.muvicat.data.ShowingRepository
-import xyz.arnau.muvicat.data.model.Cinema
-import xyz.arnau.muvicat.data.model.CinemaShowing
-import xyz.arnau.muvicat.data.model.Movie
-import xyz.arnau.muvicat.data.model.Resource
+import xyz.arnau.muvicat.repository.CinemaRepository
+import xyz.arnau.muvicat.repository.MovieRepository
+import xyz.arnau.muvicat.repository.ShowingRepository
+import xyz.arnau.muvicat.repository.model.Cinema
+import xyz.arnau.muvicat.repository.model.CinemaShowing
+import xyz.arnau.muvicat.repository.model.Movie
+import xyz.arnau.muvicat.repository.model.Resource
 import javax.inject.Inject
 
 class CinemaViewModel @Inject constructor(

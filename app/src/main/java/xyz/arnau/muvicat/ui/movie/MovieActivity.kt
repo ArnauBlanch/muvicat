@@ -17,10 +17,10 @@ import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.movie_info.*
 import kotlinx.android.synthetic.main.movie_info_header.*
 import xyz.arnau.muvicat.R
-import xyz.arnau.muvicat.data.model.Movie
-import xyz.arnau.muvicat.data.model.MovieShowing
-import xyz.arnau.muvicat.data.model.Resource
-import xyz.arnau.muvicat.data.model.Status
+import xyz.arnau.muvicat.repository.model.Movie
+import xyz.arnau.muvicat.repository.model.MovieShowing
+import xyz.arnau.muvicat.repository.model.Resource
+import xyz.arnau.muvicat.repository.model.Status
 import xyz.arnau.muvicat.ui.LocationAwareActivity
 import xyz.arnau.muvicat.ui.SimpleDividerItemDecoration
 import xyz.arnau.muvicat.ui.showing.MovieShowingsAdapter

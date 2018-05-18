@@ -8,7 +8,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.junit.runner.RunWith
 import xyz.arnau.muvicat.cache.db.MuvicatDatabase
-import xyz.arnau.muvicat.data.test.PostalCodeEntityFactory
+import xyz.arnau.muvicat.repository.test.PostalCodeEntityFactory
 
 
 @RunWith(AndroidJUnit4::class)

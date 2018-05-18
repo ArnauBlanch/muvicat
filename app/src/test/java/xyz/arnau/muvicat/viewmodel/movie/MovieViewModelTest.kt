@@ -11,14 +11,14 @@ import org.junit.runners.JUnit4
 import org.mockito.Mockito
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock
-import xyz.arnau.muvicat.data.MovieRepository
+import xyz.arnau.muvicat.repository.MovieRepository
 import xyz.arnau.muvicat.cache.model.MovieEntity
-import xyz.arnau.muvicat.data.ShowingRepository
-import xyz.arnau.muvicat.data.model.Movie
-import xyz.arnau.muvicat.data.model.MovieShowing
-import xyz.arnau.muvicat.data.model.Resource
-import xyz.arnau.muvicat.data.model.Status
-import xyz.arnau.muvicat.data.test.*
+import xyz.arnau.muvicat.repository.ShowingRepository
+import xyz.arnau.muvicat.repository.model.Movie
+import xyz.arnau.muvicat.repository.model.MovieShowing
+import xyz.arnau.muvicat.repository.model.Resource
+import xyz.arnau.muvicat.repository.model.Status
+import xyz.arnau.muvicat.repository.test.*
 import xyz.arnau.muvicat.utils.getValueBlocking
 
 @RunWith(JUnit4::class)
