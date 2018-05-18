@@ -12,12 +12,12 @@ import org.junit.runners.JUnit4
 import org.mockito.Mockito
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock
-import xyz.arnau.muvicat.data.ShowingRepository
-import xyz.arnau.muvicat.data.model.CinemaShowing
-import xyz.arnau.muvicat.data.model.Resource
-import xyz.arnau.muvicat.data.model.Showing
-import xyz.arnau.muvicat.data.model.Status
-import xyz.arnau.muvicat.data.test.*
+import xyz.arnau.muvicat.repository.ShowingRepository
+import xyz.arnau.muvicat.repository.model.CinemaShowing
+import xyz.arnau.muvicat.repository.model.Resource
+import xyz.arnau.muvicat.repository.model.Showing
+import xyz.arnau.muvicat.repository.model.Status
+import xyz.arnau.muvicat.repository.test.*
 import xyz.arnau.muvicat.utils.getValueBlocking
 
 @RunWith(JUnit4::class)

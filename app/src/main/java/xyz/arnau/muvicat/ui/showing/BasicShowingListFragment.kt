@@ -14,8 +14,8 @@ import com.ethanhua.skeleton.Skeleton
 import kotlinx.android.synthetic.main.error_layout.*
 import kotlinx.android.synthetic.main.showing_list.*
 import xyz.arnau.muvicat.R
-import xyz.arnau.muvicat.data.model.Resource
-import xyz.arnau.muvicat.data.model.Status
+import xyz.arnau.muvicat.repository.model.Resource
+import xyz.arnau.muvicat.repository.model.Status
 import xyz.arnau.muvicat.di.Injectable
 import xyz.arnau.muvicat.ui.ListFragment
 import xyz.arnau.muvicat.ui.SimpleDividerItemDecoration

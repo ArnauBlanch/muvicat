@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import xyz.arnau.muvicat.R
-import xyz.arnau.muvicat.data.model.Cinema
+import xyz.arnau.muvicat.repository.model.Cinema
 import xyz.arnau.muvicat.utils.setVisibleText
 import javax.inject.Inject
 

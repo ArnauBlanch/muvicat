@@ -10,8 +10,8 @@ import android.widget.TextView
 import android.widget.ToggleButton
 import kotlinx.android.synthetic.main.movie_info_header.*
 import xyz.arnau.muvicat.R
-import xyz.arnau.muvicat.data.model.Movie
-import xyz.arnau.muvicat.data.model.MovieShowing
+import xyz.arnau.muvicat.repository.model.Movie
+import xyz.arnau.muvicat.repository.model.MovieShowing
 import xyz.arnau.muvicat.ui.cinema.CinemaActivity
 import xyz.arnau.muvicat.utils.*
 import javax.inject.Inject

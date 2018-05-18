@@ -4,7 +4,7 @@ import android.arch.lifecycle.LiveData
 import android.arch.persistence.room.*
 import org.joda.time.LocalDate
 import xyz.arnau.muvicat.cache.model.MovieEntity
-import xyz.arnau.muvicat.data.model.Movie
+import xyz.arnau.muvicat.repository.model.Movie
 import java.util.*
 
 @Dao

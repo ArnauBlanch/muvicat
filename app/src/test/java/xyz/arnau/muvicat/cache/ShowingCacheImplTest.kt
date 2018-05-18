@@ -11,9 +11,9 @@ import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
 import org.mockito.Mockito.*
 import xyz.arnau.muvicat.cache.dao.ShowingDao
-import xyz.arnau.muvicat.data.model.Showing
-import xyz.arnau.muvicat.data.test.ShowingEntityFactory
-import xyz.arnau.muvicat.data.test.ShowingMapper
+import xyz.arnau.muvicat.repository.model.Showing
+import xyz.arnau.muvicat.repository.test.ShowingEntityFactory
+import xyz.arnau.muvicat.repository.test.ShowingMapper
 
 
 @RunWith(JUnit4::class)

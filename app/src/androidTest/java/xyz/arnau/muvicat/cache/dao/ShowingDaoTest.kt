@@ -11,10 +11,10 @@ import org.junit.Test
 import org.junit.rules.TestRule
 import org.junit.runner.RunWith
 import xyz.arnau.muvicat.cache.db.MuvicatDatabase
-import xyz.arnau.muvicat.data.model.CinemaShowing
-import xyz.arnau.muvicat.data.model.MovieShowing
-import xyz.arnau.muvicat.data.model.Showing
-import xyz.arnau.muvicat.data.test.*
+import xyz.arnau.muvicat.repository.model.CinemaShowing
+import xyz.arnau.muvicat.repository.model.MovieShowing
+import xyz.arnau.muvicat.repository.model.Showing
+import xyz.arnau.muvicat.repository.test.*
 import xyz.arnau.muvicat.utils.getValueBlocking
 import java.util.*
 

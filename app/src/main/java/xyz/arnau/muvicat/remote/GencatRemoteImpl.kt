@@ -6,7 +6,7 @@ import android.arch.lifecycle.Transformations
 import xyz.arnau.muvicat.cache.model.CinemaEntity
 import xyz.arnau.muvicat.cache.model.MovieEntity
 import xyz.arnau.muvicat.cache.model.ShowingEntity
-import xyz.arnau.muvicat.data.repository.GencatRemote
+import xyz.arnau.muvicat.repository.data.GencatRemote
 import xyz.arnau.muvicat.remote.mapper.GencatCinemaListEntityMapper
 import xyz.arnau.muvicat.remote.mapper.GencatMovieListEntityMapper
 import xyz.arnau.muvicat.remote.mapper.GencatShowingListEntityMapper

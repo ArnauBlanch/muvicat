@@ -9,7 +9,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import xyz.arnau.muvicat.R
-import xyz.arnau.muvicat.data.model.CinemaShowing
+import xyz.arnau.muvicat.repository.model.CinemaShowing
 import xyz.arnau.muvicat.ui.movie.MovieActivity
 import xyz.arnau.muvicat.utils.DateFormatter
 import xyz.arnau.muvicat.utils.GlideApp

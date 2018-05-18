@@ -8,7 +8,7 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import kotlinx.android.synthetic.main.showing_list.*
 import kotlinx.android.synthetic.main.showing_list_toolbar.*
 import xyz.arnau.muvicat.R
-import xyz.arnau.muvicat.data.model.Showing
+import xyz.arnau.muvicat.repository.model.Showing
 import xyz.arnau.muvicat.ui.LocationAwareActivity
 import xyz.arnau.muvicat.ui.MainActivity
 import xyz.arnau.muvicat.ui.ScrollableToTop

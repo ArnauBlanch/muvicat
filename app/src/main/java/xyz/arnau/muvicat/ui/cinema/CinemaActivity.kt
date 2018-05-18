@@ -24,9 +24,9 @@ import kotlinx.android.synthetic.main.cinema_list_toolbar.*
 import kotlinx.android.synthetic.main.movie_list.*
 import kotlinx.android.synthetic.main.showing_list.*
 import xyz.arnau.muvicat.R
-import xyz.arnau.muvicat.data.model.Cinema
-import xyz.arnau.muvicat.data.model.Resource
-import xyz.arnau.muvicat.data.model.Status
+import xyz.arnau.muvicat.repository.model.Cinema
+import xyz.arnau.muvicat.repository.model.Resource
+import xyz.arnau.muvicat.repository.model.Status
 import xyz.arnau.muvicat.ui.LocationAwareActivity
 import xyz.arnau.muvicat.ui.movie.CinemaMovieListFragment
 import xyz.arnau.muvicat.ui.showing.CinemaShowingListFragment

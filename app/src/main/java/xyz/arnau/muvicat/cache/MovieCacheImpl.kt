@@ -3,8 +3,8 @@ package xyz.arnau.muvicat.cache
 import android.arch.lifecycle.LiveData
 import xyz.arnau.muvicat.cache.dao.MovieDao
 import xyz.arnau.muvicat.cache.model.MovieEntity
-import xyz.arnau.muvicat.data.model.Movie
-import xyz.arnau.muvicat.data.repository.MovieCache
+import xyz.arnau.muvicat.repository.model.Movie
+import xyz.arnau.muvicat.repository.data.MovieCache
 import javax.inject.Inject
 
 class MovieCacheImpl @Inject constructor(private val movieDao: MovieDao) : MovieCache {

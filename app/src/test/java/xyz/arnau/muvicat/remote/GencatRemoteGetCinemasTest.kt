@@ -17,7 +17,7 @@ import org.mockito.Mockito
 import org.mockito.Mockito.*
 import retrofit2.Retrofit
 import retrofit2.converter.simplexml.SimpleXmlConverterFactory
-import xyz.arnau.muvicat.data.repository.GencatRemote
+import xyz.arnau.muvicat.repository.data.GencatRemote
 import xyz.arnau.muvicat.remote.mapper.*
 import xyz.arnau.muvicat.remote.model.ResponseStatus.*
 import xyz.arnau.muvicat.remote.service.GencatService

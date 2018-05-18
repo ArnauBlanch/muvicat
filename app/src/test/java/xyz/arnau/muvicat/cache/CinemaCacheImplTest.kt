@@ -11,9 +11,9 @@ import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
 import org.mockito.Mockito.*
 import xyz.arnau.muvicat.cache.dao.CinemaDao
-import xyz.arnau.muvicat.data.model.Cinema
-import xyz.arnau.muvicat.data.test.CinemaEntityFactory
-import xyz.arnau.muvicat.data.test.CinemaFactory
+import xyz.arnau.muvicat.repository.model.Cinema
+import xyz.arnau.muvicat.repository.test.CinemaEntityFactory
+import xyz.arnau.muvicat.repository.test.CinemaFactory
 
 @RunWith(JUnit4::class)
 class CinemaCacheImplTest {
