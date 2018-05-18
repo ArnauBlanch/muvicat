@@ -7,8 +7,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-import xyz.arnau.muvicat.AppExecutors;
-
 public class CountingAppExecutors {
 
     private final Object LOCK = new Object();

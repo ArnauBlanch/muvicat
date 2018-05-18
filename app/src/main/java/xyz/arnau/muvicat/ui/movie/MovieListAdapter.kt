@@ -7,10 +7,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import xyz.arnau.muvicat.GlideApp
 import xyz.arnau.muvicat.R
-import xyz.arnau.muvicat.data.model.Movie
+import xyz.arnau.muvicat.repository.model.Movie
 import xyz.arnau.muvicat.utils.DateFormatter
+import xyz.arnau.muvicat.utils.GlideApp
+import xyz.arnau.muvicat.utils.setVisibleText
 import javax.inject.Inject
 
 class MovieListAdapter @Inject constructor() : RecyclerView.Adapter<MovieListAdapter.ViewHolder>() {
@@ -25,14 +26,7 @@ class MovieListAdapter @Inject constructor() : RecyclerView.Adapter<MovieListAda
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val movie = movies[position]
         holder.titleText.text = movie.title
-        val dateString = dateFormatter.shortDate(movie.releaseDate)
-        if (dateString != null) {
-            holder.releaseDate.text = dateString
-            holder.releaseDate.visibility = View.VISIBLE
-        } else {
-            holder.releaseDate.text = ""
-            holder.releaseDate.visibility = View.GONE
-        }
+        holder.releaseDate.setVisibleText(dateFormatter.shortReleaseDate(movie.releaseDate))
 
         GlideApp.with(holder.itemView.context)
             .load("http://www.gencat.cat/llengua/cinema/${movie.posterUrl}")
@@ -41,19 +35,13 @@ class MovieListAdapter @Inject constructor() : RecyclerView.Adapter<MovieListAda
             .into(holder.posterImage)
 
         holder.itemView.setOnClickListener {
-            context.startActivity(
-                MovieActivity.createIntent(
-                    context,
-                    movie.id
-                )
-            )
+            context.startActivity(MovieActivity.createIntent(context, movie.id))
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val itemView = LayoutInflater
-            .from(parent.context)
-            .inflate(R.layout.movie_card, parent, false)
+        val itemView = LayoutInflater.from(parent.context)
+            .inflate(R.layout.movie_item, parent, false)
         return ViewHolder(itemView)
     }
 

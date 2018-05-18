@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/movieShowingItem"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clickable="true"
+    android:foreground="?android:selectableItemBackgroundBorderless"
+    android:paddingStart="18dp"
+    android:paddingEnd="8dp"
+    android:paddingTop="10dp"
+    android:paddingBottom="10dp"
+    android:orientation="horizontal"
+    android:focusable="true">
+
+    <LinearLayout
+        android:id="@+id/showingDetailsLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/showingVersion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/nunito_sans_extrabold_italic"
+            android:textSize="14sp"
+            android:textColor="@color/grey"
+            />
+        <TextView
+            android:id="@+id/cinemaName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/nunito_sans_extrabold"
+            android:textSize="15sp"
+            android:textColor="@color/colorAccent"
+            android:layout_marginTop="8dp"
+            android:ellipsize="marquee"
+            android:layout_marginBottom="1dp"
+            android:singleLine="true" />
+        <TextView
+            android:id="@+id/cinemaPlace"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/nunito_sans_semibold"
+            android:textSize="13sp"
+            android:singleLine="true"
+            android:ellipsize="marquee"
+            android:textColor="@android:color/black"
+            />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:layout_marginStart="10dp"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/date"
+            android:fontFamily="@font/nunito_sans_bold"
+            android:textSize="15sp"
+            android:textColor="@color/colorAccent"
+            android:layout_gravity="center_horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <View
+            android:id="@+id/dateDistanceMargin"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="10dp" />
+
+        <TextView
+            android:id="@+id/cinemaDistance"
+            android:visibility="gone"
+            android:fontFamily="@font/nunito_sans_semibold"
+            android:textSize="13sp"
+            android:textColor="@color/grey"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+    <ImageView
+        android:id="@+id/arrow"
+        android:layout_gravity="center_vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_chevron_right_red"
+        android:contentDescription="@string/showings" />
+</LinearLayout>

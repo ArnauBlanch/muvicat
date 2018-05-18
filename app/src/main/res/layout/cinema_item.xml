@@ -34,24 +34,23 @@
             android:textSize="13sp"
             android:textColor="@color/grey"
             />
-        <!--<TextView
+        <TextView
             android:id="@+id/cinemaStats"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/nunito_sans_bold"
-            android:textSize="14sp"
+            android:textSize="13sp"
             android:textColor="@color/colorAccent"
-            android:layout_marginTop="10dp"
-            />-->
+            android:layout_marginTop="6dp"
+            />
     </LinearLayout>
     <TextView
         android:id="@+id/cinemaDistance"
         android:visibility="gone"
-        android:fontFamily="@font/nunito_sans_bold_italic"
-        android:text="≈ 3 km"
+        android:fontFamily="@font/nunito_sans_semibold"
         android:textSize="15sp"
         android:layout_gravity="center_vertical"
-        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
         android:textColor="@color/grey"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />

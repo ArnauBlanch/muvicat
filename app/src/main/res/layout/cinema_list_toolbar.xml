@@ -15,7 +15,7 @@
         app:collapsedTitleTextAppearance="@style/CollapsingToolbarLayoutCollapsedTextStyle"
         app:layout_scrollFlags="scroll|exitUntilCollapsed"
         app:expandedTitleGravity="top|left"
-        app:title="Sales">
+        app:title="@string/cinemas">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/cinemasToolbar"

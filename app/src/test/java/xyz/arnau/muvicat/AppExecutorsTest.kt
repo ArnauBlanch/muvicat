@@ -5,6 +5,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mockito.mock
 import org.robolectric.RobolectricTestRunner
+import xyz.arnau.muvicat.utils.AppExecutors
 import java.util.concurrent.Executor
 
 @RunWith(RobolectricTestRunner::class)
