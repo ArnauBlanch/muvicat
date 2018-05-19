@@ -17,7 +17,6 @@ import xyz.arnau.muvicat.R
 import xyz.arnau.muvicat.repository.model.*
 import xyz.arnau.muvicat.ui.LocationAwareActivity
 import xyz.arnau.muvicat.ui.SimpleDividerItemDecoration
-import xyz.arnau.muvicat.ui.showing.MovieShowingsAdapter
 import xyz.arnau.muvicat.utils.*
 import xyz.arnau.muvicat.viewmodel.movie.MovieViewModel
 import javax.inject.Inject
@@ -87,19 +86,45 @@ class MovieActivity : LocationAwareActivity() {
                         .into(moviePoster)
                     movieTitle.text = movie.title
 
-                    if (movie.ageRating != null && movie.year != null)
-                        movieYearAgeRatingSeparator.setVisible()
+                    if (movie.year != null && movie.genres != null && movie.genres!!.isEmpty())
+                        movieYearGenreSeparator.setVisible()
+                    if (movie.runtime != null && movie.ageRating != null)
+                        movieRuntimeAgeRatingSeparator.setVisible()
 
                     movieAgeRating.setVisibleText(movie.ageRating)
                     movieYear.setVisibleText(movie.year?.toString())
+                    movieRuntime.setVisibleText(parseRuntime(movie.runtime))
+                    movieGenre.setVisibleText(parseGenres(movie.genres))
+
+                    GlideApp.with(context)
+                        .load("https://image.tmdb.org/t/p/w1280${movie.backdropUrl}")
+                        .centerCrop()
+                        .into(movieBackdrop)
 
                     infoAndShowingsAdapter.movie = movie
                     infoAndShowingsAdapter.notifyDataSetChanged()
                 }
             }
-            Status.ERROR -> throw Exception("The movie could not be retrieved")
+            Status.ERROR -> finish()
             Status.LOADING -> return
         }
+    }
+
+    private fun parseGenres(genres: List<String>?): String? {
+        if (genres == null)
+            return null
+
+        return genres.toString().dropLast(1).drop(1)
+    }
+
+    private fun parseRuntime(runtime: Int?): String? {
+        if (runtime == null)
+            return null
+
+        return if (runtime < 60)
+            "$runtime min"
+        else
+            "${runtime / 60} h ${runtime % 60} min"
     }
 
     private fun handleShowingsDateState(status: Status, showings: List<MovieShowing>?) {

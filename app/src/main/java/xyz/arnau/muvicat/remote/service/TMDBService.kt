@@ -10,8 +10,8 @@ import xyz.arnau.muvicat.remote.utils.ApiResponse
 
 interface TMDBService {
     @GET("search/movie")
-    fun searchMovie(@Query("query") title: String, @Query("api_key") apiKey: String = "API_KEY"): LiveData<ApiResponse<TMDBSearchMovieResponse>>
+    fun searchMovie(@Query("query") title: String, @Query("api_key") apiKey: String = TMDBApiKey): LiveData<ApiResponse<TMDBSearchMovieResponse>>
 
     @GET("movie/{movie_id}")
-    fun getMovie(@Path("movie_id") movieId: Int, @Query("api_key") apiKey: String = "API_KEY", @Query("append_to_response") append: String = "credits"): LiveData<ApiResponse<TMDBMovie>>
+    fun getMovie(@Path("movie_id") movieId: Int, @Query("api_key") apiKey: String = TMDBApiKey, @Query("append_to_response") append: String = "credits"): LiveData<ApiResponse<TMDBMovie>>
 }

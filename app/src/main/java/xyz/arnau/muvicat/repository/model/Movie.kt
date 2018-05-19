@@ -20,10 +20,10 @@ data class Movie(
     var originalLanguage: String?,
     var ageRating: String?,
     var trailerUrl: String?,
-    val tmdbId: Int?,
-    val runtime: Int?,
-    val genres: List<String>?,
-    val backdropUrl: String?,
-    val voteAverage: Double?,
-    val voteCount: Int?
+    var tmdbId: Int?,
+    var runtime: Int?,
+    var genres: List<String>?,
+    var backdropUrl: String?,
+    var voteAverage: Double?,
+    var voteCount: Int?
 )

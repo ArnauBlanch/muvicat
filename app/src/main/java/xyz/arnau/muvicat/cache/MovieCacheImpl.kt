@@ -4,6 +4,7 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import xyz.arnau.muvicat.cache.dao.MovieDao
 import xyz.arnau.muvicat.cache.model.MovieEntity
+import xyz.arnau.muvicat.cache.model.MovieExtraInfo
 import xyz.arnau.muvicat.repository.model.Movie
 import xyz.arnau.muvicat.repository.data.MovieCache
 import xyz.arnau.muvicat.repository.model.MovieWithCast
@@ -24,5 +25,9 @@ class MovieCacheImpl @Inject constructor(private val movieDao: MovieDao) : Movie
 
     override fun updateMovies(movies: List<MovieEntity>) {
         movieDao.updateMovieDb(movies)
+    }
+
+    override fun updateExtraMovieInfo(movieId: Long, extraInfo: MovieExtraInfo) {
+        movieDao.addMovieExtraInfo(movieId, extraInfo)
     }
 }
