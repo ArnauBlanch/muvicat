@@ -1,7 +1,7 @@
 package xyz.arnau.muvicat.remote.mapper
 
 import xyz.arnau.muvicat.cache.model.CinemaEntity
-import xyz.arnau.muvicat.remote.model.GencatCinema
+import xyz.arnau.muvicat.remote.model.gencat.GencatCinema
 
 class GencatCinemaEntityMapper : EntityMapper<GencatCinema, CinemaEntity> {
     override fun mapFromRemote(type: GencatCinema): CinemaEntity? {

@@ -2,7 +2,7 @@ package xyz.arnau.muvicat.remote.mapper
 
 import org.junit.Assert.assertEquals
 import org.junit.Test
-import xyz.arnau.muvicat.remote.model.GencatShowingResponse
+import xyz.arnau.muvicat.remote.model.gencat.GencatShowingResponse
 import xyz.arnau.muvicat.remote.test.GencatShowingFactory
 
 class GencatShowingListEntityMapperTest {

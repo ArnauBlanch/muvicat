@@ -1,15 +1,16 @@
-package xyz.arnau.muvicat.ui.showing
+package xyz.arnau.muvicat.ui.movie
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.ToggleButton
-import kotlinx.android.synthetic.main.movie_info_header.*
 import xyz.arnau.muvicat.R
+import xyz.arnau.muvicat.repository.model.CastMember
 import xyz.arnau.muvicat.repository.model.Movie
 import xyz.arnau.muvicat.repository.model.MovieShowing
 import xyz.arnau.muvicat.ui.cinema.CinemaActivity
@@ -20,6 +21,8 @@ class MovieShowingsAdapter @Inject constructor() : RecyclerView.Adapter<Recycler
     @Inject
     lateinit var dateFormatter: DateFormatter
 
+    @Inject lateinit var castMembersAdapter: CastMembersAdapter
+
     @Inject
     lateinit var context: Context
 
@@ -27,6 +30,7 @@ class MovieShowingsAdapter @Inject constructor() : RecyclerView.Adapter<Recycler
     private val TYPE_SHOWING_ITEM = 1
 
     var movie: Movie? = null
+    var castMembers: List<CastMember> = listOf()
     var showings: List<MovieShowing> = listOf()
     var showingId: Long? = null
     var expanded = true
@@ -50,19 +54,12 @@ class MovieShowingsAdapter @Inject constructor() : RecyclerView.Adapter<Recycler
         if (holder is MovieInfoViewHolder) {
             movie?.let {
                 holder.plot.setVisibleText(movie?.plot)
-                holder.originalTitle.setTextAndVisibleLayout(
-                    movie?.originalTitle, holder.originalTitleLayout
-                )
-                holder.direction.setTextAndVisibleLayout(
-                    movie?.direction, holder.directionLayout
-                )
+                holder.originalTitle.setTextAndVisibleLayout(movie?.originalTitle, holder.originalTitleLayout)
+                holder.direction.setTextAndVisibleLayout(movie?.direction, holder.directionLayout)
                 holder.releaseDate.setTextAndVisibleLayout(
                     movie?.releaseDate?.let { dateFormatter.longDate(it) }, holder.releaseDateLayout
                 )
-                holder.originalLanguage.setTextAndVisibleLayout(
-                    movie?.originalLanguage, holder.originalLanguageLayout
-                )
-                holder.cast.setTextAndVisibleLayout(movie?.cast, holder.castLayout)
+                holder.originalLanguage.setTextAndVisibleLayout(movie?.originalLanguage, holder.originalLanguageLayout)
                 if (showings.isNotEmpty()) {
                     if (expanded)
                         holder.showingsTitle.setVisibleText(context.getString(R.string.showings))
@@ -76,6 +73,22 @@ class MovieShowingsAdapter @Inject constructor() : RecyclerView.Adapter<Recycler
                         expanded = isChecked
                         notifyDataSetChanged()
                     })
+                }
+
+                if (castMembers.isNotEmpty()) {
+                    holder.castLayout.setVisible()
+                    holder.castMembers.setVisible()
+                    if (holder.castMembers.adapter == null) {
+                        holder.castMembers.adapter = castMembersAdapter
+                        holder.castMembers.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+                    }
+                    castMembersAdapter.cast = castMembers
+                    castMembersAdapter.notifyDataSetChanged()
+                    holder.cast.setGone()
+                } else if (movie?.cast != null) {
+                    holder.castLayout.setVisible()
+                    holder.cast.setVisibleText(movie?.cast)
+                    holder.castMembers.setGone()
                 }
             }
         } else if (holder is ShowingViewHolder) {
@@ -133,6 +146,7 @@ class MovieShowingsAdapter @Inject constructor() : RecyclerView.Adapter<Recycler
         var originalLanguageLayout: View = view.findViewById(R.id.movieOriginalLanguageLayout)
         var cast: TextView = view.findViewById(R.id.movieCast)
         var castLayout: View = view.findViewById(R.id.movieCastLayout)
+        var castMembers: RecyclerView = view.findViewById(R.id.castRecyclerView)
         var showingsTitle: TextView = view.findViewById(R.id.movieShowingsTitle)
         var moreShowingsButton: ToggleButton = view.findViewById(R.id.moreShowingsButton)
     }

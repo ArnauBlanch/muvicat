@@ -4,7 +4,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import xyz.arnau.muvicat.cache.model.ShowingEntity
-import xyz.arnau.muvicat.remote.model.GencatShowing
+import xyz.arnau.muvicat.remote.model.gencat.GencatShowing
 import xyz.arnau.muvicat.remote.test.GencatShowingFactory
 import java.text.SimpleDateFormat
 import java.util.*

@@ -13,9 +13,9 @@ import org.mockito.ArgumentMatchers
 import org.mockito.Mockito.*
 import retrofit2.Response
 import xyz.arnau.muvicat.remote.mapper.*
-import xyz.arnau.muvicat.remote.model.GencatCinemaResponse
-import xyz.arnau.muvicat.remote.model.GencatMovieResponse
-import xyz.arnau.muvicat.remote.model.GencatShowingResponse
+import xyz.arnau.muvicat.remote.model.gencat.GencatCinemaResponse
+import xyz.arnau.muvicat.remote.model.gencat.GencatMovieResponse
+import xyz.arnau.muvicat.remote.model.gencat.GencatShowingResponse
 import xyz.arnau.muvicat.remote.model.ResponseStatus.SUCCESSFUL
 import xyz.arnau.muvicat.remote.service.GencatService
 import xyz.arnau.muvicat.remote.utils.ApiResponse

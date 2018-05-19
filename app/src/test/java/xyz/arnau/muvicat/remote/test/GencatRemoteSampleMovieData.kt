@@ -1,7 +1,7 @@
 package xyz.arnau.muvicat.remote.test
 
-import xyz.arnau.muvicat.remote.model.GencatMovie
-import xyz.arnau.muvicat.remote.model.GencatMovieResponse
+import xyz.arnau.muvicat.remote.model.gencat.GencatMovie
+import xyz.arnau.muvicat.remote.model.gencat.GencatMovieResponse
 
 object GencatRemoteSampleMovieData {
     val body = GencatMovieResponse(

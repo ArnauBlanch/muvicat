@@ -11,19 +11,12 @@ import android.support.design.widget.AppBarLayout
 import android.support.design.widget.Snackbar
 import android.support.v4.content.res.ResourcesCompat
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.widget.ToggleButton
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.movie_info.*
-import kotlinx.android.synthetic.main.movie_info_header.*
 import xyz.arnau.muvicat.R
-import xyz.arnau.muvicat.repository.model.Movie
-import xyz.arnau.muvicat.repository.model.MovieShowing
-import xyz.arnau.muvicat.repository.model.Resource
-import xyz.arnau.muvicat.repository.model.Status
+import xyz.arnau.muvicat.repository.model.*
 import xyz.arnau.muvicat.ui.LocationAwareActivity
 import xyz.arnau.muvicat.ui.SimpleDividerItemDecoration
-import xyz.arnau.muvicat.ui.showing.MovieShowingsAdapter
 import xyz.arnau.muvicat.utils.*
 import xyz.arnau.muvicat.viewmodel.movie.MovieViewModel
 import javax.inject.Inject
@@ -78,33 +71,63 @@ class MovieActivity : LocationAwareActivity() {
             .observe(this, Observer { if (it != null) handleShowingsDateState(it.status, it.data) })
     }
 
-    private fun handleMovieDataState(movieRes: Resource<Movie>) {
-        when (movieRes.status) {
-            Status.SUCCESS -> {
-                val movie = movieRes.data
-                if (movie != null) {
-                    setupToolbar(movie)
-
-                    GlideApp.with(context)
-                        .load("http://www.gencat.cat/llengua/cinema/${movieRes.data.posterUrl}")
-                        .error(R.drawable.poster_placeholder)
-                        .centerCrop()
-                        .into(moviePoster)
-                    movieTitle.text = movie.title
-
-                    if (movie.ageRating != null && movie.year != null)
-                        movieYearAgeRatingSeparator.setVisible()
-
-                    movieAgeRating.setVisibleText(movie.ageRating)
-                    movieYear.setVisibleText(movie.year?.toString())
-
-                    infoAndShowingsAdapter.movie = movieRes.data
-                    infoAndShowingsAdapter.notifyDataSetChanged()
-                }
-            }
-            Status.ERROR -> throw Exception("The movie could not be retrieved")
-            Status.LOADING -> return
+    private fun handleMovieDataState(movieRes: Resource<MovieWithCast>) {
+        val movieWithCast = movieRes.data
+        if (movieWithCast != null) {
+            infoAndShowingsAdapter.castMembers = movieWithCast.castMembers.sortedBy { it.order }
+            processMovie(movieWithCast.movie)
         }
+        if (movieRes.status == Status.ERROR) {
+            if (movieRes.data == null)
+                finish()
+            movieWithCast?.movie?.let { processMovie(it) }
+        }
+    }
+
+    private fun processMovie(movie: Movie) {
+        setupToolbar(movie)
+
+        GlideApp.with(context)
+            .load("http://www.gencat.cat/llengua/cinema/${movie.posterUrl}")
+            .error(R.drawable.poster_placeholder)
+            .centerCrop()
+            .into(moviePoster)
+        movieTitle.text = movie.title
+
+        if (movie.year != null && movie.genres != null && movie.genres!!.isNotEmpty())
+            movieYearGenreSeparator.setVisible()
+        if (movie.runtime != null && movie.ageRating != null)
+            movieRuntimeAgeRatingSeparator.setVisible()
+
+        movieAgeRating.setVisibleText(movie.ageRating)
+        movieYear.setVisibleText(movie.year?.toString())
+        movieRuntime.setVisibleText(parseRuntime(movie.runtime))
+        movieGenre.setVisibleText(parseGenres(movie.genres))
+
+        GlideApp.with(context)
+            .load("https://image.tmdb.org/t/p/w1280${movie.backdropUrl}")
+            .centerCrop()
+            .into(movieBackdrop)
+
+        infoAndShowingsAdapter.movie = movie
+        infoAndShowingsAdapter.notifyDataSetChanged()
+    }
+
+    private fun parseGenres(genres: List<String>?): String? {
+        if (genres == null)
+            return null
+
+        return genres.toString().dropLast(1).drop(1)
+    }
+
+    private fun parseRuntime(runtime: Int?): String? {
+        if (runtime == null)
+            return null
+
+        return if (runtime < 60)
+            "$runtime min"
+        else
+            "${runtime / 60} h ${runtime % 60} min"
     }
 
     private fun handleShowingsDateState(status: Status, showings: List<MovieShowing>?) {

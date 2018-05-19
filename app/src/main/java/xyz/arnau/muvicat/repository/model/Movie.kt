@@ -19,5 +19,11 @@ data class Movie(
     var priority: Int?,
     var originalLanguage: String?,
     var ageRating: String?,
-    var trailerUrl: String?
+    var trailerUrl: String?,
+    var tmdbId: Int?,
+    var runtime: Int?,
+    var genres: List<String>?,
+    var backdropUrl: String?,
+    var voteAverage: Double?,
+    var voteCount: Int?
 )
