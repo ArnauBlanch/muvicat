@@ -7,5 +7,9 @@ data class MovieExtraInfo(
     val backdropUrl: String?,
     val voteAverage: Double?,
     val voteCount: Int?,
-    val cast: List<CastMemberEntity>
-)
+    var cast: List<CastMemberEntity>
+) {
+    fun setMovieId(movieId: Long) {
+        cast.forEach { it.movieId = movieId }
+    }
+}

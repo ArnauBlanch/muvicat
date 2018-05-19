@@ -12,12 +12,13 @@ import org.junit.rules.TestRule
 import org.junit.runner.RunWith
 import xyz.arnau.muvicat.cache.db.MuvicatDatabase
 import xyz.arnau.muvicat.cache.db.StringListTypeConverter
-import xyz.arnau.muvicat.cache.model.MovieCastMemberJoin
+import xyz.arnau.muvicat.cache.model.CastMemberEntity
 import xyz.arnau.muvicat.repository.model.CastMember
 import xyz.arnau.muvicat.repository.model.Movie
 import xyz.arnau.muvicat.repository.test.*
 import xyz.arnau.muvicat.utils.getValueBlocking
 import java.util.*
+import kotlin.math.exp
 
 
 @Suppress("DEPRECATION")
@@ -138,13 +139,37 @@ class MovieDaoTest {
 
 
     @Test
-    fun getMovieRetrievesMovie() {
+    fun getMovieRetrievesMovieWithEmptyCast() {
         val movie = MovieEntityFactory.makeMovieEntity()
 
         muvicatDatabase.movieDao().insertMovies(listOf(movie))
 
         val retrievedMovie = muvicatDatabase.movieDao().getMovie(movie.id).getValueBlocking()
-        assertEquals(MovieMapper.mapFromMovieEntity(movie), retrievedMovie)
+        assertEquals(MovieWithCastMapper.mapFromMovieEntity(movie), retrievedMovie)
+    }
+
+    @Test
+    fun getMovieRetrievesMovieWithCastMembers() {
+        val movie = MovieEntityFactory.makeMovieEntity()
+        muvicatDatabase.movieDao().insertMovies(listOf(movie))
+
+        val extraInfo = MovieExtraInfoFactory.makeExtraInfo()
+        muvicatDatabase.movieDao().addMovieExtraInfo(movie.id, extraInfo)
+
+        movie.apply {
+            tmdbId = extraInfo.tmdbId
+            runtime = extraInfo.runtime
+            genres = extraInfo.genres
+            backdropUrl = extraInfo.backdropUrl
+            voteAverage = extraInfo.voteAverage
+            voteCount = extraInfo.voteCount
+        }
+
+        val expectedMovieWithCast = MovieWithCastMapper.mapFromMovieEntity(movie)
+        expectedMovieWithCast.castMembers = CastMemberMapper.mapFromCastMemberEntityList(extraInfo.cast)
+
+        val retrievedMovie = muvicatDatabase.movieDao().getMovie(movie.id).getValueBlocking()
+        assertEquals(expectedMovieWithCast, retrievedMovie)
     }
 
     @Test
@@ -233,12 +258,13 @@ class MovieDaoTest {
         muvicatDatabase.movieDao().insertMovies(movies1)
 
         val castMembers = CastMemberEntityFactory.makeCastMemberEntityList(5)
-        muvicatDatabase.movieDao().insertCastMembers(castMembers)
-
-        val joins = castMembers.mapIndexed { index, castMemberEntity ->
-            MovieCastMemberJoin(movies1[index].id, castMemberEntity.id)
+        castMembers.forEachIndexed { index, castMemberEntity ->
+            castMemberEntity.movieId = movies1[index].id
         }
-        muvicatDatabase.movieDao().insertMovieCastJoins(joins)
+        castMembers.forEachIndexed { index, castMemberEntity ->
+            castMemberEntity.id = index
+        }
+        muvicatDatabase.movieDao().insertCastMembers(castMembers)
 
         val updatedMovies = MovieEntityFactory.makeMovieEntityList(3)
         updatedMovies.forEachIndexed { index, item -> item.id = index.toLong() }
@@ -257,12 +283,8 @@ class MovieDaoTest {
         )
 
         assertEquals(
-            castMembers.subList(0, 4).sortedBy { it.id },
+            CastMemberMapper.mapFromCastMemberEntityList(castMembers.subList(0, 4).sortedBy { it.id }),
             muvicatDatabase.movieDao().getCastMembers()
-        )
-        assertEquals(
-            joins.subList(0, 4).sortedWith(compareBy<MovieCastMemberJoin>({ it.movieId }).thenBy { it.castMemberId }),
-            muvicatDatabase.movieDao().getMovieCastMembersJoin()
         )
     }
 
@@ -273,9 +295,11 @@ class MovieDaoTest {
 
         val extraInfo = MovieExtraInfoFactory.makeExtraInfo()
 
-        muvicatDatabase.movieDao().updateMovieExtraInfo(movie.id, extraInfo.tmdbId, extraInfo.runtime,
+        muvicatDatabase.movieDao().updateMovieExtraInfo(
+            movie.id, extraInfo.tmdbId, extraInfo.runtime,
             StringListTypeConverter().toString(extraInfo.genres), extraInfo.backdropUrl,
-            extraInfo.voteAverage, extraInfo.voteCount)
+            extraInfo.voteAverage, extraInfo.voteCount
+        )
 
         movie.apply {
             tmdbId = extraInfo.tmdbId
@@ -286,8 +310,11 @@ class MovieDaoTest {
             voteCount = extraInfo.voteCount
         }
 
+        val expectedMovieWithCast = MovieWithCastMapper.mapFromMovieEntity(movie)
+        expectedMovieWithCast.castMembers = CastMemberMapper.mapFromCastMemberEntityList(extraInfo.cast)
+
         assertEquals(
-            MovieMapper.mapFromMovieEntity(movie),
+            expectedMovieWithCast,
             muvicatDatabase.movieDao().getMovie(movie.id).getValueBlocking()
         )
     }
@@ -298,7 +325,6 @@ class MovieDaoTest {
         muvicatDatabase.movieDao().insertMovies(listOf(movie))
 
         val extraInfo = MovieExtraInfoFactory.makeExtraInfo()
-
         muvicatDatabase.movieDao().addMovieExtraInfo(movie.id, extraInfo)
 
         movie.apply {
@@ -309,60 +335,17 @@ class MovieDaoTest {
             voteAverage = extraInfo.voteAverage
             voteCount = extraInfo.voteCount
         }
+        val expectedMovieWithCast = MovieWithCastMapper.mapFromMovieEntity(movie)
+        expectedMovieWithCast.castMembers = CastMemberMapper.mapFromCastMemberEntityList(extraInfo.cast)
 
         assertEquals(
-            MovieMapper.mapFromMovieEntity(movie),
+            expectedMovieWithCast,
             muvicatDatabase.movieDao().getMovie(movie.id).getValueBlocking()
         )
         assertEquals(
-            extraInfo.cast.sortedBy { it.id },
-            muvicatDatabase.movieDao().getCastMembers()
-        )
-        assertEquals(
-            extraInfo.cast.map { MovieCastMemberJoin(movie.id, it.id) }
-                .sortedWith(compareBy<MovieCastMemberJoin>({ it.movieId }).thenBy { it.castMemberId }),
-            muvicatDatabase.movieDao().getMovieCastMembersJoin()
-        )
-    }
-
-    @Test
-    fun deleteOutdatedCastMembersDeletesMembersWithoutAnyMovie() {
-        val movies = MovieEntityFactory.makeMovieEntityList(2)
-        muvicatDatabase.movieDao().insertMovies(movies)
-
-        val castMembers = CastMemberEntityFactory.makeCastMemberEntityList(4)
-        muvicatDatabase.movieDao().insertCastMembers(castMembers)
-
-        val joins = castMembers.mapIndexed { index, castMemberEntity ->
-            MovieCastMemberJoin(movies[index/2].id, castMemberEntity.id)
-        }
-        muvicatDatabase.movieDao().insertMovieCastJoins(joins)
-
-        assertEquals(
-            castMembers.sortedBy { it.id },
-            muvicatDatabase.movieDao().getCastMembers()
-        )
-        assertEquals(
-            joins.sortedWith(compareBy<MovieCastMemberJoin>({ it.movieId }).thenBy { it.castMemberId }),
-            muvicatDatabase.movieDao().getMovieCastMembersJoin()
-        )
-
-        muvicatDatabase.movieDao().deleteMoviesById(listOf(movies[0].id))
-
-        assertEquals(
-            castMembers.sortedBy { it.id },
-            muvicatDatabase.movieDao().getCastMembers()
-        )
-        assertEquals(
-            joins.subList(2, 4).sortedWith(compareBy<MovieCastMemberJoin>({ it.movieId }).thenBy { it.castMemberId }),
-            muvicatDatabase.movieDao().getMovieCastMembersJoin()
-        )
-
-        muvicatDatabase.movieDao().deleteOutdatedCastMembers()
-
-        assertEquals(
-            castMembers.subList(2, 4).sortedBy { it.id },
-            muvicatDatabase.movieDao().getCastMembers()
+            CastMemberMapper.mapFromCastMemberEntityList(extraInfo.cast)
+                .sortedWith(compareBy<CastMember> { it.order }.thenBy { it.tmdbId }),
+            muvicatDatabase.movieDao().getCastMembersByMovie(movie.id)
         )
     }
 
@@ -374,10 +357,9 @@ class MovieDaoTest {
         val extraInfo = MovieExtraInfoFactory.makeExtraInfo()
         muvicatDatabase.movieDao().addMovieExtraInfo(movie.id, extraInfo)
 
-
         assertEquals(
             CastMemberMapper.mapFromCastMemberEntityList(extraInfo.cast)
-                .sortedWith(compareBy<CastMember> { it.order }.thenBy { it.id }),
+                .sortedWith(compareBy<CastMember> { it.order }.thenBy { it.tmdbId }),
             muvicatDatabase.movieDao().getCastMembersByMovie(movie.id)
         )
     }

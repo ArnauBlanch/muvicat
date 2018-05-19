@@ -9,9 +9,9 @@ import android.arch.persistence.room.Transaction
 import org.joda.time.LocalDate
 import xyz.arnau.muvicat.cache.db.StringListTypeConverter
 import xyz.arnau.muvicat.cache.model.CastMemberEntity
-import xyz.arnau.muvicat.cache.model.MovieCastMemberJoin
 import xyz.arnau.muvicat.cache.model.MovieEntity
 import xyz.arnau.muvicat.cache.model.MovieExtraInfo
+import xyz.arnau.muvicat.repository.model.CastMember
 import xyz.arnau.muvicat.repository.model.Movie
 import xyz.arnau.muvicat.repository.model.MovieWithCast
 import java.util.*
@@ -41,6 +41,7 @@ abstract class MovieDao {
         today: Long = LocalDate.now().toDate().time
     ): LiveData<List<Movie>>
 
+    @Transaction
     @Query("SELECT * FROM movies WHERE id = :movieId")
     abstract fun getMovie(movieId: Long): LiveData<MovieWithCast>
 
@@ -101,8 +102,6 @@ abstract class MovieDao {
                 it.ageRating, it.trailerUrl
             )
         }
-
-        deleteOutdatedCastMembers()
     }
 
     @Query(
@@ -125,29 +124,16 @@ abstract class MovieDao {
     @Insert(onConflict = IGNORE)
     abstract fun insertCastMembers(castMembers: List<CastMemberEntity>)
 
-    @Query("SELECT * FROM cast_members")
-    abstract fun getCastMembers(): List<CastMemberEntity>
+    @Query("SELECT tmdbId, `order`, name, character, profile_path, movieId FROM cast_members ORDER BY id")
+    abstract fun getCastMembers(): List<CastMember>
 
     @Query("""
-        SELECT *
+        SELECT tmdbId, `order`, name, character, profile_path, movieId
         FROM cast_members
-        WHERE id IN (
-            SELECT castMemberId
-            FROM movie_cast_member_join
-            WHERE movieId = :movieId
-            )
-        ORDER BY `order`, id
+        WHERE movieId = :movieId
+        ORDER BY `order`, tmdbId
         """)
-    abstract fun getCastMembersByMovie(movieId: Long): List<CastMemberEntity>
-
-    @Query("DELETE FROM cast_members WHERE id NOT IN (SELECT castMemberId FROM movie_cast_member_join)")
-    abstract fun deleteOutdatedCastMembers()
-
-    @Insert(onConflict = IGNORE)
-    abstract fun insertMovieCastJoins(movieCastMembersRelations: List<MovieCastMemberJoin>)
-
-    @Query("SELECT * FROM movie_cast_member_join ORDER BY movieId, castMemberId")
-    abstract fun getMovieCastMembersJoin(): List<MovieCastMemberJoin>
+    abstract fun getCastMembersByMovie(movieId: Long): List<CastMember>
 
     @Transaction
     open fun addMovieExtraInfo(movieId: Long, extraInfo: MovieExtraInfo) {
@@ -155,9 +141,7 @@ abstract class MovieDao {
             movieId, extraInfo.tmdbId, extraInfo.runtime, StringListTypeConverter().toString(extraInfo.genres),
             extraInfo.backdropUrl, extraInfo.voteAverage, extraInfo.voteCount
         )
-
+        extraInfo.setMovieId(movieId)
         insertCastMembers(extraInfo.cast)
-
-        insertMovieCastJoins(extraInfo.cast.map { MovieCastMemberJoin(movieId, it.id) })
     }
 }

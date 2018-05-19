@@ -11,16 +11,10 @@ import android.support.design.widget.AppBarLayout
 import android.support.design.widget.Snackbar
 import android.support.v4.content.res.ResourcesCompat
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.widget.ToggleButton
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.movie_info.*
-import kotlinx.android.synthetic.main.movie_info_header.*
 import xyz.arnau.muvicat.R
-import xyz.arnau.muvicat.repository.model.Movie
-import xyz.arnau.muvicat.repository.model.MovieShowing
-import xyz.arnau.muvicat.repository.model.Resource
-import xyz.arnau.muvicat.repository.model.Status
+import xyz.arnau.muvicat.repository.model.*
 import xyz.arnau.muvicat.ui.LocationAwareActivity
 import xyz.arnau.muvicat.ui.SimpleDividerItemDecoration
 import xyz.arnau.muvicat.ui.showing.MovieShowingsAdapter
@@ -78,15 +72,16 @@ class MovieActivity : LocationAwareActivity() {
             .observe(this, Observer { if (it != null) handleShowingsDateState(it.status, it.data) })
     }
 
-    private fun handleMovieDataState(movieRes: Resource<Movie>) {
+    private fun handleMovieDataState(movieRes: Resource<MovieWithCast>) {
         when (movieRes.status) {
             Status.SUCCESS -> {
-                val movie = movieRes.data
-                if (movie != null) {
-                    setupToolbar(movie)
+                val movieWithCast = movieRes.data
+                if (movieWithCast != null) {
+                    val movie = movieWithCast.movie
+                    setupToolbar(movieWithCast.movie)
 
                     GlideApp.with(context)
-                        .load("http://www.gencat.cat/llengua/cinema/${movieRes.data.posterUrl}")
+                        .load("http://www.gencat.cat/llengua/cinema/${movie.posterUrl}")
                         .error(R.drawable.poster_placeholder)
                         .centerCrop()
                         .into(moviePoster)
@@ -98,7 +93,7 @@ class MovieActivity : LocationAwareActivity() {
                     movieAgeRating.setVisibleText(movie.ageRating)
                     movieYear.setVisibleText(movie.year?.toString())
 
-                    infoAndShowingsAdapter.movie = movieRes.data
+                    infoAndShowingsAdapter.movie = movie
                     infoAndShowingsAdapter.notifyDataSetChanged()
                 }
             }

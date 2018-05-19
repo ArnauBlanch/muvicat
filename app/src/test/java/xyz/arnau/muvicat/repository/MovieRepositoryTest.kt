@@ -26,6 +26,8 @@ import xyz.arnau.muvicat.repository.test.MovieMapper
 import xyz.arnau.muvicat.repository.utils.RepoPreferencesHelper
 import xyz.arnau.muvicat.remote.DataUpdateCallback
 import xyz.arnau.muvicat.remote.model.Response
+import xyz.arnau.muvicat.repository.model.MovieWithCast
+import xyz.arnau.muvicat.repository.test.MovieWithCastMapper
 import xyz.arnau.muvicat.utils.AfterCountDownLatch
 import xyz.arnau.muvicat.utils.BeforeCountDownLatch
 import xyz.arnau.muvicat.utils.InstantAppExecutors
@@ -55,8 +57,8 @@ class MovieRepositoryTest {
     private val currentTime = System.currentTimeMillis()
     private val callback = mock(DataUpdateCallback::class.java)
 
-    private val movie = MovieMapper.mapFromMovieEntity(MovieEntityFactory.makeMovieEntity())
-    private val movieLiveData = MutableLiveData<Movie>()
+    private val movieWithCast = MovieWithCastMapper.mapFromMovieEntity(MovieEntityFactory.makeMovieEntity())
+    private val movieWithCastLiveData = MutableLiveData<MovieWithCast>()
 
     @Before
     fun setUp() {
@@ -302,18 +304,18 @@ class MovieRepositoryTest {
 
     @Test
     fun getMovieReturnsMovieLiveDataWithSuccessIfExists() {
-        `when`(movieCache.getMovie(movie.id)).thenReturn(movieLiveData)
-        movieLiveData.postValue(movie)
+        `when`(movieCache.getMovie(movieWithCast.movie.id)).thenReturn(movieWithCastLiveData)
+        movieWithCastLiveData.postValue(movieWithCast)
 
-        val res = movieRepository.getMovie(movie.id).getValueBlocking()
+        val res = movieRepository.getMovie(movieWithCast.movie.id).getValueBlocking()
         assertEquals(Status.SUCCESS, res?.status)
-        assertEquals(movie, res?.data)
+        assertEquals(movieWithCast, res?.data)
     }
 
     @Test
     fun getMovieReturnsMovieLiveDataWithErrorIfDoesNotExist() {
-        `when`(movieCache.getMovie(100.toLong())).thenReturn(movieLiveData)
-        movieLiveData.postValue(null)
+        `when`(movieCache.getMovie(100.toLong())).thenReturn(movieWithCastLiveData)
+        movieWithCastLiveData.postValue(null)
 
         val res = movieRepository.getMovie(100.toLong()).getValueBlocking()
         assertEquals(Status.ERROR, res?.status)
@@ -343,7 +345,7 @@ class MovieRepositoryTest {
     @Test
     fun getMoviesByCinemaReturnsMovieLiveDataWithErrorIfEmptyCache() {
         `when`(movieCache.getMoviesByCinema(100.toLong())).thenReturn(dbMovieLiveData)
-        dbMovieLiveData.postValue(listOf<Movie>())
+        dbMovieLiveData.postValue(listOf())
 
         val res = movieRepository.getMoviesByCinema(100.toLong()).getValueBlocking()
         assertEquals(Status.ERROR, res?.status)

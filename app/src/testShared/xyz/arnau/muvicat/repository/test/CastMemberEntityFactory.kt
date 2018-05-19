@@ -5,6 +5,7 @@ import xyz.arnau.muvicat.cache.model.MovieExtraInfo
 import xyz.arnau.muvicat.cache.model.PostalCodeEntity
 import xyz.arnau.muvicat.utils.DataFactory.Factory.randomDouble
 import xyz.arnau.muvicat.utils.DataFactory.Factory.randomInt
+import xyz.arnau.muvicat.utils.DataFactory.Factory.randomLong
 import xyz.arnau.muvicat.utils.DataFactory.Factory.randomString
 
 class CastMemberEntityFactory {
@@ -12,6 +13,8 @@ class CastMemberEntityFactory {
         private fun makeCastMemberEntity() =
             CastMemberEntity(
                 randomInt(),
+                randomInt(),
+                randomLong(),
                 randomInt(),
                 randomString(),
                 randomString(),

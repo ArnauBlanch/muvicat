@@ -2,12 +2,18 @@ package xyz.arnau.muvicat.repository.model
 
 import android.arch.persistence.room.Embedded
 import android.arch.persistence.room.Relation
-import xyz.arnau.muvicat.cache.model.MovieCastMemberJoin
+import xyz.arnau.muvicat.cache.model.CastMemberEntity
 
-class MovieWithCast {
+data class MovieWithCast(
     @Embedded
-    lateinit var movie :Movie
+    var movie: Movie
+) {
 
-    @Relation(parentColumn = "movie.id", entityColumn = "movieId", entity = MovieCastMemberJoin::class)
-    var castMembers: List<CastMember>? = null
+    @Relation(
+        parentColumn = "id",
+        entityColumn = "movieId",
+        entity = CastMemberEntity::class,
+        projection = ["tmdbId", "order", "name", "character", "profile_path"]
+    )
+    var castMembers: List<CastMember> = listOf()
 }

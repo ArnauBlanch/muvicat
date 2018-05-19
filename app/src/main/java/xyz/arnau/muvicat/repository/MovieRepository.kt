@@ -13,6 +13,7 @@ import xyz.arnau.muvicat.repository.utils.RepoPreferencesHelper
 import xyz.arnau.muvicat.remote.model.Response
 import xyz.arnau.muvicat.remote.model.ResponseStatus.NOT_MODIFIED
 import xyz.arnau.muvicat.remote.model.ResponseStatus.SUCCESSFUL
+import xyz.arnau.muvicat.repository.model.MovieWithCast
 import xyz.arnau.muvicat.utils.AfterCountDownLatch
 import xyz.arnau.muvicat.utils.AppExecutors
 import xyz.arnau.muvicat.utils.BeforeCountDownLatch
@@ -97,9 +98,9 @@ class MovieRepository(
         })
     }
 
-    fun getMovie(id: Long): LiveData<Resource<Movie>> {
+    fun getMovie(id: Long): LiveData<Resource<MovieWithCast>> {
         return Transformations.switchMap(movieCache.getMovie(id), { movie ->
-            val liveData = MutableLiveData<Resource<Movie>>()
+            val liveData = MutableLiveData<Resource<MovieWithCast>>()
             if (movie == null) {
                 liveData.postValue(Resource.error("Movie not found", null))
             } else {
