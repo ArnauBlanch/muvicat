@@ -14,6 +14,7 @@ import xyz.arnau.muvicat.cache.dao.MovieDao
 import xyz.arnau.muvicat.repository.model.Movie
 import xyz.arnau.muvicat.repository.model.MovieWithCast
 import xyz.arnau.muvicat.repository.test.MovieEntityFactory
+import xyz.arnau.muvicat.repository.test.MovieExtraInfoFactory
 import xyz.arnau.muvicat.repository.test.MovieMapper
 import xyz.arnau.muvicat.repository.test.MovieWithCastMapper
 
@@ -68,5 +69,13 @@ class MovieCacheImplTest {
         movieCacheImpl.updateMovies(movies)
 
         verify(movieDao).updateMovieDb(movies)
+    }
+
+    @Test
+    fun addExtraMovieInfoUpdatesInfo() {
+        val extraInfo = MovieExtraInfoFactory.makeExtraInfo()
+        movieCacheImpl.updateExtraMovieInfo(1.toLong(), extraInfo)
+
+        verify(movieDao).addMovieExtraInfo(1.toLong(), extraInfo)
     }
 }

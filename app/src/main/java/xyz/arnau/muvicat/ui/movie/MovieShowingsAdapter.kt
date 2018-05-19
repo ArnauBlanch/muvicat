@@ -1,4 +1,4 @@
-package xyz.arnau.muvicat.ui.showing
+package xyz.arnau.muvicat.ui.movie
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -8,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.ToggleButton
-import kotlinx.android.synthetic.main.movie_info_header.*
 import xyz.arnau.muvicat.R
 import xyz.arnau.muvicat.repository.model.Movie
 import xyz.arnau.muvicat.repository.model.MovieShowing
@@ -50,18 +49,12 @@ class MovieShowingsAdapter @Inject constructor() : RecyclerView.Adapter<Recycler
         if (holder is MovieInfoViewHolder) {
             movie?.let {
                 holder.plot.setVisibleText(movie?.plot)
-                holder.originalTitle.setTextAndVisibleLayout(
-                    movie?.originalTitle, holder.originalTitleLayout
-                )
-                holder.direction.setTextAndVisibleLayout(
-                    movie?.direction, holder.directionLayout
-                )
+                holder.originalTitle.setTextAndVisibleLayout(movie?.originalTitle, holder.originalTitleLayout)
+                holder.direction.setTextAndVisibleLayout(movie?.direction, holder.directionLayout)
                 holder.releaseDate.setTextAndVisibleLayout(
                     movie?.releaseDate?.let { dateFormatter.longDate(it) }, holder.releaseDateLayout
                 )
-                holder.originalLanguage.setTextAndVisibleLayout(
-                    movie?.originalLanguage, holder.originalLanguageLayout
-                )
+                holder.originalLanguage.setTextAndVisibleLayout(movie?.originalLanguage, holder.originalLanguageLayout)
                 holder.cast.setTextAndVisibleLayout(movie?.cast, holder.castLayout)
                 if (showings.isNotEmpty()) {
                     if (expanded)

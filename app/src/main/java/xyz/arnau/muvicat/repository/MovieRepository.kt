@@ -4,16 +4,18 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Transformations
 import xyz.arnau.muvicat.cache.model.MovieEntity
-import xyz.arnau.muvicat.repository.model.Movie
-import xyz.arnau.muvicat.repository.model.Resource
-import xyz.arnau.muvicat.repository.data.GencatRemote
-import xyz.arnau.muvicat.repository.data.MovieCache
-import xyz.arnau.muvicat.repository.utils.NetworkBoundResource
-import xyz.arnau.muvicat.repository.utils.RepoPreferencesHelper
+import xyz.arnau.muvicat.cache.model.MovieExtraInfo
 import xyz.arnau.muvicat.remote.model.Response
 import xyz.arnau.muvicat.remote.model.ResponseStatus.NOT_MODIFIED
 import xyz.arnau.muvicat.remote.model.ResponseStatus.SUCCESSFUL
+import xyz.arnau.muvicat.repository.data.GencatRemote
+import xyz.arnau.muvicat.repository.data.MovieCache
+import xyz.arnau.muvicat.repository.data.TMDBRemote
+import xyz.arnau.muvicat.repository.model.Movie
 import xyz.arnau.muvicat.repository.model.MovieWithCast
+import xyz.arnau.muvicat.repository.model.Resource
+import xyz.arnau.muvicat.repository.utils.NetworkBoundResource
+import xyz.arnau.muvicat.repository.utils.RepoPreferencesHelper
 import xyz.arnau.muvicat.utils.AfterCountDownLatch
 import xyz.arnau.muvicat.utils.AppExecutors
 import xyz.arnau.muvicat.utils.BeforeCountDownLatch
@@ -21,6 +23,7 @@ import xyz.arnau.muvicat.utils.BeforeCountDownLatch
 class MovieRepository(
     private val movieCache: MovieCache,
     private val gencatRemote: GencatRemote,
+    private val tmdbRemote: TMDBRemote,
     private val appExecutors: AppExecutors,
     private val preferencesHelper: RepoPreferencesHelper,
     private val beforeLatch: BeforeCountDownLatch,
@@ -98,15 +101,32 @@ class MovieRepository(
         })
     }
 
-    fun getMovie(id: Long): LiveData<Resource<MovieWithCast>> {
-        return Transformations.switchMap(movieCache.getMovie(id), { movie ->
-            val liveData = MutableLiveData<Resource<MovieWithCast>>()
-            if (movie == null) {
-                liveData.postValue(Resource.error("Movie not found", null))
-            } else {
-                liveData.postValue(Resource.success(movie))
+    fun getMovie(movieId: Long): LiveData<Resource<MovieWithCast>> =
+        object : NetworkBoundResource<MovieWithCast, MovieExtraInfo>(appExecutors) {
+            private var movieTitle: String? = null
+
+            override fun saveResponse(response: Response<MovieExtraInfo>) {
+                if (response.type == SUCCESSFUL) {
+                    response.body!!.let {
+                        movieCache.updateExtraMovieInfo(movieId, it)
+                    }
+                }
             }
-            liveData
-        })
-    }
+
+            override fun loadFromDb(): LiveData<MovieWithCast> {
+                return movieCache.getMovie(movieId)
+            }
+
+            override fun onFetchFailed() {}
+
+            override fun createCall(): LiveData<Response<MovieExtraInfo>> {
+                return tmdbRemote.getMovie(movieTitle!!)
+            }
+
+            override fun shouldFetch(data: MovieWithCast?): Boolean {
+                data?.let { movieTitle = it.movie.title }
+                return data != null
+            }
+
+        }.asLiveData()
 }
