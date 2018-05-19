@@ -102,6 +102,8 @@ dependencies {
     // Retrofit
     implementation 'com.squareup.retrofit2:retrofit:2.4.0'
     implementation 'com.squareup.retrofit2:converter-simplexml:2.4.0'
+    implementation 'com.google.code.gson:gson:2.8.1'
+    implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
     implementation 'com.squareup.okhttp3:okhttp:3.10.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:3.10.0'
     implementation 'com.squareup.retrofit2:adapter-rxjava2:2.3.0'
@@ -118,18 +120,18 @@ dependencies {
     kapt "android.arch.lifecycle:compiler:1.1.1"
 
     // Room (use 1.1.0-beta2 for latest beta)
-    implementation "android.arch.persistence.room:runtime:1.1.0-rc1"
-    kapt "android.arch.persistence.room:compiler:1.1.0-rc1"
+    implementation "android.arch.persistence.room:runtime:1.1.0"
+    kapt "android.arch.persistence.room:compiler:1.1.0"
 
     // Paging
-    implementation "android.arch.paging:runtime:1.0.0-rc1"
+    implementation "android.arch.paging:runtime:1.0.0"
 
     // Test helpers for LiveData
     testImplementation "android.arch.core:core-testing:1.1.1"
     androidTestImplementation "android.arch.core:core-testing:1.1.1"
 
     // Test helpers for Room
-    androidTestImplementation "android.arch.persistence.room:testing:1.1.0-rc1"
+    androidTestImplementation "android.arch.persistence.room:testing:1.1.0"
 
     // Dagger 2
     kapt 'com.google.dagger:dagger-compiler:2.15'
