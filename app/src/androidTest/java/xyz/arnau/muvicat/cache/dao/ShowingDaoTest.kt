@@ -245,7 +245,7 @@ class ShowingDaoTest {
     }
 
     @Test
-    fun updateMovieDbDeletesAndInsertsAsExpected() {
+    fun updateShowingDbDeletesAndInsertsAsExpected() {
         val movies1 = MovieEntityFactory.makeMovieEntityList(3)
         muvicatDatabase.movieDao().insertMovies(movies1)
         val cinemas1 = CinemaEntityFactory.makeCinemaEntityList(3)

@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 5,
-    "identityHash": "a7cdb7dc4765144761faa98f4f2038ba",
+    "identityHash": "4d7c7fb164d3dca78eab1b19ac706f2d",
     "entities": [
       {
         "tableName": "movies",
@@ -347,11 +347,23 @@
       },
       {
         "tableName": "cast_members",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `order` INTEGER, `name` TEXT NOT NULL, `character` TEXT, `profile_path` TEXT, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `tmdbId` INTEGER NOT NULL, `movieId` INTEGER NOT NULL, `order` INTEGER, `name` TEXT NOT NULL, `character` TEXT, `profile_path` TEXT, FOREIGN KEY(`movieId`) REFERENCES `movies`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
             "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "tmdbId",
+            "columnName": "tmdbId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "movieId",
+            "columnName": "movieId",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -384,45 +396,18 @@
           "columnNames": [
             "id"
           ],
-          "autoGenerate": false
+          "autoGenerate": true
         },
         "indices": [
           {
-            "name": "castMemberId",
+            "name": "castMemberMovieId",
             "unique": false,
             "columnNames": [
-              "id"
+              "movieId"
             ],
-            "createSql": "CREATE  INDEX `castMemberId` ON `${TABLE_NAME}` (`id`)"
+            "createSql": "CREATE  INDEX `castMemberMovieId` ON `${TABLE_NAME}` (`movieId`)"
           }
         ],
-        "foreignKeys": []
-      },
-      {
-        "tableName": "movie_cast_member_join",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`movieId` INTEGER NOT NULL, `castMemberId` INTEGER NOT NULL, PRIMARY KEY(`movieId`, `castMemberId`), FOREIGN KEY(`movieId`) REFERENCES `movies`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`castMemberId`) REFERENCES `cast_members`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
-        "fields": [
-          {
-            "fieldPath": "movieId",
-            "columnName": "movieId",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "castMemberId",
-            "columnName": "castMemberId",
-            "affinity": "INTEGER",
-            "notNull": true
-          }
-        ],
-        "primaryKey": {
-          "columnNames": [
-            "movieId",
-            "castMemberId"
-          ],
-          "autoGenerate": false
-        },
-        "indices": [],
         "foreignKeys": [
           {
             "table": "movies",
@@ -434,24 +419,13 @@
             "referencedColumns": [
               "id"
             ]
-          },
-          {
-            "table": "cast_members",
-            "onDelete": "NO ACTION",
-            "onUpdate": "NO ACTION",
-            "columns": [
-              "castMemberId"
-            ],
-            "referencedColumns": [
-              "id"
-            ]
           }
         ]
       }
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"a7cdb7dc4765144761faa98f4f2038ba\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"4d7c7fb164d3dca78eab1b19ac706f2d\")"
     ]
   }
 }

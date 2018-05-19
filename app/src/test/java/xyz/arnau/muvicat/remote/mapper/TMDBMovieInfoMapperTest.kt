@@ -19,7 +19,7 @@ class TMDBMovieInfoMapperTest {
         val searchedMovie = TMDBSearchedMovieFactory.makeTMDBSearchedMovieModel()
         val movie = TMDBMovieFactory.makeTMDBMovieModel()
         searchedMovie.genre_ids = listOf(TMDBMovieInfoMapper.genres.keys.first(), TMDBMovieInfoMapper.genres.keys.last())
-        val genres = listOf(TMDBMovieInfoMapper.genres[0]!!, TMDBMovieInfoMapper.genres[TMDBMovieInfoMapper.genres.size-1]!!)
+        val genres = listOf(TMDBMovieInfoMapper.genres[searchedMovie.genre_ids[0]]!!, TMDBMovieInfoMapper.genres[searchedMovie.genre_ids[1]]!!)
 
         val mappedMovieInfo = movieInfoMapper.mapFromRemote(Pair(searchedMovie, movie))
         assertMovieInfo(searchedMovie, movie, mappedMovieInfo, genres)
@@ -52,7 +52,9 @@ class TMDBMovieInfoMapperTest {
         assertEquals(movie.vote_average, mappedInfo.voteAverage)
         assertEquals(movie.vote_count, mappedInfo.voteCount)
         movie.credits.cast.forEachIndexed { index, castMember ->
-            assertEquals(castMember.id, mappedInfo.cast[index].id)
+            assertEquals(null, mappedInfo.cast[index].id)
+            assertEquals(castMember.id, mappedInfo.cast[index].tmdbId)
+            assertEquals((-1).toLong(), mappedInfo.cast[index].movieId)
             assertEquals(castMember.character, mappedInfo.cast[index].character)
             assertEquals(castMember.name, mappedInfo.cast[index].name)
             assertEquals(castMember.order, mappedInfo.cast[index].order)

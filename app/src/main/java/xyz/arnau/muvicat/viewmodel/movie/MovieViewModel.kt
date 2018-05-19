@@ -8,6 +8,7 @@ import xyz.arnau.muvicat.repository.MovieRepository
 import xyz.arnau.muvicat.repository.ShowingRepository
 import xyz.arnau.muvicat.repository.model.Movie
 import xyz.arnau.muvicat.repository.model.MovieShowing
+import xyz.arnau.muvicat.repository.model.MovieWithCast
 import xyz.arnau.muvicat.repository.model.Resource
 import javax.inject.Inject
 
@@ -17,7 +18,7 @@ class MovieViewModel @Inject constructor(
 ) : ViewModel() {
     private val movieId = MutableLiveData<Long>()
 
-    val movie: LiveData<Resource<Movie>> =
+    val movie: LiveData<Resource<MovieWithCast>> =
         Transformations.switchMap(movieId) { id ->
             movieRepository.getMovie(id)
         }

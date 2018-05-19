@@ -5,8 +5,8 @@ import android.arch.persistence.room.PrimaryKey
 
 @Entity
 data class CastMember(
-    @PrimaryKey
-    val id: Int,
+    val tmdbId: Int,
+    val movieId: Long,
     val order: Int?,
     val name: String,
     val character: String?,

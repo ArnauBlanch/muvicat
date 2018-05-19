@@ -16,7 +16,6 @@ import xyz.arnau.muvicat.cache.db.migrations.DbMigration3to4;
 import xyz.arnau.muvicat.cache.db.migrations.DbMigration4to5;
 import xyz.arnau.muvicat.cache.model.CastMemberEntity;
 import xyz.arnau.muvicat.cache.model.CinemaEntity;
-import xyz.arnau.muvicat.cache.model.MovieCastMemberJoin;
 import xyz.arnau.muvicat.cache.model.MovieEntity;
 import xyz.arnau.muvicat.cache.model.PostalCodeEntity;
 import xyz.arnau.muvicat.cache.model.ShowingEntity;
@@ -25,7 +24,7 @@ import xyz.arnau.muvicat.utils.AppExecutors;
 
 @Database(
         entities = {MovieEntity.class, CinemaEntity.class, PostalCodeEntity.class,
-                ShowingEntity.class, CastMemberEntity.class, MovieCastMemberJoin.class},
+                ShowingEntity.class, CastMemberEntity.class},
         version = 5
 )
 @TypeConverters({DateTypeConverter.class, StringListTypeConverter.class})
