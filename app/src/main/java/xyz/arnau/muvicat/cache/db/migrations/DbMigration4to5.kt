@@ -15,11 +15,11 @@ object DbMigration4to5 : Migration(4, 5) {
 
             execSQL("""
                 CREATE TABLE IF NOT EXISTS `cast_members` (
-                `id` INTEGER PRIMARY KEY AUTOINCREMENT,
                 `tmdbId` INTEGER NOT NULL,
                 `movieId` INTEGER NOT NULL,
                 `order` INTEGER, `name` TEXT NOT NULL,
                 `character` TEXT, `profile_path` TEXT,
+                PRIMARY KEY(`tmdbId`, `movieId`),
                 FOREIGN KEY(`movieId`) REFERENCES `movies`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )
             """)
             execSQL("CREATE  INDEX `castMemberMovieId` ON `cast_members` (`movieId`)")

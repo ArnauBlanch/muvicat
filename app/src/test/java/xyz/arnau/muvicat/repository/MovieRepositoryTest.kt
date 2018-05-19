@@ -89,7 +89,7 @@ class MovieRepositoryTest {
         `when`(gencatRemote.getMovies()).thenReturn(remoteMovieLiveData)
 
         `when`(movieCache.getMovie(movieWithCast.movie.id)).thenReturn(dbMovieWithCastLiveData)
-        `when`(tmdbRemote.getMovie(movieWithCast.movie.title!!)).thenReturn(remoteExtraInfoLiveData)
+        `when`(tmdbRemote.getMovie(movieWithCast.movie.originalTitle!!)).thenReturn(remoteExtraInfoLiveData)
     }
 
     @Test
@@ -357,16 +357,6 @@ class MovieRepositoryTest {
     }
 
     @Test
-    fun getMovieWithNullDbResponse222() {
-        dbMovieWithCastLiveData.postValue(null)
-
-        val res = movieRepository.getMovie(movieWithCast.movie.id).getValueBlocking()
-        assertEquals(Status.SUCCESS, res?.status)
-        assertEquals(null, res?.data)
-        assertEquals(null, res?.message)
-    }
-
-    @Test
     fun getMovieWithNullDbResponse() {
         dbMovieWithCastLiveData.postValue(movieWithCast)
         remoteExtraInfoLiveData.postValue(Response.successful(remoteMovieExtraInfo))
@@ -380,8 +370,6 @@ class MovieRepositoryTest {
 
     @Test
     fun getMovieWithSuccessfulRemoteResponse() {
-        dbMovieWithCastLiveData.postValue(movieWithCast)
-
         val result = movieRepository.getMovie(movieWithCast.movie.id)
         result.observeForever(observer as Observer<Resource<MovieWithCast>>)
 
@@ -396,8 +384,6 @@ class MovieRepositoryTest {
 
     @Test
     fun getMovieWithErrorRemoteResponse() {
-        dbMovieWithCastLiveData.postValue(movieWithCast)
-
         val result = movieRepository.getMovie(movieWithCast.movie.id)
         result.observeForever(observer as Observer<Resource<MovieWithCast>>)
 

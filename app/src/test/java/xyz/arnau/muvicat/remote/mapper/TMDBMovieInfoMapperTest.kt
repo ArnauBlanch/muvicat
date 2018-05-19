@@ -5,6 +5,7 @@ import org.junit.Test
 import xyz.arnau.muvicat.cache.model.CastMemberEntity
 import xyz.arnau.muvicat.cache.model.MovieExtraInfo
 import xyz.arnau.muvicat.remote.model.gencat.GencatShowingResponse
+import xyz.arnau.muvicat.remote.model.tmdb.TMDBCastMember
 import xyz.arnau.muvicat.remote.model.tmdb.TMDBMovie
 import xyz.arnau.muvicat.remote.model.tmdb.TMDBSearchedMovie
 import xyz.arnau.muvicat.remote.test.GencatShowingFactory
@@ -51,8 +52,8 @@ class TMDBMovieInfoMapperTest {
         assertEquals(if (backdropNull) null else searchedMovie.backdrop_path, mappedInfo.backdropUrl)
         assertEquals(movie.vote_average, mappedInfo.voteAverage)
         assertEquals(movie.vote_count, mappedInfo.voteCount)
-        movie.credits.cast.forEachIndexed { index, castMember ->
-            assertEquals(null, mappedInfo.cast[index].id)
+        movie.credits.cast.sortedWith(compareBy<TMDBCastMember> { it.order }.thenBy { it.id }).take(10).
+            forEachIndexed { index, castMember ->
             assertEquals(castMember.id, mappedInfo.cast[index].tmdbId)
             assertEquals((-1).toLong(), mappedInfo.cast[index].movieId)
             assertEquals(castMember.character, mappedInfo.cast[index].character)

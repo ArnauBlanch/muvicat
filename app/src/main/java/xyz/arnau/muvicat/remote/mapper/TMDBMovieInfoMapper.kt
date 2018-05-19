@@ -23,8 +23,8 @@ class TMDBMovieInfoMapper : EntityMapper<Pair<TMDBSearchedMovie, TMDBMovie>, Mov
     }
 
     private fun mapCast(cast: List<TMDBCastMember>): List<CastMemberEntity> {
-        return cast.map { CastMemberEntity(null, it.id,
-            (-1).toLong(), it.order, it.name, it.character, it.profile_path) }
+        return cast.sortedWith(compareBy<TMDBCastMember> { it.order }.thenBy { it.id }).take(10)
+            .map { CastMemberEntity(it.id, (-1).toLong(), it.order, it.name, it.character, it.profile_path) }
     }
 
     private fun parseGenres(genreIds: List<Int>): List<String> {

@@ -10,6 +10,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.simplexml.SimpleXmlConverterFactory
+import xyz.arnau.muvicat.BuildConfig
 import xyz.arnau.muvicat.repository.data.GencatRemote
 import xyz.arnau.muvicat.remote.GencatRemoteImpl
 import xyz.arnau.muvicat.remote.TMDBRemoteImpl
@@ -30,7 +31,6 @@ class RemoteModule {
         return RemotePreferencesHelper(context)
     }
 
-    @Singleton
     @Provides
     fun provideOkHttpClient(httpLoggingInterceptor: HttpLoggingInterceptor): OkHttpClient {
         return OkHttpClient.Builder()
@@ -41,7 +41,6 @@ class RemoteModule {
 
     }
 
-    @Singleton
     @Provides
     fun provideLoggingInterceptor(isDebug: Boolean): HttpLoggingInterceptor {
         val logging = HttpLoggingInterceptor()
@@ -55,7 +54,7 @@ class RemoteModule {
     @Singleton
     @Provides
     fun provideGencatService(): GencatService {
-        return provideGencatService(true)
+        return provideGencatService(BuildConfig.DEBUG)
     }
 
     private fun provideGencatService(isDebug: Boolean): GencatService {
@@ -91,7 +90,7 @@ class RemoteModule {
     @Singleton
     @Provides
     fun provideTMDBService(): TMDBService {
-        return provideTMDBService(true)
+        return provideTMDBService(BuildConfig.DEBUG)
     }
 
     private fun provideTMDBService(isDebug: Boolean): TMDBService {

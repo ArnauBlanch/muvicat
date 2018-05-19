@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 5,
-    "identityHash": "4d7c7fb164d3dca78eab1b19ac706f2d",
+    "identityHash": "42fb736f0d4fcb9b38a71d703074a63a",
     "entities": [
       {
         "tableName": "movies",
@@ -347,14 +347,8 @@
       },
       {
         "tableName": "cast_members",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `tmdbId` INTEGER NOT NULL, `movieId` INTEGER NOT NULL, `order` INTEGER, `name` TEXT NOT NULL, `character` TEXT, `profile_path` TEXT, FOREIGN KEY(`movieId`) REFERENCES `movies`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`tmdbId` INTEGER NOT NULL, `movieId` INTEGER NOT NULL, `order` INTEGER, `name` TEXT NOT NULL, `character` TEXT, `profile_path` TEXT, PRIMARY KEY(`tmdbId`, `movieId`), FOREIGN KEY(`movieId`) REFERENCES `movies`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
-          {
-            "fieldPath": "id",
-            "columnName": "id",
-            "affinity": "INTEGER",
-            "notNull": false
-          },
           {
             "fieldPath": "tmdbId",
             "columnName": "tmdbId",
@@ -394,9 +388,10 @@
         ],
         "primaryKey": {
           "columnNames": [
-            "id"
+            "tmdbId",
+            "movieId"
           ],
-          "autoGenerate": true
+          "autoGenerate": false
         },
         "indices": [
           {
@@ -425,7 +420,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"4d7c7fb164d3dca78eab1b19ac706f2d\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"42fb736f0d4fcb9b38a71d703074a63a\")"
     ]
   }
 }

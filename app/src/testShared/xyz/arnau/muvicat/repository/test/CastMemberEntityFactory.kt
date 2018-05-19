@@ -13,7 +13,6 @@ class CastMemberEntityFactory {
         private fun makeCastMemberEntity() =
             CastMemberEntity(
                 randomInt(),
-                randomInt(),
                 randomLong(),
                 randomInt(),
                 randomString(),

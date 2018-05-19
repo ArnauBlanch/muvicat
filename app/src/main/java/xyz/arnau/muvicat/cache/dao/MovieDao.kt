@@ -124,7 +124,7 @@ abstract class MovieDao {
     @Insert(onConflict = IGNORE)
     abstract fun insertCastMembers(castMembers: List<CastMemberEntity>)
 
-    @Query("SELECT tmdbId, `order`, name, character, profile_path, movieId FROM cast_members ORDER BY id")
+    @Query("SELECT tmdbId, `order`, name, character, profile_path, movieId FROM cast_members ORDER BY tmdbId, movieId")
     abstract fun getCastMembers(): List<CastMember>
 
     @Query("""
