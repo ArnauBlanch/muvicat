@@ -19,6 +19,7 @@ import xyz.arnau.muvicat.utils.getValueBlocking
 import java.util.*
 
 
+@Suppress("DEPRECATION")
 @RunWith(AndroidJUnit4::class)
 class ShowingDaoTest {
     @get:Rule

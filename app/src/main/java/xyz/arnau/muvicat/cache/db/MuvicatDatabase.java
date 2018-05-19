@@ -13,7 +13,10 @@ import xyz.arnau.muvicat.cache.dao.ShowingDao;
 import xyz.arnau.muvicat.cache.db.migrations.DbMigration1to2;
 import xyz.arnau.muvicat.cache.db.migrations.DbMigration2to3;
 import xyz.arnau.muvicat.cache.db.migrations.DbMigration3to4;
+import xyz.arnau.muvicat.cache.db.migrations.DbMigration4to5;
+import xyz.arnau.muvicat.cache.model.CastMemberEntity;
 import xyz.arnau.muvicat.cache.model.CinemaEntity;
+import xyz.arnau.muvicat.cache.model.MovieCastMemberJoin;
 import xyz.arnau.muvicat.cache.model.MovieEntity;
 import xyz.arnau.muvicat.cache.model.PostalCodeEntity;
 import xyz.arnau.muvicat.cache.model.ShowingEntity;
@@ -21,10 +24,11 @@ import xyz.arnau.muvicat.cache.utils.PostalCodeCsvReader;
 import xyz.arnau.muvicat.utils.AppExecutors;
 
 @Database(
-        entities = {MovieEntity.class, CinemaEntity.class, PostalCodeEntity.class, ShowingEntity.class},
-        version = 4
+        entities = {MovieEntity.class, CinemaEntity.class, PostalCodeEntity.class,
+                ShowingEntity.class, CastMemberEntity.class, MovieCastMemberJoin.class},
+        version = 5
 )
-@TypeConverters(DateTypeConverter.class)
+@TypeConverters({DateTypeConverter.class, StringListTypeConverter.class})
 public abstract class MuvicatDatabase extends RoomDatabase {
     private static final String MUVICAT_DB = "muvicat-db";
     private static MuvicatDatabase sInstance = null;
@@ -47,7 +51,8 @@ public abstract class MuvicatDatabase extends RoomDatabase {
 
     private static MuvicatDatabase buildDatabase(Context context, AppExecutors appExecutors) {
         return Room.databaseBuilder(context, MuvicatDatabase.class, MUVICAT_DB)
-                .addMigrations(DbMigration1to2.INSTANCE, DbMigration2to3.INSTANCE, DbMigration3to4.INSTANCE)
+                .addMigrations(DbMigration1to2.INSTANCE, DbMigration2to3.INSTANCE, DbMigration3to4.INSTANCE,
+                        DbMigration4to5.INSTANCE)
                 .addCallback(new PostalCodesDbCallback(context, appExecutors, new PostalCodeCsvReader()))
                 .build();
     }

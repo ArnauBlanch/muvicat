@@ -4,7 +4,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import xyz.arnau.muvicat.cache.model.CinemaEntity
-import xyz.arnau.muvicat.remote.model.GencatCinema
+import xyz.arnau.muvicat.remote.model.gencat.GencatCinema
 import xyz.arnau.muvicat.remote.test.GencatCinemaFactory
 
 class GencatCinemaEntityMapperTest {

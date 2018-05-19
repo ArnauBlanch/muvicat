@@ -1,4 +1,4 @@
-package xyz.arnau.muvicat.remote.model
+package xyz.arnau.muvicat.remote.model.gencat
 
 import org.simpleframework.xml.Element
 import org.simpleframework.xml.Root

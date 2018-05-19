@@ -1,7 +1,7 @@
 package xyz.arnau.muvicat.remote.mapper
 
 import xyz.arnau.muvicat.cache.model.MovieEntity
-import xyz.arnau.muvicat.remote.model.GencatMovieResponse
+import xyz.arnau.muvicat.remote.model.gencat.GencatMovieResponse
 
 class GencatMovieListEntityMapper constructor(private val itemMapper: GencatMovieEntityMapper) :
     EntityMapper<GencatMovieResponse?, List<MovieEntity>?> {

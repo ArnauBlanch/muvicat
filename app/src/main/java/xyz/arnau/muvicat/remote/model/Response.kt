@@ -10,15 +10,15 @@ data class Response<T>(
     val callback: DataUpdateCallback?
 ) {
     companion object {
-        fun <T> successful(body: T?, callback: DataUpdateCallback?): Response<T> {
+        fun <T> successful(body: T?, callback: DataUpdateCallback? = null): Response<T> {
             return Response(body, null, SUCCESSFUL, callback)
         }
 
-        fun <T> error(msg: String?, callback: DataUpdateCallback?): Response<T> {
+        fun <T> error(msg: String?, callback: DataUpdateCallback? = null): Response<T> {
             return Response(null, msg, ERROR, callback)
         }
 
-        fun <T> notModified(callback: DataUpdateCallback?): Response<T> {
+        fun <T> notModified(callback: DataUpdateCallback? = null): Response<T> {
             return Response(null, null, NOT_MODIFIED, callback)
         }
     }
