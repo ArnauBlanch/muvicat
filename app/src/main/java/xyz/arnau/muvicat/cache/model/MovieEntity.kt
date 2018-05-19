@@ -22,5 +22,11 @@ data class MovieEntity(
     var priority: Int?,
     var originalLanguage: String?,
     var ageRating: String?,
-    var trailerUrl: String?
+    var trailerUrl: String?,
+    var tmdbId: Int? = null,
+    var runtime: Int? = null,
+    var genres: List<String>? = null,
+    var backdropUrl: String? = null,
+    var voteAverage: Double? = null,
+    var voteCount: Int? = null
 )

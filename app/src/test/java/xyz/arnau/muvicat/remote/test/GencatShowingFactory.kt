@@ -1,7 +1,7 @@
 package xyz.arnau.muvicat.remote.test
 
-import xyz.arnau.muvicat.remote.model.GencatShowing
-import xyz.arnau.muvicat.remote.model.GencatShowingResponse
+import xyz.arnau.muvicat.remote.model.gencat.GencatShowing
+import xyz.arnau.muvicat.remote.model.gencat.GencatShowingResponse
 import xyz.arnau.muvicat.utils.DataFactory.Factory.randomInt
 import xyz.arnau.muvicat.utils.DataFactory.Factory.randomString
 
@@ -107,7 +107,9 @@ class GencatShowingFactory {
             )
 
         fun makeGencatShowingResponse(count: Int): GencatShowingResponse {
-            return GencatShowingResponse(makeGencatShowingModelList(count))
+            return GencatShowingResponse(
+                makeGencatShowingModelList(count)
+            )
         }
 
         private fun makeGencatShowingModelList(count: Int): List<GencatShowing> {

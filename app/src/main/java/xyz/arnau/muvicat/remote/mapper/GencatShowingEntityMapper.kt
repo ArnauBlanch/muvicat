@@ -2,7 +2,7 @@ package xyz.arnau.muvicat.remote.mapper
 
 import android.annotation.SuppressLint
 import xyz.arnau.muvicat.cache.model.ShowingEntity
-import xyz.arnau.muvicat.remote.model.GencatShowing
+import xyz.arnau.muvicat.remote.model.gencat.GencatShowing
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*

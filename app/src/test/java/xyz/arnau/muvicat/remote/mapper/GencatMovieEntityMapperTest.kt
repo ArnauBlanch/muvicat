@@ -4,7 +4,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import xyz.arnau.muvicat.cache.model.MovieEntity
-import xyz.arnau.muvicat.remote.model.GencatMovie
+import xyz.arnau.muvicat.remote.model.gencat.GencatMovie
 import xyz.arnau.muvicat.remote.test.GencatMovieFactory
 import java.text.SimpleDateFormat
 import java.util.*

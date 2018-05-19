@@ -1,7 +1,7 @@
 package xyz.arnau.muvicat.remote.test
 
-import xyz.arnau.muvicat.remote.model.GencatMovie
-import xyz.arnau.muvicat.remote.model.GencatMovieResponse
+import xyz.arnau.muvicat.remote.model.gencat.GencatMovie
+import xyz.arnau.muvicat.remote.model.gencat.GencatMovieResponse
 import xyz.arnau.muvicat.utils.DataFactory.Factory.randomInt
 import xyz.arnau.muvicat.utils.DataFactory.Factory.randomString
 
@@ -35,7 +35,7 @@ class GencatMovieFactory {
                 "--",
                 "--",
                 "--",
-                randomInt(), // TODO: test if priority is not an integer (i.e. "--")
+                randomInt(),
                 "--",
                 "--",
                 "--"
@@ -52,7 +52,7 @@ class GencatMovieFactory {
                 "",
                 "",
                 "",
-                randomInt(), // TODO: test if priority is not an integer (i.e. "--")
+                randomInt(),
                 "",
                 "",
                 ""
@@ -76,7 +76,9 @@ class GencatMovieFactory {
             )
 
         fun makeGencatMovieResponse(count: Int): GencatMovieResponse {
-            return GencatMovieResponse(makeGencatMovieModelList(count))
+            return GencatMovieResponse(
+                makeGencatMovieModelList(count)
+            )
         }
 
         private fun makeGencatMovieModelList(count: Int): List<GencatMovie> {

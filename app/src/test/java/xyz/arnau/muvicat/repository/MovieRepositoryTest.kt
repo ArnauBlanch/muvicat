@@ -15,17 +15,19 @@ import org.junit.runners.JUnit4
 import org.mockito.Mockito
 import org.mockito.Mockito.*
 import xyz.arnau.muvicat.cache.model.MovieEntity
-import xyz.arnau.muvicat.repository.MovieRepository.Companion.EXPIRATION_TIME
-import xyz.arnau.muvicat.repository.model.Movie
-import xyz.arnau.muvicat.repository.model.Resource
-import xyz.arnau.muvicat.repository.model.Status
-import xyz.arnau.muvicat.repository.data.GencatRemote
-import xyz.arnau.muvicat.repository.data.MovieCache
-import xyz.arnau.muvicat.repository.test.MovieEntityFactory
-import xyz.arnau.muvicat.repository.test.MovieMapper
-import xyz.arnau.muvicat.repository.utils.RepoPreferencesHelper
+import xyz.arnau.muvicat.cache.model.MovieExtraInfo
 import xyz.arnau.muvicat.remote.DataUpdateCallback
 import xyz.arnau.muvicat.remote.model.Response
+import xyz.arnau.muvicat.repository.MovieRepository.Companion.EXPIRATION_TIME
+import xyz.arnau.muvicat.repository.data.GencatRemote
+import xyz.arnau.muvicat.repository.data.MovieCache
+import xyz.arnau.muvicat.repository.data.TMDBRemote
+import xyz.arnau.muvicat.repository.model.Movie
+import xyz.arnau.muvicat.repository.model.MovieWithCast
+import xyz.arnau.muvicat.repository.model.Resource
+import xyz.arnau.muvicat.repository.model.Status
+import xyz.arnau.muvicat.repository.test.*
+import xyz.arnau.muvicat.repository.utils.RepoPreferencesHelper
 import xyz.arnau.muvicat.utils.AfterCountDownLatch
 import xyz.arnau.muvicat.utils.BeforeCountDownLatch
 import xyz.arnau.muvicat.utils.InstantAppExecutors
@@ -38,14 +40,24 @@ class MovieRepositoryTest {
 
     private val movieCache = mock(MovieCache::class.java)
     private val gencatRemote = mock(GencatRemote::class.java)
+    private val tmdbRemote = mock(TMDBRemote::class.java)
     private val appExecutors = InstantAppExecutors()
     private val preferencesHelper = mock(RepoPreferencesHelper::class.java)
     private val beforeLatch = mock(BeforeCountDownLatch::class.java)
     private val afterLatch = mock(AfterCountDownLatch::class.java)
-    private val movieRepository = MovieRepository(movieCache, gencatRemote, appExecutors, preferencesHelper, beforeLatch, afterLatch)
+    private val movieRepository = MovieRepository(
+        movieCache,
+        gencatRemote,
+        tmdbRemote,
+        appExecutors,
+        preferencesHelper,
+        beforeLatch,
+        afterLatch
+    )
 
-    private val dbMovieLiveData = MutableLiveData<List<Movie>>()
-    private val dbMovies = MovieMapper.mapFromMovieEntityList(MovieEntityFactory.makeMovieEntityList(3))
+    private val dbMoviesLiveData = MutableLiveData<List<Movie>>()
+    private val dbMovies =
+        MovieMapper.mapFromMovieEntityList(MovieEntityFactory.makeMovieEntityList(3))
 
     private val remoteMovieLiveData = MutableLiveData<Response<List<MovieEntity>>>()
     private val remoteMovies = MovieEntityFactory.makeMovieEntityList(3)
@@ -55,18 +67,34 @@ class MovieRepositoryTest {
     private val currentTime = System.currentTimeMillis()
     private val callback = mock(DataUpdateCallback::class.java)
 
-    private val movie = MovieMapper.mapFromMovieEntity(MovieEntityFactory.makeMovieEntity())
-    private val movieLiveData = MutableLiveData<Movie>()
+    private val remoteExtraInfoLiveData = MutableLiveData<Response<MovieExtraInfo>>()
+    private val remoteMovieExtraInfo = MovieExtraInfoFactory.makeExtraInfo()
+
+    private var movieWithCast =
+        MovieWithCastMapper.mapFromMovieEntity(MovieEntityFactory.makeMovieEntity())
+    private var updatedMovieWithCast = movieWithCast.apply {
+        this.castMembers = CastMemberMapper.mapFromCastMemberEntityList(remoteMovieExtraInfo.cast)
+        this.movie.tmdbId = remoteMovieExtraInfo.tmdbId
+        this.movie.runtime = remoteMovieExtraInfo.runtime
+        this.movie.genres = remoteMovieExtraInfo.genres
+        this.movie.backdropUrl = remoteMovieExtraInfo.backdropUrl
+        this.movie.voteAverage = remoteMovieExtraInfo.voteAverage
+        this.movie.voteCount = remoteMovieExtraInfo.voteCount
+    }
+    private val dbMovieWithCastLiveData = MutableLiveData<MovieWithCast>()
 
     @Before
     fun setUp() {
-        `when`(movieCache.getMovies()).thenReturn(dbMovieLiveData)
+        `when`(movieCache.getMovies()).thenReturn(dbMoviesLiveData)
         `when`(gencatRemote.getMovies()).thenReturn(remoteMovieLiveData)
+
+        `when`(movieCache.getMovie(movieWithCast.movie.id)).thenReturn(dbMovieWithCastLiveData)
+        `when`(tmdbRemote.getMovie(movieWithCast.movie.originalTitle!!)).thenReturn(remoteExtraInfoLiveData)
     }
 
     @Test
     fun getMoviesWhenMoviesAreCachedAndNotExpired() {
-        dbMovieLiveData.postValue(dbMovies)
+        dbMoviesLiveData.postValue(dbMovies)
         `when`(preferencesHelper.movieslastUpdateTime).thenReturn(currentTime - 5000)
 
         val movies = movieRepository.getMovies()
@@ -78,7 +106,7 @@ class MovieRepositoryTest {
         verify(beforeLatch).countDown()
         verify(gencatRemote, never()).getMovies()
     }
-    
+
 
     @Test
     fun getMoviesWhenMoviesAreCachedButExpiredSuccesfulWithCallback() {
@@ -87,9 +115,9 @@ class MovieRepositoryTest {
         val movies = movieRepository.getMovies()
         movies.observeForever(observer as Observer<Resource<List<Movie>>>)
 
-        dbMovieLiveData.postValue(dbMovies)
+        dbMoviesLiveData.postValue(dbMovies)
         remoteMovieLiveData.postValue(Response.successful(remoteMovies, callback))
-        dbMovieLiveData.postValue(remoteMoviesMapped)
+        dbMoviesLiveData.postValue(remoteMoviesMapped)
 
         verify(observer).onChanged(Resource.loading(dbMovies))
         verify(observer).onChanged(Resource.success(remoteMoviesMapped))
@@ -107,9 +135,9 @@ class MovieRepositoryTest {
         val movies = movieRepository.getMovies()
         movies.observeForever(observer as Observer<Resource<List<Movie>>>)
 
-        dbMovieLiveData.postValue(dbMovies)
+        dbMoviesLiveData.postValue(dbMovies)
         remoteMovieLiveData.postValue(Response.successful(remoteMovies, null))
-        dbMovieLiveData.postValue(remoteMoviesMapped)
+        dbMoviesLiveData.postValue(remoteMoviesMapped)
 
         verify(observer).onChanged(Resource.loading(dbMovies))
         verify(observer).onChanged(Resource.success(remoteMoviesMapped))
@@ -126,9 +154,9 @@ class MovieRepositoryTest {
         val movies = movieRepository.getMovies()
         movies.observeForever(observer as Observer<Resource<List<Movie>>>)
 
-        dbMovieLiveData.postValue(dbMovies)
+        dbMoviesLiveData.postValue(dbMovies)
         remoteMovieLiveData.postValue(Response.successful(remoteMovies, null))
-        dbMovieLiveData.postValue(remoteMoviesMapped)
+        dbMoviesLiveData.postValue(remoteMoviesMapped)
 
         verify(observer).onChanged(Resource.loading(dbMovies))
         verify(observer).onChanged(Resource.success(remoteMoviesMapped))
@@ -162,7 +190,7 @@ class MovieRepositoryTest {
         val movies = movieRepository.getMovies()
         movies.observeForever(observer as Observer<Resource<List<Movie>>>)
 
-        dbMovieLiveData.postValue(dbMovies)
+        dbMoviesLiveData.postValue(dbMovies)
         remoteMovieLiveData.postValue(Response.notModified(callback))
 
         verify(observer).onChanged(Resource.loading(dbMovies))
@@ -181,7 +209,7 @@ class MovieRepositoryTest {
         val movies = movieRepository.getMovies()
         movies.observeForever(observer as Observer<Resource<List<Movie>>>)
 
-        dbMovieLiveData.postValue(dbMovies)
+        dbMoviesLiveData.postValue(dbMovies)
         remoteMovieLiveData.postValue(Response.error("error msg", callback))
 
         verify(observer).onChanged(Resource.loading(dbMovies))
@@ -200,7 +228,7 @@ class MovieRepositoryTest {
         val movies = movieRepository.getMovies()
         movies.observeForever(observer as Observer<Resource<List<Movie>>>)
 
-        dbMovieLiveData.postValue(dbMovies)
+        dbMoviesLiveData.postValue(dbMovies)
         remoteMovieLiveData.postValue(Response.error("error msg", callback))
 
         verify(observer).onChanged(Resource.loading(dbMovies))
@@ -233,9 +261,9 @@ class MovieRepositoryTest {
         val movies = movieRepository.getMovies()
         movies.observeForever(observer as Observer<Resource<List<Movie>>>)
 
-        dbMovieLiveData.postValue(null)
+        dbMoviesLiveData.postValue(null)
         remoteMovieLiveData.postValue(Response.successful(remoteMovies, callback))
-        dbMovieLiveData.postValue(remoteMoviesMapped)
+        dbMoviesLiveData.postValue(remoteMoviesMapped)
 
         verify(observer).onChanged(Resource.loading(null))
         verify(observer).onChanged(Resource.success(remoteMoviesMapped))
@@ -251,9 +279,9 @@ class MovieRepositoryTest {
         val movies = movieRepository.getMovies()
         movies.observeForever(observer as Observer<Resource<List<Movie>>>)
 
-        dbMovieLiveData.postValue(listOf())
+        dbMoviesLiveData.postValue(listOf())
         remoteMovieLiveData.postValue(Response.successful(remoteMovies, callback))
-        dbMovieLiveData.postValue(remoteMoviesMapped)
+        dbMoviesLiveData.postValue(remoteMoviesMapped)
 
         verify(observer).onChanged(Resource.loading(listOf()))
         verify(observer).onChanged(Resource.success(remoteMoviesMapped))
@@ -268,7 +296,7 @@ class MovieRepositoryTest {
     fun getMoviesWhenMoviesAreNotCachedSucessfulWithNullResponseBody() {
         val movies = movieRepository.getMovies()
         movies.observeForever(observer as Observer<Resource<List<Movie>>>)
-        dbMovieLiveData.postValue(listOf())
+        dbMoviesLiveData.postValue(listOf())
 
         remoteMovieLiveData.postValue(Response.successful(null, callback))
 
@@ -285,7 +313,7 @@ class MovieRepositoryTest {
     fun getMoviesWhenMoviesAreNotCachedError() {
         val movies = movieRepository.getMovies()
         movies.observeForever(observer as Observer<Resource<List<Movie>>>)
-        dbMovieLiveData.postValue(listOf())
+        dbMoviesLiveData.postValue(listOf())
 
         remoteMovieLiveData.postValue(Response.error("error msg", callback))
 
@@ -298,32 +326,10 @@ class MovieRepositoryTest {
         verify(movieCache, never()).updateMovies(remoteMovies)
     }
 
-
-
-    @Test
-    fun getMovieReturnsMovieLiveDataWithSuccessIfExists() {
-        `when`(movieCache.getMovie(movie.id)).thenReturn(movieLiveData)
-        movieLiveData.postValue(movie)
-
-        val res = movieRepository.getMovie(movie.id).getValueBlocking()
-        assertEquals(Status.SUCCESS, res?.status)
-        assertEquals(movie, res?.data)
-    }
-
-    @Test
-    fun getMovieReturnsMovieLiveDataWithErrorIfDoesNotExist() {
-        `when`(movieCache.getMovie(100.toLong())).thenReturn(movieLiveData)
-        movieLiveData.postValue(null)
-
-        val res = movieRepository.getMovie(100.toLong()).getValueBlocking()
-        assertEquals(Status.ERROR, res?.status)
-        assertEquals(null, res?.data)
-    }
-
     @Test
     fun getMoviesByCinemaReturnsMovieLiveDataWithSuccessIfExists() {
-        `when`(movieCache.getMoviesByCinema(100.toLong())).thenReturn(dbMovieLiveData)
-        dbMovieLiveData.postValue(dbMovies)
+        `when`(movieCache.getMoviesByCinema(100.toLong())).thenReturn(dbMoviesLiveData)
+        dbMoviesLiveData.postValue(dbMovies)
 
         val res = movieRepository.getMoviesByCinema(100.toLong()).getValueBlocking()
         assertEquals(Status.SUCCESS, res?.status)
@@ -332,8 +338,8 @@ class MovieRepositoryTest {
 
     @Test
     fun getMoviesByCinemaReturnsMovieLiveDataWithErrorIfNullCache() {
-        `when`(movieCache.getMoviesByCinema(100.toLong())).thenReturn(dbMovieLiveData)
-        dbMovieLiveData.postValue(null)
+        `when`(movieCache.getMoviesByCinema(100.toLong())).thenReturn(dbMoviesLiveData)
+        dbMoviesLiveData.postValue(null)
 
         val res = movieRepository.getMoviesByCinema(100.toLong()).getValueBlocking()
         assertEquals(Status.ERROR, res?.status)
@@ -342,14 +348,53 @@ class MovieRepositoryTest {
 
     @Test
     fun getMoviesByCinemaReturnsMovieLiveDataWithErrorIfEmptyCache() {
-        `when`(movieCache.getMoviesByCinema(100.toLong())).thenReturn(dbMovieLiveData)
-        dbMovieLiveData.postValue(listOf<Movie>())
+        `when`(movieCache.getMoviesByCinema(100.toLong())).thenReturn(dbMoviesLiveData)
+        dbMoviesLiveData.postValue(listOf())
 
         val res = movieRepository.getMoviesByCinema(100.toLong()).getValueBlocking()
         assertEquals(Status.ERROR, res?.status)
         assertEquals(listOf<Movie>(), res?.data)
     }
 
+    @Test
+    fun getMovieWithNullDbResponse() {
+        dbMovieWithCastLiveData.postValue(movieWithCast)
+        remoteExtraInfoLiveData.postValue(Response.successful(remoteMovieExtraInfo))
+
+        val res = movieRepository.getMovie(movieWithCast.movie.id).getValueBlocking()
+
+        assertEquals(Status.SUCCESS, res?.status)
+        assertEquals(movieWithCast, res?.data)
+        assertEquals(null, res?.message)
+    }
+
+    @Test
+    fun getMovieWithSuccessfulRemoteResponse() {
+        val result = movieRepository.getMovie(movieWithCast.movie.id)
+        result.observeForever(observer as Observer<Resource<MovieWithCast>>)
+
+        dbMovieWithCastLiveData.postValue(movieWithCast)
+        verify(observer).onChanged(Resource.loading(movieWithCast))
+
+        remoteExtraInfoLiveData.postValue(Response.successful(remoteMovieExtraInfo))
+        verify(observer).onChanged(Resource.success(updatedMovieWithCast))
+
+        verify(movieCache).updateExtraMovieInfo(movieWithCast.movie.id, remoteMovieExtraInfo)
+    }
+
+    @Test
+    fun getMovieWithErrorRemoteResponse() {
+        val result = movieRepository.getMovie(movieWithCast.movie.id)
+        result.observeForever(observer as Observer<Resource<MovieWithCast>>)
+
+        dbMovieWithCastLiveData.postValue(movieWithCast)
+        verify(observer).onChanged(Resource.loading(movieWithCast))
+
+        remoteExtraInfoLiveData.postValue(Response.error("error msg"))
+        verify(observer).onChanged(Resource.error("error msg", movieWithCast))
+
+        verify(movieCache, never()).updateExtraMovieInfo(movieWithCast.movie.id, remoteMovieExtraInfo)
+    }
 
     @Test
     fun hasExpiredReturnsTrueIfExpired() {

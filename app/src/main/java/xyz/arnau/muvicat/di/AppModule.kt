@@ -9,10 +9,7 @@ import dagger.Provides
 import xyz.arnau.muvicat.repository.CinemaRepository
 import xyz.arnau.muvicat.repository.MovieRepository
 import xyz.arnau.muvicat.repository.ShowingRepository
-import xyz.arnau.muvicat.repository.data.CinemaCache
-import xyz.arnau.muvicat.repository.data.GencatRemote
-import xyz.arnau.muvicat.repository.data.MovieCache
-import xyz.arnau.muvicat.repository.data.ShowingCache
+import xyz.arnau.muvicat.repository.data.*
 import xyz.arnau.muvicat.repository.utils.RepoPreferencesHelper
 import xyz.arnau.muvicat.utils.AfterCountDownLatch
 import xyz.arnau.muvicat.utils.AppExecutors
@@ -55,13 +52,14 @@ class AppModule {
     @Singleton
     @Provides
     fun provideMovieRepository(
-        movieCache: MovieCache, gencatRemote: GencatRemote,
+        movieCache: MovieCache, gencatRemote: GencatRemote, tmdbRemote: TMDBRemote,
         appExecutors: AppExecutors, preferencesHelper: RepoPreferencesHelper,
         beforeLatch: BeforeCountDownLatch, afterLatch: AfterCountDownLatch
     ): MovieRepository {
         return MovieRepository(
             movieCache,
             gencatRemote,
+            tmdbRemote,
             appExecutors,
             preferencesHelper,
             beforeLatch,

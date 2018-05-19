@@ -127,11 +127,11 @@
 
     <LinearLayout
         android:id="@+id/movieCastLayout"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
-        android:orientation="vertical"
-        android:visibility="gone">
+        android:visibility="gone"
+        android:orientation="vertical">
 
         <TextView
             android:layout_width="wrap_content"
@@ -148,6 +148,17 @@
             android:layout_height="wrap_content"
             android:textSize="15sp" />
 
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/castRecyclerView"
+            android:layout_marginTop="10dp"
+            android:scrollbars="horizontal"
+            android:nestedScrollingEnabled="false"
+            android:scrollbarSize="2dp"
+            android:fadeScrollbars="true"
+            android:scrollbarDefaultDelayBeforeFade="1000"
+            android:scrollbarFadeDuration="400"
+            android:layout_width="wrap_content"
+            android:layout_height="200dp"/>
     </LinearLayout>
 
     <RelativeLayout

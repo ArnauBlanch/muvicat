@@ -12,8 +12,11 @@ import org.junit.runners.JUnit4
 import org.mockito.Mockito.*
 import xyz.arnau.muvicat.cache.dao.MovieDao
 import xyz.arnau.muvicat.repository.model.Movie
+import xyz.arnau.muvicat.repository.model.MovieWithCast
 import xyz.arnau.muvicat.repository.test.MovieEntityFactory
+import xyz.arnau.muvicat.repository.test.MovieExtraInfoFactory
 import xyz.arnau.muvicat.repository.test.MovieMapper
+import xyz.arnau.muvicat.repository.test.MovieWithCastMapper
 
 
 @RunWith(JUnit4::class)
@@ -51,13 +54,13 @@ class MovieCacheImplTest {
 
     @Test
     fun getMovieReturnsMovie() {
-        val movie = MovieMapper.mapFromMovieEntity(MovieEntityFactory.makeMovieEntity())
-        val movieLiveData = MutableLiveData<Movie>()
-        movieLiveData.value = movie
-        `when`(movieDao.getMovie(movie.id)).thenReturn(movieLiveData)
-        val movieFromCache = movieCacheImpl.getMovie(movie.id)
-        verify(movieDao).getMovie(movie.id)
-        assertEquals(movie, movieFromCache.value)
+        val movieWithCast = MovieWithCastMapper.mapFromMovieEntity(MovieEntityFactory.makeMovieEntity())
+        val movieWithCastLiveData = MutableLiveData<MovieWithCast>()
+        movieWithCastLiveData.value = movieWithCast
+        `when`(movieDao.getMovie(movieWithCast.movie.id)).thenReturn(movieWithCastLiveData)
+        val movieFromCache = movieCacheImpl.getMovie(movieWithCast.movie.id)
+        verify(movieDao).getMovie(movieWithCast.movie.id)
+        assertEquals(movieWithCast, movieFromCache.value)
     }
 
     @Test
@@ -66,5 +69,13 @@ class MovieCacheImplTest {
         movieCacheImpl.updateMovies(movies)
 
         verify(movieDao).updateMovieDb(movies)
+    }
+
+    @Test
+    fun addExtraMovieInfoUpdatesInfo() {
+        val extraInfo = MovieExtraInfoFactory.makeExtraInfo()
+        movieCacheImpl.updateExtraMovieInfo(1.toLong(), extraInfo)
+
+        verify(movieDao).addMovieExtraInfo(1.toLong(), extraInfo)
     }
 }
