@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:layout_margin="4dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+    <com.santalu.aspectratioimageview.AspectRatioImageView
+        android:id="@+id/castMemberImage"
+        android:layout_weight="1"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        app:ari_aspect="width"
+        android:background="@color/skeleton_light"
+        android:layout_marginBottom="4dp"
+        app:ari_ratio="0.7"/>
+    <TextView
+        android:id="@+id/castMemberName"
+        android:text=" "
+        android:fontFamily="@font/nunito_sans_extrabold"
+        android:textColor="@android:color/black"
+        android:ellipsize="marquee"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:singleLine="true" />
+    <TextView
+        android:id="@+id/castMemberCharacter"
+        android:text=" "
+        android:fontFamily="@font/nunito_sans"
+        android:textColor="@color/grey"
+        android:ellipsize="marquee"
+        android:textSize="12sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:singleLine="true" />
+</LinearLayout>

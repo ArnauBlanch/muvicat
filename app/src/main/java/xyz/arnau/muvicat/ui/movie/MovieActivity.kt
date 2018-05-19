@@ -72,42 +72,45 @@ class MovieActivity : LocationAwareActivity() {
     }
 
     private fun handleMovieDataState(movieRes: Resource<MovieWithCast>) {
-        when (movieRes.status) {
-            Status.SUCCESS -> {
-                val movieWithCast = movieRes.data
-                if (movieWithCast != null) {
-                    val movie = movieWithCast.movie
-                    setupToolbar(movieWithCast.movie)
-
-                    GlideApp.with(context)
-                        .load("http://www.gencat.cat/llengua/cinema/${movie.posterUrl}")
-                        .error(R.drawable.poster_placeholder)
-                        .centerCrop()
-                        .into(moviePoster)
-                    movieTitle.text = movie.title
-
-                    if (movie.year != null && movie.genres != null && movie.genres!!.isEmpty())
-                        movieYearGenreSeparator.setVisible()
-                    if (movie.runtime != null && movie.ageRating != null)
-                        movieRuntimeAgeRatingSeparator.setVisible()
-
-                    movieAgeRating.setVisibleText(movie.ageRating)
-                    movieYear.setVisibleText(movie.year?.toString())
-                    movieRuntime.setVisibleText(parseRuntime(movie.runtime))
-                    movieGenre.setVisibleText(parseGenres(movie.genres))
-
-                    GlideApp.with(context)
-                        .load("https://image.tmdb.org/t/p/w1280${movie.backdropUrl}")
-                        .centerCrop()
-                        .into(movieBackdrop)
-
-                    infoAndShowingsAdapter.movie = movie
-                    infoAndShowingsAdapter.notifyDataSetChanged()
-                }
-            }
-            Status.ERROR -> finish()
-            Status.LOADING -> return
+        val movieWithCast = movieRes.data
+        if (movieWithCast != null) {
+            infoAndShowingsAdapter.castMembers = movieWithCast.castMembers.sortedBy { it.order }
+            processMovie(movieWithCast.movie)
         }
+        if (movieRes.status == Status.ERROR) {
+            if (movieRes.data == null)
+                finish()
+            movieWithCast?.movie?.let { processMovie(it) }
+        }
+    }
+
+    private fun processMovie(movie: Movie) {
+        setupToolbar(movie)
+
+        GlideApp.with(context)
+            .load("http://www.gencat.cat/llengua/cinema/${movie.posterUrl}")
+            .error(R.drawable.poster_placeholder)
+            .centerCrop()
+            .into(moviePoster)
+        movieTitle.text = movie.title
+
+        if (movie.year != null && movie.genres != null && movie.genres!!.isNotEmpty())
+            movieYearGenreSeparator.setVisible()
+        if (movie.runtime != null && movie.ageRating != null)
+            movieRuntimeAgeRatingSeparator.setVisible()
+
+        movieAgeRating.setVisibleText(movie.ageRating)
+        movieYear.setVisibleText(movie.year?.toString())
+        movieRuntime.setVisibleText(parseRuntime(movie.runtime))
+        movieGenre.setVisibleText(parseGenres(movie.genres))
+
+        GlideApp.with(context)
+            .load("https://image.tmdb.org/t/p/w1280${movie.backdropUrl}")
+            .centerCrop()
+            .into(movieBackdrop)
+
+        infoAndShowingsAdapter.movie = movie
+        infoAndShowingsAdapter.notifyDataSetChanged()
     }
 
     private fun parseGenres(genres: List<String>?): String? {

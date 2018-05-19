@@ -124,7 +124,7 @@ class MovieRepository(
             }
 
             override fun shouldFetch(data: MovieWithCast?): Boolean {
-                data?.let { movieTitle = it.movie.title }
+                data?.let { movieTitle = it.movie.originalTitle }
                 return data != null
             }
 

@@ -8,6 +8,7 @@ import android.arch.persistence.room.PrimaryKey
 
 @Entity(
     tableName = "cast_members", indices = [(Index(value = ["movieId"], name = "castMemberMovieId"))],
+    primaryKeys = ["tmdbId", "movieId"],
     foreignKeys = [ForeignKey(
         entity = MovieEntity::class,
         parentColumns = ["id"],
@@ -16,8 +17,6 @@ import android.arch.persistence.room.PrimaryKey
     )]
 )
 data class CastMemberEntity(
-    @PrimaryKey(autoGenerate = true)
-    var id: Int?,
     val tmdbId: Int,
     var movieId: Long,
     val order: Int?,

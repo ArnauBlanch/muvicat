@@ -261,9 +261,6 @@ class MovieDaoTest {
         castMembers.forEachIndexed { index, castMemberEntity ->
             castMemberEntity.movieId = movies1[index].id
         }
-        castMembers.forEachIndexed { index, castMemberEntity ->
-            castMemberEntity.id = index
-        }
         muvicatDatabase.movieDao().insertCastMembers(castMembers)
 
         val updatedMovies = MovieEntityFactory.makeMovieEntityList(3)
@@ -283,7 +280,8 @@ class MovieDaoTest {
         )
 
         assertEquals(
-            CastMemberMapper.mapFromCastMemberEntityList(castMembers.subList(0, 4).sortedBy { it.id }),
+            CastMemberMapper.mapFromCastMemberEntityList(castMembers.subList(0, 4).sortedWith(
+                compareBy<CastMemberEntity> { it.tmdbId }.thenBy { it.movieId })),
             muvicatDatabase.movieDao().getCastMembers()
         )
     }
