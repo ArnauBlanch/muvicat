@@ -2,16 +2,19 @@ package xyz.arnau.muvicat.ui.movie
 
 import android.annotation.SuppressLint
 import android.arch.lifecycle.Observer
+import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.location.Location
+import android.net.Uri
 import android.os.Bundle
 import android.support.design.widget.AppBarLayout
 import android.support.design.widget.Snackbar
 import android.support.v4.content.res.ResourcesCompat
 import android.support.v7.widget.LinearLayoutManager
+import com.google.android.youtube.player.YouTubeIntents
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.movie_info.*
 import xyz.arnau.muvicat.R
@@ -20,7 +23,6 @@ import xyz.arnau.muvicat.ui.LocationAwareActivity
 import xyz.arnau.muvicat.ui.SimpleDividerItemDecoration
 import xyz.arnau.muvicat.utils.*
 import xyz.arnau.muvicat.viewmodel.movie.MovieViewModel
-import java.math.BigDecimal
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
 import java.util.*
@@ -123,7 +125,7 @@ class MovieActivity : LocationAwareActivity() {
                     } else {
                         tmdbRatingLayout.setVisible()
                         movieVoteAverage.text =
-                                "${movie.voteAverage!!.div(2).toString1Decimal()} / 5"
+                                "${movie.voteAverage!!.div(2).toString1Decimal()}/5"
                         movieVoteCount.text = parseVoteCount(movie.voteCount!!)
                         movieVoteStars.rating = movie.voteAverage!!.div(2).toFloat()
                     }
@@ -131,11 +133,21 @@ class MovieActivity : LocationAwareActivity() {
             }
         }
 
+        movie.trailerUrl?.let { videoId ->
+            playTrailer.setVisible()
+            playTrailer.setOnClickListener { watchYoutubeVideo(this, videoId) }
+        }
 
-        GlideApp.with(context)
-            .load("https://image.tmdb.org/t/p/w1280${movie.backdropUrl}")
-            .centerCrop()
-            .into(movieBackdrop)
+        if (movie.backdropUrl != null || movie.trailerUrl != null) {
+            val url = if (movie.backdropUrl != null)
+                "https://image.tmdb.org/t/p/w1280${movie.backdropUrl}"
+            else
+                "https://img.youtube.com/vi/${movie.trailerUrl}/maxresdefault.jpg"
+            GlideApp.with(context)
+                .load(url)
+                .centerCrop()
+                .into(movieBackdrop)
+        }
 
         infoAndShowingsAdapter.movie = movie
         infoAndShowingsAdapter.notifyDataSetChanged()
@@ -145,7 +157,9 @@ class MovieActivity : LocationAwareActivity() {
         return when {
             voteCount == 1 -> return "1 ${getString(R.string.vote)}"
             voteCount < 1000 -> "$voteCount ${getString(R.string.votes)}"
-            voteCount < 1000000 -> "${(voteCount / 100).toDouble() / 10}m ${getString(R.string.votes)}"
+            voteCount < 1000000 -> "${((voteCount / 100).toDouble() / 10).toString1Decimal()}m ${getString(
+                R.string.votes
+            )}"
             else -> "${(voteCount / 100000).toDouble() / 10}M ${getString(R.string.votes)}"
         }
     }
@@ -262,12 +276,31 @@ class MovieActivity : LocationAwareActivity() {
         }
     }
 
+    private fun watchYoutubeVideo(context: Context, id: String) {
+        try {
+            context.startActivity(
+                YouTubeIntents.createPlayVideoIntentWithOptions(this, id, true, true)
+            )
+        } catch (ex: ActivityNotFoundException) {
+            context.startActivity(
+                Intent(Intent.ACTION_VIEW, Uri.parse("https://www.youtube.com/watch?v=$id"))
+            )
+        }
+
+    }
+
+
     companion object {
         private const val MOVIE_ID = "movie_id"
         private const val SHOWING_ID = "showing_id"
         private const val CINEMA_ID = "cinema_id"
 
-        fun createIntent(context: Context, movieId: Long, showingId: Long? = null, cinemaId: Long? = null): Intent {
+        fun createIntent(
+            context: Context,
+            movieId: Long,
+            showingId: Long? = null,
+            cinemaId: Long? = null
+        ): Intent {
             return Intent(context, MovieActivity::class.java).apply {
                 putExtra(MOVIE_ID, movieId)
                 showingId?.let { putExtra(SHOWING_ID, showingId) }
