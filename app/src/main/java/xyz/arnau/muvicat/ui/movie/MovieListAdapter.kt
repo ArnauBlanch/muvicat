@@ -22,6 +22,7 @@ class MovieListAdapter @Inject constructor() : RecyclerView.Adapter<MovieListAda
     lateinit var context: Context
 
     var movies: List<Movie> = arrayListOf()
+    var cinemaId: Long? = null
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val movie = movies[position]
@@ -35,7 +36,7 @@ class MovieListAdapter @Inject constructor() : RecyclerView.Adapter<MovieListAda
             .into(holder.posterImage)
 
         holder.itemView.setOnClickListener {
-            context.startActivity(MovieActivity.createIntent(context, movie.id))
+            context.startActivity(MovieActivity.createIntent(context, movie.id, cinemaId = cinemaId))
         }
     }
 

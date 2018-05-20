@@ -16,7 +16,7 @@ class CastMembersAdapter @Inject constructor() : RecyclerView.Adapter<CastMember
     @Inject
     lateinit var context: Context
 
-    var cast: List<CastMember> = arrayListOf()
+    var cast: List<CastMember> = listOf()
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val castMember = cast[position]

@@ -33,6 +33,7 @@ class MovieShowingsAdapter @Inject constructor() : RecyclerView.Adapter<Recycler
     var castMembers: List<CastMember> = listOf()
     var showings: List<MovieShowing> = listOf()
     var showingId: Long? = null
+    var cinemaId: Long? = null
     var expanded = true
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -61,13 +62,13 @@ class MovieShowingsAdapter @Inject constructor() : RecyclerView.Adapter<Recycler
                 )
                 holder.originalLanguage.setTextAndVisibleLayout(movie?.originalLanguage, holder.originalLanguageLayout)
                 if (showings.isNotEmpty()) {
-                    if (expanded)
+                    if (expanded || cinemaId != null)
                         holder.showingsTitle.setVisibleText(context.getString(R.string.showings))
                     else
                         holder.showingsTitle.setVisibleText(context.getString(R.string.showing))
                 }
 
-                if (showingId != null) {
+                if (showingId != null || cinemaId != null) {
                     holder.moreShowingsButton.setVisible()
                     holder.moreShowingsButton.setOnCheckedChangeListener({ _, isChecked ->
                         expanded = isChecked
@@ -94,11 +95,14 @@ class MovieShowingsAdapter @Inject constructor() : RecyclerView.Adapter<Recycler
         } else if (holder is ShowingViewHolder) {
             val showing = if (expanded)
                 showings[position - 1]
-            else if (!expanded && position == 1)
+            else if (!expanded && showingId != null && position == 1)
                 if (showings.any { it.id == showingId })
                     showings.first { it.id == showingId }
                 else null
-            else
+            else if (!expanded && cinemaId != null) {
+                val list = showings.filter { it.cinemaId == cinemaId }
+                if (list.isNotEmpty()) list[position - 1] else null
+            } else
                 null
 
             showing?.let {
@@ -125,10 +129,12 @@ class MovieShowingsAdapter @Inject constructor() : RecyclerView.Adapter<Recycler
     }
 
     override fun getItemCount(): Int =
-        if (expanded)
-            showings.size + 1
-        else
+        if (!expanded && showingId != null)
             2
+        else if (!expanded && cinemaId != null)
+            showings.count { it.cinemaId == cinemaId } + 1
+        else
+            showings.size + 1
 
     override fun getItemViewType(position: Int): Int {
         return if (position == 0)

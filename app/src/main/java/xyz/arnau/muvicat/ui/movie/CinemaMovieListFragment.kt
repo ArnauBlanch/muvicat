@@ -20,6 +20,7 @@ class CinemaMovieListFragment : BasicMovieListFragment<Movie>(),
         super.onActivityCreated(savedInstanceState)
 
         viewModel = (activity as CinemaActivity).viewModel
+        moviesAdapter.cinemaId = (activity as CinemaActivity).cinemaId
         moviesToolbarLayout.setGone()
     }
 
