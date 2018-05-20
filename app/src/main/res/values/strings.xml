@@ -28,4 +28,8 @@
     <string name="showing">Sessió</string>
     <string name="more_showings">  més sessions</string>
     <string name="less_showings">menys sessions</string>
+    <string name="tmdbRating">VALORACIÓ TMDb</string>
+    <string name="votes">vots</string>
+    <string name="vote">vot</string>
+    <string name="no_rating">no hi ha valoració</string>
 </resources>

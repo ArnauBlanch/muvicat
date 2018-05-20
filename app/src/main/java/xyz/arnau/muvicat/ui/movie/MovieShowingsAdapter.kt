@@ -109,10 +109,13 @@ class MovieShowingsAdapter @Inject constructor() : RecyclerView.Adapter<Recycler
                     "${showing.cinemaTown} (${showing.cinemaRegion})"
                 else
                     showing.cinemaTown
-                showing.cinemaDistance?.let {
-                    holder.distance.setVisibleText("≈ ${showing.cinemaDistance} km")
+
+                holder.distance.setVisibleText(if (showing.cinemaDistance == null) null else "≈ ${showing.cinemaDistance} km")
+
+                if (showing.cinemaDistance == null)
+                    holder.dateDistanceMargin.setGone()
+                else
                     holder.dateDistanceMargin.setVisible()
-                }
 
                 holder.itemView.setOnClickListener {
                     context.startActivity(CinemaActivity.createIntent(context, showing.cinemaId))

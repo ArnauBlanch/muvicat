@@ -6,35 +6,41 @@ import xyz.arnau.muvicat.remote.model.tmdb.TMDBCastMember
 import xyz.arnau.muvicat.remote.model.tmdb.TMDBMovie
 import xyz.arnau.muvicat.remote.model.tmdb.TMDBSearchedMovie
 
-class TMDBMovieInfoMapper : EntityMapper<Pair<TMDBSearchedMovie, TMDBMovie>, MovieExtraInfo> {
-    override fun mapFromRemote(type: Pair<TMDBSearchedMovie, TMDBMovie>): MovieExtraInfo {
+class TMDBMovieInfoMapper : EntityMapper<Pair<TMDBSearchedMovie?, TMDBMovie?>, MovieExtraInfo> {
+    override fun mapFromRemote(type: Pair<TMDBSearchedMovie?, TMDBMovie?>): MovieExtraInfo {
         val searchedMovie = type.first
         val movie = type.second
         checkNullValues(searchedMovie, movie)
         return MovieExtraInfo(
-            searchedMovie.id,
-            movie.runtime,
-            parseGenres(searchedMovie.genre_ids),
-            searchedMovie.backdrop_path,
-            movie.vote_average,
-            movie.vote_count,
-            mapCast(movie.credits.cast)
+            searchedMovie?.id,
+            movie?.runtime,
+            parseGenres(searchedMovie?.genre_ids),
+            searchedMovie?.backdrop_path,
+            movie?.vote_average,
+            movie?.vote_count,
+            mapCast(movie?.credits?.cast)
         )
     }
 
-    private fun mapCast(cast: List<TMDBCastMember>): List<CastMemberEntity> {
+    private fun mapCast(cast: List<TMDBCastMember>?): List<CastMemberEntity>? {
+        if (cast == null)
+            return null
+
         return cast.sortedWith(compareBy<TMDBCastMember> { it.order }.thenBy { it.id }).take(10)
             .map { CastMemberEntity(it.id, (-1).toLong(), it.order, it.name, it.character, it.profile_path) }
     }
 
-    private fun parseGenres(genreIds: List<Int>): List<String> {
+    private fun parseGenres(genreIds: List<Int>?): List<String>? {
+        if (genreIds == null)
+            return null
+
         return genreIds.mapNotNull { genres[it] }
     }
 
-    private fun checkNullValues(searchedMovie: TMDBSearchedMovie, movie: TMDBMovie) {
-        if (searchedMovie.backdrop_path == "")
+    private fun checkNullValues(searchedMovie: TMDBSearchedMovie?, movie: TMDBMovie?) {
+        if (searchedMovie?.backdrop_path == "")
             searchedMovie.backdrop_path = null
-        if (movie.runtime != null && movie.runtime!! <= 0)
+        if (movie?.runtime != null && movie.runtime!! <= 0)
             movie.runtime = null
     }
 

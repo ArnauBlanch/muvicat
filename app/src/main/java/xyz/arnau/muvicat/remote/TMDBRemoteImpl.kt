@@ -18,20 +18,26 @@ class TMDBRemoteImpl(
     override fun getMovie(movieTitle: String): LiveData<Response<MovieExtraInfo>> {
         return Transformations.switchMap(tmdbService.searchMovie(movieTitle), { apiResponse ->
             if (apiResponse.status == ResponseStatus.SUCCESSFUL && apiResponse.body != null
-                && apiResponse.body!!.results.isNotEmpty()) {
+                && apiResponse.body!!.results.isNotEmpty()
+            ) {
                 val searchedMovie = apiResponse.body!!.results[0]
-                Transformations.switchMap(tmdbService.getMovie(searchedMovie.id), { apiResponse2 ->
-                    val data = MutableLiveData<Response<MovieExtraInfo>>()
-                    if (apiResponse2.status == ResponseStatus.SUCCESSFUL && apiResponse2.body != null) {
-                        val movieInfo = apiResponse2.body!!
-                        val extraMovieInfo = tmdbMovieInfoMapper.mapFromRemote(Pair(searchedMovie, movieInfo))
-                        data.postValue(Response.successful(extraMovieInfo))
-                        data
-                    } else {
-                        data.postValue(Response.error(apiResponse2.errorMessage))
-                        data
-                    }
-                })
+                Transformations.switchMap(
+                    tmdbService.getMovie(
+                        searchedMovie.id,
+                        append = "credits"
+                    ), { apiResponse2 ->
+                        val data = MutableLiveData<Response<MovieExtraInfo>>()
+                        if (apiResponse2.status == ResponseStatus.SUCCESSFUL && apiResponse2.body != null) {
+                            val movieInfo = apiResponse2.body!!
+                            val extraMovieInfo =
+                                tmdbMovieInfoMapper.mapFromRemote(Pair(searchedMovie, movieInfo))
+                            data.postValue(Response.successful(extraMovieInfo))
+                            data
+                        } else {
+                            data.postValue(Response.error(apiResponse.errorMessage))
+                            data
+                        }
+                    })
             } else {
                 val errorData = MutableLiveData<Response<MovieExtraInfo>>()
                 errorData.postValue(Response.error(apiResponse.errorMessage))
@@ -39,4 +45,19 @@ class TMDBRemoteImpl(
             }
         })
     }
+
+    override fun getMovie(tmdbId: Int): LiveData<Response<MovieExtraInfo>> =
+        Transformations.switchMap(tmdbService.getMovie(tmdbId, append = ""), { apiResponse ->
+            val data = MutableLiveData<Response<MovieExtraInfo>>()
+            if (apiResponse.status == ResponseStatus.SUCCESSFUL && apiResponse.body != null) {
+                val movieInfo = apiResponse.body!!
+                val extraMovieInfo = tmdbMovieInfoMapper.mapFromRemote(Pair(null, movieInfo))
+                data.postValue(Response.successful(extraMovieInfo))
+                data
+            } else {
+                data.postValue(Response.error(apiResponse.errorMessage))
+                data
+            }
+        })
+
 }

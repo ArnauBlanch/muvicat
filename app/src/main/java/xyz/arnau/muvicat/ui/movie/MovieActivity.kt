@@ -1,5 +1,6 @@
 package xyz.arnau.muvicat.ui.movie
 
+import android.annotation.SuppressLint
 import android.arch.lifecycle.Observer
 import android.content.Context
 import android.content.Intent
@@ -19,6 +20,10 @@ import xyz.arnau.muvicat.ui.LocationAwareActivity
 import xyz.arnau.muvicat.ui.SimpleDividerItemDecoration
 import xyz.arnau.muvicat.utils.*
 import xyz.arnau.muvicat.viewmodel.movie.MovieViewModel
+import java.math.BigDecimal
+import java.text.DecimalFormat
+import java.text.DecimalFormatSymbols
+import java.util.*
 import javax.inject.Inject
 
 
@@ -84,6 +89,7 @@ class MovieActivity : LocationAwareActivity() {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private fun processMovie(movie: Movie) {
         setupToolbar(movie)
 
@@ -104,6 +110,24 @@ class MovieActivity : LocationAwareActivity() {
         movieRuntime.setVisibleText(parseRuntime(movie.runtime))
         movieGenre.setVisibleText(parseGenres(movie.genres))
 
+        movie.tmdbId?.let {
+            ratingLayout.setVisible()
+            movie.voteCount?.let {
+                movie.voteAverage?.let {
+                    if (movie.voteCount == 0) {
+                        tmdbNoRatingText.setVisible()
+                    } else {
+                        tmdbRatingLayout.setVisible()
+                        movieVoteAverage.text =
+                                "${movie.voteAverage!!.div(2).toString1Decimal()} / 5,0"
+                        movieVoteCount.text = parseVoteCount(movie.voteCount!!)
+                        movieVoteStars.rating = movie.voteAverage!!.div(2).toFloat()
+                    }
+                }
+            }
+        }
+
+
         GlideApp.with(context)
             .load("https://image.tmdb.org/t/p/w1280${movie.backdropUrl}")
             .centerCrop()
@@ -111,6 +135,15 @@ class MovieActivity : LocationAwareActivity() {
 
         infoAndShowingsAdapter.movie = movie
         infoAndShowingsAdapter.notifyDataSetChanged()
+    }
+
+    private fun parseVoteCount(voteCount: Int): String {
+        return when {
+            voteCount == 1 -> return "1 ${getString(R.string.vote)}"
+            voteCount < 1000 -> "$voteCount ${getString(R.string.votes)}"
+            voteCount < 1000000 -> "${(voteCount / 100).toDouble() / 10}m ${getString(R.string.votes)}"
+            else -> "${(voteCount / 100000).toDouble() / 10}M ${getString(R.string.votes)}"
+        }
     }
 
     private fun parseGenres(genres: List<String>?): String? {
@@ -124,10 +157,11 @@ class MovieActivity : LocationAwareActivity() {
         if (runtime == null)
             return null
 
-        return if (runtime < 60)
-            "$runtime min"
-        else
-            "${runtime / 60} h ${runtime % 60} min"
+        return when {
+            runtime < 60 -> "$runtime min"
+            runtime % 60 == 0 -> "${runtime / 60} h"
+            else -> "${runtime / 60} h ${runtime % 60} min"
+        }
     }
 
     private fun handleShowingsDateState(status: Status, showings: List<MovieShowing>?) {
@@ -235,5 +269,12 @@ class MovieActivity : LocationAwareActivity() {
                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             }
         }
+    }
+
+    private fun Double.toString1Decimal(): String {
+        val dfs = DecimalFormatSymbols(Locale.getDefault())
+        dfs.decimalSeparator = ','
+        val df = DecimalFormat("#.0", dfs)
+        return df.format(this)
     }
 }

@@ -21,7 +21,7 @@ import xyz.arnau.muvicat.ui.ListFragment
 import xyz.arnau.muvicat.utils.setGone
 import xyz.arnau.muvicat.utils.setVisible
 
-abstract class BasicMovieListFragment<T, V : RecyclerView.ViewHolder?> : ListFragment(),
+abstract class BasicMovieListFragment<T> : ListFragment(),
     Injectable {
     private lateinit var skeleton: RecyclerViewSkeletonScreen
 

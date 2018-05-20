@@ -9,10 +9,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import xyz.arnau.muvicat.R
 import xyz.arnau.muvicat.repository.model.CastMember
-import xyz.arnau.muvicat.repository.model.Movie
-import xyz.arnau.muvicat.utils.DateFormatter
 import xyz.arnau.muvicat.utils.GlideApp
-import xyz.arnau.muvicat.utils.setVisibleText
 import javax.inject.Inject
 
 class CastMembersAdapter @Inject constructor() : RecyclerView.Adapter<CastMembersAdapter.ViewHolder>() {
@@ -28,13 +25,9 @@ class CastMembersAdapter @Inject constructor() : RecyclerView.Adapter<CastMember
 
         GlideApp.with(holder.itemView.context)
             .load("https://image.tmdb.org/t/p/w300/${castMember.profile_path}")
-            .error(R.drawable.poster_placeholder)
+            .placeholder(R.drawable.people_placeholder)
             .centerCrop()
             .into(holder.image)
-
-        /*holder.itemView.setOnClickListener {
-            context.startActivity(MovieActivity.createIntent(context, movie.id))
-        }*/
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

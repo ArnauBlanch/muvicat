@@ -34,4 +34,18 @@
         <item name="textAllCaps">false</item>
     </style>
 
+    <!--
+    <style name="CustomRatingBar" parent="@android:style/Widget.Material.RatingBar.Indicator" >
+        <item name="android:scaleX">0.5</item>
+        <item name="android:scaleY">0.5</item>
+        <item name="android:progressTint">@color/darkYellow</item>
+        <item name="android:progressBackgroundTint">@color/lightYellow</item>
+    </style>-->
+
+    <style name="foodRatingBar" parent="@android:style/Widget.RatingBar">
+        <item name="android:progressDrawable">@drawable/rating_stars</item>
+        <item name="android:minHeight">22dip</item>
+        <item name="android:maxHeight">22dip</item>
+    </style>
+
 </resources>

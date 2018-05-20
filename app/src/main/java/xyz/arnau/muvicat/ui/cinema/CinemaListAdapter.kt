@@ -26,7 +26,7 @@ class CinemaListAdapter @Inject constructor() :
         else
             cinema.town
 
-        holder.distance.setVisibleText("≈ ${cinema.distance} km")
+        holder.distance.setVisibleText(if (cinema.distance == null) null else "≈ ${cinema.distance} km")
         holder.stats.text = formatStats(cinema.numMovies, cinema.numShowings)
 
         holder.itemView.setOnClickListener {
