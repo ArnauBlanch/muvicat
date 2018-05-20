@@ -34,6 +34,7 @@
             android:screenOrientation="portrait"/>
         <activity
             android:name=".ui.movie.MovieActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
             android:launchMode="singleTop"
             android:parentActivityName=".ui.MainActivity"
             android:screenOrientation="portrait"/>

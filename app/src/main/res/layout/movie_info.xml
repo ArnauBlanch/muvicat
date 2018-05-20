@@ -44,7 +44,7 @@
                             android:layout_gravity="start|bottom"
                             android:layout_marginBottom="15dp"
                             android:layout_marginStart="15dp"
-                            android:layout_marginTop="95dp"
+                            android:layout_marginTop="125dp"
                             android:background="@android:color/transparent"
                             app:ari_aspect="width"
                             app:ari_ratio="0.7" />
@@ -164,6 +164,14 @@
                             android:layout_height="200dp"
                             android:layout_gravity="bottom"
                             android:background="@drawable/gradient_downtop" />
+                        <ImageView
+                            android:id="@+id/playTrailer"
+                            android:visibility="gone"
+                            android:src="@drawable/ic_play"
+                            android:layout_gravity="center"
+                            android:translationY="-40dp"
+                            android:layout_width="60dp"
+                            android:layout_height="60dp" />
                     </FrameLayout>
                 </FrameLayout>
 
