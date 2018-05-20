@@ -14,6 +14,7 @@ import xyz.arnau.muvicat.ui.movie.MovieActivity
 import xyz.arnau.muvicat.utils.DateFormatter
 import xyz.arnau.muvicat.utils.GlideApp
 import xyz.arnau.muvicat.utils.longerVersion
+import xyz.arnau.muvicat.utils.setGone
 import javax.inject.Inject
 
 
@@ -38,6 +39,7 @@ class CinemaShowingListAdapter @Inject constructor() :
             .into(holder.moviePoster)
         holder.version.text = longerVersion(showing.version)
         holder.date.text = dateFormatter.shortDate(showing.date)
+        holder.dateDistanceMargin.setGone()
 
         val posterParams = holder.moviePoster.layoutParams
         posterParams.height = convertDpToPixel(65F)

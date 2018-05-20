@@ -13,14 +13,11 @@ import android.support.design.widget.AppBarLayout
 import android.support.design.widget.TabLayout
 import android.support.v4.app.Fragment
 import android.support.v4.content.res.ResourcesCompat
-import android.view.View
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
 import kotlinx.android.synthetic.main.cinema_info.*
-import kotlinx.android.synthetic.main.cinema_info.view.*
-import kotlinx.android.synthetic.main.cinema_list_toolbar.*
 import kotlinx.android.synthetic.main.movie_list.*
 import kotlinx.android.synthetic.main.showing_list.*
 import xyz.arnau.muvicat.R
@@ -31,7 +28,6 @@ import xyz.arnau.muvicat.ui.LocationAwareActivity
 import xyz.arnau.muvicat.ui.movie.CinemaMovieListFragment
 import xyz.arnau.muvicat.ui.showing.CinemaShowingListFragment
 import xyz.arnau.muvicat.utils.LocationUtils
-import xyz.arnau.muvicat.utils.setVisible
 import xyz.arnau.muvicat.utils.setVisibleText
 import xyz.arnau.muvicat.viewmodel.cinema.CinemaViewModel
 import javax.inject.Inject
@@ -60,6 +56,7 @@ class CinemaActivity : LocationAwareActivity(), HasSupportFragmentInjector {
         this
     )
 
+    internal var cinemaId: Long? = null
     private var cinemaLatitude: Double? = null
     private var cinemaLongitude: Double? = null
 
@@ -74,6 +71,7 @@ class CinemaActivity : LocationAwareActivity(), HasSupportFragmentInjector {
             throw Exception("Missing cinema identifier")
         else {
             viewModel.setId(cinemaId)
+            this.cinemaId = cinemaId
             setupTabs()
         }
         cinemaInfoToolbar.setOnClickListener {

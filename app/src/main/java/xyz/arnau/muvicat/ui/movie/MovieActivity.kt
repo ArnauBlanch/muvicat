@@ -52,8 +52,12 @@ class MovieActivity : LocationAwareActivity() {
             movieViewModel.setId(movieId)
 
         val showingId = intent.getLongExtra(SHOWING_ID, (-1).toLong())
+        val cinemaId = intent.getLongExtra(CINEMA_ID, (-1).toLong())
         if (showingId != (-1).toLong()) {
             infoAndShowingsAdapter.showingId = showingId
+            infoAndShowingsAdapter.expanded = false
+        } else if (cinemaId != (-1).toLong()) {
+            infoAndShowingsAdapter.cinemaId = cinemaId
             infoAndShowingsAdapter.expanded = false
         }
 
@@ -119,7 +123,7 @@ class MovieActivity : LocationAwareActivity() {
                     } else {
                         tmdbRatingLayout.setVisible()
                         movieVoteAverage.text =
-                                "${movie.voteAverage!!.div(2).toString1Decimal()} / 5,0"
+                                "${movie.voteAverage!!.div(2).toString1Decimal()} / 5"
                         movieVoteCount.text = parseVoteCount(movie.voteCount!!)
                         movieVoteStars.rating = movie.voteAverage!!.div(2).toFloat()
                     }
@@ -261,11 +265,13 @@ class MovieActivity : LocationAwareActivity() {
     companion object {
         private const val MOVIE_ID = "movie_id"
         private const val SHOWING_ID = "showing_id"
+        private const val CINEMA_ID = "cinema_id"
 
-        fun createIntent(context: Context, movieId: Long, showingId: Long? = null): Intent {
+        fun createIntent(context: Context, movieId: Long, showingId: Long? = null, cinemaId: Long? = null): Intent {
             return Intent(context, MovieActivity::class.java).apply {
                 putExtra(MOVIE_ID, movieId)
                 showingId?.let { putExtra(SHOWING_ID, showingId) }
+                cinemaId?.let { putExtra(CINEMA_ID, cinemaId) }
                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             }
         }
