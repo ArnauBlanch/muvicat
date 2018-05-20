@@ -142,6 +142,6 @@ abstract class MovieDao {
             extraInfo.backdropUrl, extraInfo.voteAverage, extraInfo.voteCount
         )
         extraInfo.setMovieId(movieId)
-        insertCastMembers(extraInfo.cast)
+        extraInfo.cast?.let { insertCastMembers(it) }
     }
 }

@@ -9,4 +9,5 @@ import xyz.arnau.muvicat.remote.model.Response
 
 interface TMDBRemote {
     fun getMovie(movieTitle: String): LiveData<Response<MovieExtraInfo>>
+    fun getMovie(tmdbId: Int): LiveData<Response<MovieExtraInfo>>
 }

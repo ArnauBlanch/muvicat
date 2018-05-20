@@ -103,7 +103,8 @@ class MovieRepository(
 
     fun getMovie(movieId: Long): LiveData<Resource<MovieWithCast>> =
         object : NetworkBoundResource<MovieWithCast, MovieExtraInfo>(appExecutors) {
-            private var movieTitle: String? = null
+            lateinit var movieTitle: String
+            private var tmdbId: Int? = null
 
             override fun saveResponse(response: Response<MovieExtraInfo>) {
                 if (response.type == SUCCESSFUL) {
@@ -120,11 +121,15 @@ class MovieRepository(
             override fun onFetchFailed() {}
 
             override fun createCall(): LiveData<Response<MovieExtraInfo>> {
-                return tmdbRemote.getMovie(movieTitle!!)
+                tmdbId?.let { return tmdbRemote.getMovie(it) }
+                return tmdbRemote.getMovie(movieTitle)
             }
 
             override fun shouldFetch(data: MovieWithCast?): Boolean {
-                data?.let { movieTitle = it.movie.originalTitle }
+                data?.let {
+                    movieTitle = it.movie.originalTitle ?: it.movie.title!!
+                    tmdbId = it.movie.tmdbId
+                }
                 return data != null
             }
 

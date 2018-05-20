@@ -43,10 +43,11 @@ class ShowingListAdapter @Inject constructor() :
             showing.cinemaTown
 
 
-        showing.cinemaDistance?.let {
-            holder.distance.setVisibleText("≈ ${showing.cinemaDistance} km")
+        if (showing.cinemaDistance != null)
             holder.dateDistanceMargin.setVisible()
-        }
+        else
+            holder.dateDistanceMargin.setGone()
+        holder.distance.setVisibleText(if (showing.cinemaDistance == null) null else "≈ ${showing.cinemaDistance} km")
 
         holder.itemView.setOnClickListener {
             context.startActivity(MovieActivity.createIntent(context, showing.movieId, showing.id))

@@ -13,7 +13,7 @@ import xyz.arnau.muvicat.ui.ScrollableToTop
 import xyz.arnau.muvicat.viewmodel.movie.MovieListViewModel
 import javax.inject.Inject
 
-class MovieListFragment : BasicMovieListFragment<Movie, MovieListAdapter.ViewHolder>(),
+class MovieListFragment : BasicMovieListFragment<Movie>(),
     ScrollableToTop {
     @Inject
     lateinit var moviesAdapter: MovieListAdapter
