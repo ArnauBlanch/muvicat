@@ -120,8 +120,8 @@ dependencies {
     kapt "android.arch.lifecycle:compiler:1.1.1"
 
     // Room (use 1.1.0-beta2 for latest beta)
-    implementation "android.arch.persistence.room:runtime:1.1.0"
-    kapt "android.arch.persistence.room:compiler:1.1.0"
+    implementation "android.arch.persistence.room:runtime:1.1.1-rc1"
+    kapt "android.arch.persistence.room:compiler:1.1.1-rc1"
 
     // Paging
     implementation "android.arch.paging:runtime:1.0.0"
@@ -131,7 +131,7 @@ dependencies {
     androidTestImplementation "android.arch.core:core-testing:1.1.1"
 
     // Test helpers for Room
-    androidTestImplementation "android.arch.persistence.room:testing:1.1.0"
+    androidTestImplementation "android.arch.persistence.room:testing:1.1.1-rc1"
 
     // Dagger 2
     kapt 'com.google.dagger:dagger-compiler:2.15'
