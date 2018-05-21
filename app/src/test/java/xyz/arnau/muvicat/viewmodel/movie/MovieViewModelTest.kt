@@ -1,9 +1,11 @@
 package xyz.arnau.muvicat.viewmodel.movie
 
 import android.arch.core.executor.testing.InstantTaskExecutorRule
+import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import junit.framework.TestCase
 import org.junit.Assert.assertEquals
+import org.junit.Assert.fail
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -55,5 +57,26 @@ class MovieViewModelTest {
         TestCase.assertEquals(Status.SUCCESS, result!!.status)
         TestCase.assertEquals(null, result.message)
         TestCase.assertEquals(movieShowings, result.data)
+    }
+
+    @Test
+    fun rateMovieReturnsLiveData() {
+        movieViewModel.setId(10.toLong())
+        val liveData = MutableLiveData<Resource<Boolean>>()
+        `when`(movieRepository.rateMovie(10.toLong(), 1, 1.0)).thenReturn(liveData)
+        liveData.postValue(Resource.success(true))
+        val result = movieViewModel.rateMovie(1, 1.0).getValueBlocking()
+
+        assertEquals(Resource.success(true), result)
+    }
+
+    @Test
+    fun rateMovieWithoutIdSet() {
+        try {
+            movieViewModel.rateMovie(1, 1.5)
+            fail()
+        } catch (e: NoSuchFieldException) {
+            assertEquals("Unknown movie ID", e.message)
+        }
     }
 }
