@@ -31,6 +31,53 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layout_collapseMode="parallax"
+                        app:layout_collapseParallaxMultiplier="0.7">
+
+                        <com.santalu.aspectratioimageview.AspectRatioImageView
+                            android:id="@+id/movieBackdrop"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:adjustViewBounds="true"
+                            android:background="@color/darkGrey"
+                            android:scaleType="centerCrop"
+                            app:ari_aspect="height"
+                            app:ari_ratio="0.65" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical">
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="80dp"
+                                android:layout_gravity="top"
+                                android:layout_marginBottom="10dp"
+                                android:background="@drawable/gradient_topdown"
+                                android:fitsSystemWindows="true" />
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="0dp"
+                                android:layout_gravity="bottom"
+                                android:layout_weight="1"
+                                android:background="@drawable/gradient_downtop" />
+                        </LinearLayout>
+
+                        <ImageView
+                            android:id="@+id/playTrailer"
+                            android:layout_width="80dp"
+                            android:layout_height="80dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_play"
+                            android:translationY="-40dp"
+                            android:visibility="gone" />
+                    </FrameLayout>
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -45,7 +92,7 @@
                             android:layout_marginBottom="15dp"
                             android:layout_marginStart="15dp"
                             android:layout_marginTop="100dp"
-                            android:background="@android:color/transparent"
+                            android:background="@color/darkGrey"
                             app:ari_aspect="width"
                             app:ari_ratio="0.7" />
 
@@ -136,115 +183,81 @@
                             </LinearLayout>
                         </LinearLayout>
                     </LinearLayout>
-
-                    <FrameLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        app:layout_collapseMode="parallax"
-                        app:layout_collapseParallaxMultiplier="0.7">
-
-                        <com.santalu.aspectratioimageview.AspectRatioImageView
-                            android:id="@+id/movieBackdrop"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@color/darkGrey"
-                            android:scaleType="centerCrop"
-                            app:ari_aspect="height"
-                            app:ari_ratio="0.65" />
-
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="80dp"
-                            android:layout_gravity="top"
-                            android:background="@drawable/gradient_topdown"
-                            android:fitsSystemWindows="true" />
-
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="200dp"
-                            android:layout_gravity="bottom"
-                            android:background="@drawable/gradient_downtop" />
-                        <ImageView
-                            android:id="@+id/playTrailer"
-                            android:visibility="gone"
-                            android:src="@drawable/ic_play"
-                            android:layout_gravity="center"
-                            android:translationY="-40dp"
-                            android:layout_width="80dp"
-                            android:layout_height="80dp" />
-                    </FrameLayout>
                 </FrameLayout>
 
                 <LinearLayout
                     android:id="@+id/ratingLayout"
-                    android:visibility="gone"
                     android:layout_width="match_parent"
                     android:layout_height="80dp"
                     android:background="@color/darkerGrey"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:visibility="gone">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:paddingTop="6dp"
-                        android:paddingBottom="10dp"
                         android:layout_marginLeft="10dp"
                         android:layout_marginRight="10dp"
+                        android:layout_weight="1"
                         android:gravity="center"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:paddingBottom="10dp"
+                        android:paddingTop="6dp">
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:textAlignment="center"
                             android:fontFamily="@font/nunito_sans_extrabold"
                             android:text="@string/tmdbRating"
+                            android:textAlignment="center"
                             android:textColor="@color/colorPrimary"
                             android:textSize="12sp" />
 
                         <TextView
                             android:id="@+id/tmdbNoRatingText"
-                            android:text="@string/no_rating"
-                            android:fontFamily="@font/nunito_sans_semibold"
-                            android:textSize="14sp"
-                            android:visibility="gone"
-                            android:textColor="@color/light_grey"
-                            android:gravity="center"
                             android:layout_width="wrap_content"
-                            android:layout_height="match_parent" />
+                            android:layout_height="match_parent"
+                            android:fontFamily="@font/nunito_sans_semibold"
+                            android:gravity="center"
+                            android:text="@string/no_rating"
+                            android:textColor="@color/light_grey"
+                            android:textSize="14sp"
+                            android:visibility="gone" />
 
                         <LinearLayout
                             android:id="@+id/tmdbRatingLayout"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:visibility="gone"
                             android:gravity="center"
-                            android:orientation="horizontal">
+                            android:orientation="horizontal"
+                            android:visibility="gone">
+
                             <LinearLayout
-                                android:layout_weight="1"
-                                android:gravity="center"
                                 android:layout_width="0dp"
-                                android:layout_height="wrap_content">
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center">
 
                                 <me.zhanghai.android.materialratingbar.MaterialRatingBar
                                     android:id="@+id/movieVoteStars"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginBottom="10dp"
+                                    android:layout_marginEnd="5dp"
+                                    android:layout_marginStart="5dp"
+                                    android:layout_marginTop="10dp"
                                     android:numStars="5"
                                     app:mrb_fillBackgroundStars="true"
-                                    app:mrb_progressTint="@color/darkYellow"
                                     app:mrb_progressBackgroundTint="@color/lightYellow"
-                                    android:layout_marginStart="5dp"
-                                    android:layout_marginEnd="5dp"
-                                    android:layout_marginTop="10dp"
-                                    android:layout_marginBottom="10dp"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content" />
+                                    app:mrb_progressTint="@color/darkYellow" />
                             </LinearLayout>
+
                             <LinearLayout
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
                                 android:gravity="center"
                                 android:orientation="vertical">
+
                                 <TextView
                                     android:id="@+id/movieVoteAverage"
                                     android:layout_width="wrap_content"
@@ -292,7 +305,6 @@
                 app:contentInsetStartWithNavigation="0dp"
                 app:layout_collapseMode="pin"
                 app:titleMarginStart="0dp" />
-
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
 

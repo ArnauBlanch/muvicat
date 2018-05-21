@@ -16,6 +16,7 @@ import android.support.v4.content.res.ResourcesCompat
 import android.support.v7.widget.LinearLayoutManager
 import com.google.android.youtube.player.YouTubeIntents
 import dagger.android.AndroidInjection
+import kotlinx.android.synthetic.main.error_layout.view.*
 import kotlinx.android.synthetic.main.movie_info.*
 import xyz.arnau.muvicat.R
 import xyz.arnau.muvicat.repository.model.*
@@ -101,9 +102,9 @@ class MovieActivity : LocationAwareActivity() {
 
         GlideApp.with(context)
             .load("http://www.gencat.cat/llengua/cinema/${movie.posterUrl}")
-            .error(R.drawable.poster_placeholder)
             .centerCrop()
             .into(moviePoster)
+
         movieTitle.text = movie.title
 
         if (movie.year != null && movie.genres != null && movie.genres!!.isNotEmpty())
