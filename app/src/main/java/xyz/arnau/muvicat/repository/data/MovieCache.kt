@@ -12,4 +12,5 @@ interface MovieCache {
     fun getMovie(movieId: Long): LiveData<MovieWithCast>
     fun updateMovies(movies: List<MovieEntity>)
     fun updateExtraMovieInfo(movieId: Long, extraInfo: MovieExtraInfo)
+    fun voteMovie(movieId: Long, vote: Double)
 }

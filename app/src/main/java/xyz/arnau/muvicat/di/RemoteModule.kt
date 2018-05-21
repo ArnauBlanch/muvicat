@@ -100,10 +100,11 @@ class RemoteModule {
 
     @Singleton
     @Provides
-    fun provideTMDBRemote(tmdbService: TMDBService): TMDBRemote {
+    fun provideTMDBRemote(tmdbService: TMDBService, preferencesHelper: RemotePreferencesHelper): TMDBRemote {
         return TMDBRemoteImpl(
             tmdbService,
-            TMDBMovieInfoMapper()
+            TMDBMovieInfoMapper(),
+            preferencesHelper
         )
     }
 

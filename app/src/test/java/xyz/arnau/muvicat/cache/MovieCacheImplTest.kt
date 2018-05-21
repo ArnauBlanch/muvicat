@@ -78,4 +78,10 @@ class MovieCacheImplTest {
 
         verify(movieDao).addMovieExtraInfo(1.toLong(), extraInfo)
     }
+
+    @Test
+    fun voteMovieUpdatesVote() {
+        movieCacheImpl.voteMovie(1.toLong(), 5.0)
+        verify(movieDao).voteMovie(1.toLong(), 5.0)
+    }
 }

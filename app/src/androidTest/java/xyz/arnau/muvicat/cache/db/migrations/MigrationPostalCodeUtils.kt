@@ -5,12 +5,12 @@ import android.database.Cursor
 import junit.framework.TestCase.assertEquals
 
 object MigrationPostalCodeUtils {
-    fun insertPostalCodes(db: SupportSQLiteDatabase) {
+    fun insertPostalCodes3(db: SupportSQLiteDatabase) {
         db.execSQL("INSERT INTO postal_codes VALUES(111, 1.11, 1.11)")
         db.execSQL("INSERT INTO postal_codes VALUES(222, 2.22, 2.22)")
     }
 
-    fun checkPostalCodes(db: SupportSQLiteDatabase) {
+    fun checkPostalCodes3to4(db: SupportSQLiteDatabase) {
         val cursor = db.query("SELECT * FROM postal_codes ORDER BY code")
         assertEquals(2, cursor.count)
         cursor.moveToNext()

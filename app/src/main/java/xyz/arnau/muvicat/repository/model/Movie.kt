@@ -25,5 +25,6 @@ data class Movie(
     var genres: List<String>?,
     var backdropUrl: String?,
     var voteAverage: Double?,
-    var voteCount: Int?
+    var voteCount: Int?,
+    var vote: Double?
 )

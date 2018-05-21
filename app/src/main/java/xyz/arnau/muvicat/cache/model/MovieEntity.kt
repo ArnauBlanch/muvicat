@@ -28,5 +28,6 @@ data class MovieEntity(
     var genres: List<String>? = null,
     var backdropUrl: String? = null,
     var voteAverage: Double? = null,
-    var voteCount: Int? = null
+    var voteCount: Int? = null,
+    var vote: Double? = null
 )
