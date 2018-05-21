@@ -18,7 +18,6 @@ import xyz.arnau.muvicat.repository.model.Movie
 import xyz.arnau.muvicat.repository.test.*
 import xyz.arnau.muvicat.utils.getValueBlocking
 import java.util.*
-import kotlin.math.exp
 
 
 @Suppress("DEPRECATION")
@@ -166,7 +165,9 @@ class MovieDaoTest {
         }
 
         val expectedMovieWithCast = MovieWithCastMapper.mapFromMovieEntity(movie)
-        expectedMovieWithCast.castMembers = CastMemberMapper.mapFromCastMemberEntityList(extraInfo.cast)
+        extraInfo.cast?.let {
+            expectedMovieWithCast.castMembers = CastMemberMapper.mapFromCastMemberEntityList(it)
+        }
 
         val retrievedMovie = muvicatDatabase.movieDao().getMovie(movie.id).getValueBlocking()
         assertEquals(expectedMovieWithCast, retrievedMovie)
@@ -201,15 +202,19 @@ class MovieDaoTest {
 
     @Test
     fun deleteMoviesByIdDeletesOutdatedMovies() {
-        val oldMovies = MovieEntityFactory.makeMovieEntityList(2)
+        val oldMovies = MovieEntityFactory.makeMovieEntityList(3)
         val newMovies = MovieEntityFactory.makeMovieEntityList(5)
         muvicatDatabase.movieDao().insertMovies(oldMovies)
         muvicatDatabase.movieDao().insertMovies(newMovies)
+        muvicatDatabase.movieDao().voteMovie(oldMovies[0].id, 1.0)
+        oldMovies[0].vote = 1.0
+        muvicatDatabase.movieDao().voteMovie(oldMovies[2].id, 2.0)
+        oldMovies[2].vote = 2.0
         val oldIds = oldMovies.map { it.id }
 
         muvicatDatabase.movieDao().deleteMoviesById(oldIds)
         assertEquals(
-            MovieMapper.mapFromMovieEntityList(newMovies)
+            MovieMapper.mapFromMovieEntityList(newMovies + oldMovies[0] + oldMovies[2])
                 .sortedWith(compareByDescending<Movie> { it.priority }.thenBy { it.id }),
             muvicatDatabase.movieDao().getMovies().getValueBlocking()
         )
@@ -244,11 +249,12 @@ class MovieDaoTest {
         val movies = MovieEntityFactory.makeMovieEntityList(5)
         muvicatDatabase.movieDao().updateMovieDb(movies)
 
-        assertEquals(
-            MovieMapper.mapFromMovieEntityList(movies)
-                .sortedWith(compareByDescending<Movie> { it.priority }.thenBy { it.id }),
-            muvicatDatabase.movieDao().getMovies().getValueBlocking()
-        )
+        val sorted = MovieMapper.mapFromMovieEntityList(movies)
+            .sortedWith(compareByDescending<Movie> { it.priority }.thenBy { it.id })
+
+        val retrieved = muvicatDatabase.movieDao().getMovies().getValueBlocking()
+
+        assertEquals(sorted, retrieved)
     }
 
     @Test
@@ -256,6 +262,10 @@ class MovieDaoTest {
         val movies1 = MovieEntityFactory.makeMovieEntityList(5)
         movies1.forEachIndexed { index, item -> item.id = index.toLong() }
         muvicatDatabase.movieDao().insertMovies(movies1)
+
+        muvicatDatabase.movieDao().voteMovie(movies1[1].id, 1.0)
+        muvicatDatabase.movieDao().voteMovie(movies1[3].id, 3.0)
+        muvicatDatabase.movieDao().voteMovie(movies1[4].id, 4.0)
 
         val castMembers = CastMemberEntityFactory.makeCastMemberEntityList(5)
         castMembers.forEachIndexed { index, castMemberEntity ->
@@ -267,20 +277,25 @@ class MovieDaoTest {
         updatedMovies.forEachIndexed { index, item -> item.id = index.toLong() }
 
         val notUpdatedMovies = listOf(movies1[3])
-        // val deletedMovies = movies1[4]
+        // val deletedMovies = movies1[5]
         val newMovies = MovieEntityFactory.makeMovieEntityList(3)
         newMovies.forEach { it.id += 10 }
         val movies2 = notUpdatedMovies + updatedMovies + newMovies
         muvicatDatabase.movieDao().updateMovieDb(movies2)
 
+        movies2.first { it.id == movies1[1].id }.vote = 1.0
+        movies2.first { it.id == movies1[3].id }.vote = 3.0
+        movies1[4].vote = 4.0
+
+        val expected = movies2 + movies1[4]
         assertEquals(
-            MovieMapper.mapFromMovieEntityList(movies2)
+            MovieMapper.mapFromMovieEntityList(expected)
                 .sortedWith(compareByDescending<Movie> { it.priority }.thenBy { it.id }),
             muvicatDatabase.movieDao().getMovies().getValueBlocking()
         )
 
         assertEquals(
-            CastMemberMapper.mapFromCastMemberEntityList(castMembers.subList(0, 4).sortedWith(
+            CastMemberMapper.mapFromCastMemberEntityList(castMembers.filter { it.movieId in expected.map { it.id } }.sortedWith(
                 compareBy<CastMemberEntity> { it.tmdbId }.thenBy { it.movieId })),
             muvicatDatabase.movieDao().getCastMembers()
         )
@@ -309,7 +324,7 @@ class MovieDaoTest {
         }
 
         val expectedMovieWithCast = MovieWithCastMapper.mapFromMovieEntity(movie)
-        expectedMovieWithCast.castMembers = CastMemberMapper.mapFromCastMemberEntityList(extraInfo.cast)
+        expectedMovieWithCast.castMembers = CastMemberMapper.mapFromCastMemberEntityList(extraInfo.cast!!)
 
         assertEquals(
             expectedMovieWithCast,
@@ -334,15 +349,16 @@ class MovieDaoTest {
             voteCount = extraInfo.voteCount
         }
         val expectedMovieWithCast = MovieWithCastMapper.mapFromMovieEntity(movie)
-        expectedMovieWithCast.castMembers = CastMemberMapper.mapFromCastMemberEntityList(extraInfo.cast)
+        extraInfo.cast?.let {
+            expectedMovieWithCast.castMembers = CastMemberMapper.mapFromCastMemberEntityList(it)
+        }
 
         assertEquals(
             expectedMovieWithCast,
             muvicatDatabase.movieDao().getMovie(movie.id).getValueBlocking()
         )
         assertEquals(
-            CastMemberMapper.mapFromCastMemberEntityList(extraInfo.cast)
-                .sortedWith(compareBy<CastMember> { it.order }.thenBy { it.tmdbId }),
+            extraInfo.cast?.let { CastMemberMapper.mapFromCastMemberEntityList(it).sortedWith(compareBy<CastMember> { it.order }.thenBy { it.tmdbId }) },
             muvicatDatabase.movieDao().getCastMembersByMovie(movie.id)
         )
     }
@@ -356,9 +372,40 @@ class MovieDaoTest {
         muvicatDatabase.movieDao().addMovieExtraInfo(movie.id, extraInfo)
 
         assertEquals(
-            CastMemberMapper.mapFromCastMemberEntityList(extraInfo.cast)
+            CastMemberMapper.mapFromCastMemberEntityList(extraInfo.cast!!)
                 .sortedWith(compareBy<CastMember> { it.order }.thenBy { it.tmdbId }),
             muvicatDatabase.movieDao().getCastMembersByMovie(movie.id)
+        )
+    }
+
+    @Test
+    fun voteMovieSetsVote() {
+        val movie = MovieEntityFactory.makeMovieEntity()
+        muvicatDatabase.movieDao().insertMovies(listOf(movie))
+        muvicatDatabase.movieDao().voteMovie(movie.id, 2.5)
+        movie.vote = 2.5
+        assertEquals(
+            MovieWithCastMapper.mapFromMovieEntity(movie),
+            muvicatDatabase.movieDao().getMovie(movie.id).getValueBlocking()
+        )
+    }
+
+    @Test
+    fun voteMovieUpdatesVote() {
+        val movie = MovieEntityFactory.makeMovieEntity()
+        muvicatDatabase.movieDao().insertMovies(listOf(movie))
+        muvicatDatabase.movieDao().voteMovie(movie.id, 2.5)
+        movie.vote = 2.5
+        assertEquals(
+            MovieWithCastMapper.mapFromMovieEntity(movie),
+            muvicatDatabase.movieDao().getMovie(movie.id).getValueBlocking()
+        )
+
+        muvicatDatabase.movieDao().voteMovie(movie.id, 3.8)
+        movie.vote = 3.8
+        assertEquals(
+            MovieWithCastMapper.mapFromMovieEntity(movie),
+            muvicatDatabase.movieDao().getMovie(movie.id).getValueBlocking()
         )
     }
 }

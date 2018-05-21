@@ -246,6 +246,7 @@
                                     android:layout_marginEnd="5dp"
                                     android:layout_marginStart="5dp"
                                     android:layout_marginTop="10dp"
+                                    android:isIndicator="true"
                                     android:numStars="5"
                                     app:mrb_fillBackgroundStars="true"
                                     app:mrb_progressBackgroundTint="@color/lightYellow"

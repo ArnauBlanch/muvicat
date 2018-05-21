@@ -54,7 +54,7 @@ abstract class MovieDao {
     @Query("SELECT id FROM movies")
     abstract fun getMovieIds(): List<Long>
 
-    @Query("DELETE FROM movies WHERE id IN(:ids)")
+    @Query("DELETE FROM movies WHERE id IN(:ids) AND vote IS NULL")
     abstract fun deleteMoviesById(ids: List<Long>)
 
     @Query(
@@ -144,4 +144,7 @@ abstract class MovieDao {
         extraInfo.setMovieId(movieId)
         extraInfo.cast?.let { insertCastMembers(it) }
     }
+
+    @Query("UPDATE movies SET vote = :vote WHERE id = :movieId")
+    abstract fun voteMovie(movieId: Long, vote: Double)
 }

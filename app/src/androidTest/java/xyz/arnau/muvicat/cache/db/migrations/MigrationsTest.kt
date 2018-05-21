@@ -8,15 +8,16 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import xyz.arnau.muvicat.cache.db.MuvicatDatabase
-import xyz.arnau.muvicat.cache.db.migrations.MigrationCinemaUtils.checkCinemas
-import xyz.arnau.muvicat.cache.db.migrations.MigrationCinemaUtils.insertCinemas
-import xyz.arnau.muvicat.cache.db.migrations.MigrationMovieUtils.checkMovies
-import xyz.arnau.muvicat.cache.db.migrations.MigrationMovieUtils.checkMoviesOld
-import xyz.arnau.muvicat.cache.db.migrations.MigrationMovieUtils.insertMoviesOld
-import xyz.arnau.muvicat.cache.db.migrations.MigrationPostalCodeUtils.checkPostalCodes
-import xyz.arnau.muvicat.cache.db.migrations.MigrationPostalCodeUtils.insertPostalCodes
-import xyz.arnau.muvicat.cache.db.migrations.MigrationShowingUtils.checkShowings
-import xyz.arnau.muvicat.cache.db.migrations.MigrationShowingUtils.insertShowings
+import xyz.arnau.muvicat.cache.db.migrations.MigrationCinemaUtils.checkCinemasVersion2to3
+import xyz.arnau.muvicat.cache.db.migrations.MigrationCinemaUtils.insertCinemasVersion2
+import xyz.arnau.muvicat.cache.db.migrations.MigrationMovieUtils.checkMoviesVersion1to2
+import xyz.arnau.muvicat.cache.db.migrations.MigrationMovieUtils.checkMoviesVersion5to6
+import xyz.arnau.muvicat.cache.db.migrations.MigrationMovieUtils.insertMoviesVersion1
+import xyz.arnau.muvicat.cache.db.migrations.MigrationMovieUtils.insertMoviesVersion5
+import xyz.arnau.muvicat.cache.db.migrations.MigrationPostalCodeUtils.checkPostalCodes3to4
+import xyz.arnau.muvicat.cache.db.migrations.MigrationPostalCodeUtils.insertPostalCodes3
+import xyz.arnau.muvicat.cache.db.migrations.MigrationShowingUtils.checkShowings4to5
+import xyz.arnau.muvicat.cache.db.migrations.MigrationShowingUtils.insertShowings4
 
 @RunWith(AndroidJUnit4::class)
 class MigrationsTest {
@@ -36,12 +37,12 @@ class MigrationsTest {
     fun migrate1To2() {
         var db = helper.createDatabase(TEST_DB, 1)
 
-        insertMoviesOld(db)
+        insertMoviesVersion1(db)
         db.close()
 
         db = helper.runMigrationsAndValidate(TEST_DB, 2, true, DbMigration1to2)
 
-        checkMoviesOld(db)
+        checkMoviesVersion1to2(db)
         db.close()
     }
 
@@ -49,14 +50,14 @@ class MigrationsTest {
     fun migrate2To3() {
         var db = helper.createDatabase(TEST_DB, 2)
 
-        insertMoviesOld(db)
-        insertCinemas(db)
+        insertMoviesVersion1(db)
+        insertCinemasVersion2(db)
         db.close()
 
         db = helper.runMigrationsAndValidate(TEST_DB, 3, true, DbMigration2to3)
 
-        checkMoviesOld(db)
-        checkCinemas(db)
+        checkMoviesVersion1to2(db)
+        checkCinemasVersion2to3(db)
         db.close()
     }
 
@@ -64,32 +65,49 @@ class MigrationsTest {
     @Test
     fun migrate3To4() {
         var db = helper.createDatabase(TEST_DB, 3)
-        insertMoviesOld(db)
-        insertCinemas(db)
-        insertPostalCodes(db)
+        insertMoviesVersion1(db)
+        insertCinemasVersion2(db)
+        insertPostalCodes3(db)
         db.close()
 
         db = helper.runMigrationsAndValidate(TEST_DB, 4, true, DbMigration3to4)
 
-        checkMoviesOld(db)
-        checkCinemas(db)
-        checkPostalCodes(db)
+        checkMoviesVersion1to2(db)
+        checkCinemasVersion2to3(db)
+        checkPostalCodes3to4(db)
     }
 
     @Test
     fun migrate4To5() {
         var db = helper.createDatabase(TEST_DB, 4)
-        insertMoviesOld(db)
-        insertCinemas(db)
-        insertPostalCodes(db)
-        insertShowings(db)
+        insertMoviesVersion1(db)
+        insertCinemasVersion2(db)
+        insertPostalCodes3(db)
+        insertShowings4(db)
         db.close()
 
         db = helper.runMigrationsAndValidate(TEST_DB, 5, true, DbMigration4to5)
 
-        checkMovies(db)
-        checkCinemas(db)
-        checkPostalCodes(db)
-        checkShowings(db)
+        checkMoviesVersion1to2(db)
+        checkCinemasVersion2to3(db)
+        checkPostalCodes3to4(db)
+        checkShowings4to5(db)
+    }
+
+    @Test
+    fun migrate5To6() {
+        var db = helper.createDatabase(TEST_DB, 5)
+        insertMoviesVersion5(db)
+        insertCinemasVersion2(db)
+        insertPostalCodes3(db)
+        insertShowings4(db)
+        db.close()
+
+        db = helper.runMigrationsAndValidate(TEST_DB, 6, true, DbMigration5to6)
+
+        checkMoviesVersion5to6(db)
+        checkCinemasVersion2to3(db)
+        checkPostalCodes3to4(db)
+        checkShowings4to5(db)
     }
 }

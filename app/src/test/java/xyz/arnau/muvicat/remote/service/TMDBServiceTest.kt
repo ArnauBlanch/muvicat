@@ -17,6 +17,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.simplexml.SimpleXmlConverterFactory
 import xyz.arnau.muvicat.remote.model.ResponseStatus.*
+import xyz.arnau.muvicat.remote.model.tmdb.TMDBRateMovieBody
 import xyz.arnau.muvicat.remote.model.tmdb.TMDBSearchMovieResponse
 import xyz.arnau.muvicat.remote.test.*
 import xyz.arnau.muvicat.remote.utils.LiveDataCallAdapterFactory
@@ -122,6 +123,85 @@ class TMDBServiceTest {
         assertEquals(HTTP_BAD_REQUEST, response?.code)
         assertEquals(ERROR, response?.status)
         assertEquals("Client Error", response?.errorMessage)
+        assertEquals(null, response?.body)
+    }
+
+    @Test
+    fun createGuestSessionSucessfulResponse() {
+        mockServer.enqueue(
+            MockResponse()
+                .setResponseCode(HTTP_OK)
+                .setBody(TMDBSampleGuestSessionResponse.json)
+        )
+
+        val response = tmdbService.createGuestSession("apiKey").getValueBlocking()
+        val request = mockServer.takeRequest()
+        assertEquals("/authentication/guest_session/new?api_key=apiKey", request.path)
+
+        assertEquals(HTTP_OK, response?.code)
+        assertEquals(SUCCESSFUL, response?.status)
+        assertEquals(null, response?.errorMessage)
+        assertEquals(TMDBSampleGuestSessionResponse.body, response?.body)
+    }
+
+    @Test
+    fun createGuestSessionErrorResponse() {
+        mockServer.enqueue(
+            MockResponse()
+                .setResponseCode(401)
+        )
+
+        val response = tmdbService.createGuestSession("apiKey").getValueBlocking()
+        val request = mockServer.takeRequest()
+        assertEquals("/authentication/guest_session/new?api_key=apiKey", request.path)
+
+        assertEquals(401, response?.code)
+        assertEquals(ERROR, response?.status)
+        assertEquals("Client Error", response?.errorMessage)
+        assertEquals(null, response?.body)
+    }
+
+    @Test
+    fun rateMovieSucessfulResponse() {
+        mockServer.enqueue(
+            MockResponse()
+                .setResponseCode(HTTP_CREATED)
+                .setBody(TMDBSampleStatusResponse.successJson)
+        )
+
+        val requestBody = TMDBRateMovieBody(5.0)
+        val response =
+            tmdbService.rateMovie(100, requestBody, "guestSessionId", "apiKey").getValueBlocking()
+        val request = mockServer.takeRequest()
+        assertEquals("/movie/100/rating?guest_session_id=guestSessionId&api_key=apiKey", request.path)
+        assertEquals("[text={\"value\":5.0}]", request.body.toString())
+        assertEquals("POST", request.method)
+
+        assertEquals(HTTP_CREATED, response?.code)
+        assertEquals(SUCCESSFUL, response?.status)
+        assertEquals(null, response?.errorMessage)
+        assertEquals(TMDBSampleStatusResponse.successBody, response?.body)
+    }
+
+    @Test
+    fun rateMovieErrorResponse() {
+        mockServer.enqueue(
+            MockResponse()
+                .setResponseCode(404)
+                .setBody(TMDBSampleStatusResponse.errorJson)
+        )
+
+        val requestBody = TMDBRateMovieBody(5.0)
+        val response =
+            tmdbService.rateMovie(100, requestBody, "guestSessionId", "apiKey").getValueBlocking()
+        val request = mockServer.takeRequest()
+        assertEquals("/movie/100/rating?guest_session_id=guestSessionId&api_key=apiKey", request.path)
+        assertEquals("[text={\"value\":5.0}]", request.body.toString())
+        assertEquals("POST", request.method)
+
+        assertEquals(404, response?.code)
+        assertEquals(ERROR, response?.status)
+        assertEquals(TMDBSampleStatusResponse.errorJson, response?.errorMessage)
         assertEquals(null, response?.body)
     }
 }
