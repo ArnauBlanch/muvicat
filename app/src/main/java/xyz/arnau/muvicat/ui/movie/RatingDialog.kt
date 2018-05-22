@@ -33,5 +33,5 @@ class RatingDialog(private val activity: MovieActivity, private val movie: Movie
         }
     }
 
-    private fun Double.toString1Decimal(): String = gDecimalFormat("0.0").format(this)
+    private fun Double.toString1Decimal(): String = DecimalFormat("0.0").format(this)
 }
