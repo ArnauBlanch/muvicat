@@ -46,6 +46,15 @@ class RemotePreferencesHelperTest {
         assertEquals(eTag, preferencesHelper.showingsETag)
     }
 
+    @Test
+    fun getTmdbGuestSessionIdReturnId() {
+        val guestSessionId = "TMDB_GUEST_SESSION_ID"
+        sharedPreferences.edit()
+            .putString(RemotePreferencesHelper.PREF_KEY_TMDB_GUEST_SESSION_ID, guestSessionId).apply()
+
+        assertEquals(guestSessionId, preferencesHelper.tmdbGuestSessionId)
+    }
+
 
     @Test
     fun setMoviesETagSavesETag() {
@@ -77,6 +86,17 @@ class RemotePreferencesHelperTest {
         assertEquals(
             eTag,
             sharedPreferences.getString(RemotePreferencesHelper.PREF_KEY_SHOWINGS_ETAG, null)
+        )
+    }
+
+    @Test
+    fun setTMDBGuestSessionIdSavesId() {
+        val guestSessionId = "TMDB_GUEST_SESSION_ID"
+        preferencesHelper.tmdbGuestSessionId = guestSessionId
+
+        assertEquals(
+            guestSessionId,
+            sharedPreferences.getString(RemotePreferencesHelper.PREF_KEY_TMDB_GUEST_SESSION_ID, null)
         )
     }
 }

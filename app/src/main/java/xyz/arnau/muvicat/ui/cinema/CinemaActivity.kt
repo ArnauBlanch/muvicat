@@ -166,7 +166,7 @@ class CinemaActivity : LocationAwareActivity(), HasSupportFragmentInjector {
         cinemaInfoToolbar.setNavigationOnClickListener { onBackPressed() }
 
         val backArrow =
-            ResourcesCompat.getDrawable(resources, R.drawable.ic_chevron_left_black, null)
+            ResourcesCompat.getDrawable(resources, R.drawable.ic_chevron_left_white, null)
         backArrow?.setColorFilter(Color.parseColor("#AF0000"), PorterDuff.Mode.SRC_ATOP)
         supportActionBar!!.setHomeAsUpIndicator(backArrow)
 

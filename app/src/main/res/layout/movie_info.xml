@@ -89,9 +89,9 @@
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:layout_gravity="start|bottom"
-                            android:layout_marginBottom="15dp"
                             android:layout_marginStart="15dp"
                             android:layout_marginTop="100dp"
+                            android:layout_marginBottom="15dp"
                             android:background="@color/darkGrey"
                             app:ari_aspect="width"
                             app:ari_ratio="0.7" />
@@ -188,10 +188,11 @@
                 <LinearLayout
                     android:id="@+id/ratingLayout"
                     android:layout_width="match_parent"
-                    android:layout_height="80dp"
+                    android:layout_height="70dp"
                     android:background="@color/darkerGrey"
                     android:orientation="horizontal"
-                    android:visibility="gone">
+                    android:visibility="gone"
+                    android:weightSum="2">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -201,8 +202,8 @@
                         android:layout_weight="1"
                         android:gravity="center"
                         android:orientation="vertical"
-                        android:paddingBottom="10dp"
-                        android:paddingTop="6dp">
+                        android:paddingTop="6dp"
+                        android:paddingBottom="10dp">
 
                         <TextView
                             android:layout_width="match_parent"
@@ -239,17 +240,18 @@
                                 android:gravity="center">
 
                                 <me.zhanghai.android.materialratingbar.MaterialRatingBar
-                                    android:id="@+id/movieVoteStars"
+                                    android:id="@+id/movieTmdbVoteStars"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginBottom="10dp"
-                                    android:layout_marginEnd="5dp"
                                     android:layout_marginStart="5dp"
-                                    android:layout_marginTop="10dp"
+                                    android:layout_marginTop="5dp"
+                                    android:layout_marginEnd="5dp"
+                                    android:layout_marginBottom="5dp"
+                                    android:isIndicator="true"
                                     android:numStars="5"
                                     app:mrb_fillBackgroundStars="true"
-                                    app:mrb_progressBackgroundTint="@color/lightYellow"
-                                    app:mrb_progressTint="@color/darkYellow" />
+                                    app:mrb_progressBackgroundTint="@color/darkYellow"
+                                    app:mrb_progressTint="@color/lightYellow" />
                             </LinearLayout>
 
                             <LinearLayout
@@ -259,7 +261,7 @@
                                 android:orientation="vertical">
 
                                 <TextView
-                                    android:id="@+id/movieVoteAverage"
+                                    android:id="@+id/movieTmdbVoteAverage"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:fontFamily="@font/nunito_sans_extrabold"
@@ -268,7 +270,7 @@
                                     android:textSize="15sp" />
 
                                 <TextView
-                                    android:id="@+id/movieVoteCount"
+                                    android:id="@+id/movieTmdbVoteCount"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:fontFamily="@font/nunito_sans_semibold"
@@ -283,16 +285,95 @@
                     <View
                         android:layout_width="1dp"
                         android:layout_height="match_parent"
-                        android:layout_marginBottom="15dp"
-                        android:layout_marginTop="15dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="10dp"
                         android:background="@color/grey" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
                         android:layout_weight="1"
-                        android:gravity="center">
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:paddingTop="6dp"
+                        android:paddingBottom="10dp">
 
+                        <Button
+                            android:id="@+id/rateMovieButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@android:color/transparent"
+                            android:backgroundTint="@android:color/transparent"
+                            android:drawableStart="@drawable/ic_star_half_black_24dp"
+                            android:drawablePadding="12dp"
+                            android:fontFamily="@font/nunito_sans_extrabold"
+                            android:gravity="center"
+                            android:minHeight="0dp"
+                            android:shadowColor="@android:color/transparent"
+                            android:text="@string/rate_it"
+                            android:textAllCaps="true"
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="13sp"
+                            android:visibility="gone" />
+
+                        <LinearLayout
+                            android:id="@+id/userRatingLayout"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:visibility="gone">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="top"
+                                android:fontFamily="@font/nunito_sans_extrabold"
+                                android:text="@string/yourRating"
+                                android:textAlignment="center"
+                                android:textColor="@color/light_grey"
+                                android:textSize="12sp" />
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:gravity="center"
+                                android:orientation="horizontal">
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center">
+
+                                <me.zhanghai.android.materialratingbar.MaterialRatingBar
+                                    android:id="@+id/movieUserVoteStars"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="5dp"
+                                    android:layout_marginTop="5dp"
+                                    android:layout_marginEnd="5dp"
+                                    android:layout_marginBottom="5dp"
+                                    android:isIndicator="true"
+                                    android:numStars="5"
+                                    android:rating="3.5"
+                                    app:mrb_fillBackgroundStars="true"
+                                    app:mrb_progressBackgroundTint="@color/darkRed"
+                                    app:mrb_progressTint="@color/lightRed" />
+                            </LinearLayout>
+
+                            <TextView
+                                android:id="@+id/movieUserRating"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:gravity="center"
+                                android:fontFamily="@font/nunito_sans_extrabold"
+                                android:singleLine="true"
+                                android:textColor="@color/light_grey"
+                                android:textSize="15sp" />
+                            </LinearLayout>
+                        </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>

@@ -9,7 +9,8 @@ object MovieMapper {
             movie.id, movie.title, movie.originalTitle, movie.year, movie.direction,
             movie.cast, movie.plot, movie.releaseDate, movie.posterUrl, movie.priority,
             movie.originalLanguage, movie.ageRating, movie.trailerUrl,
-            movie.tmdbId, movie.runtime, movie.genres, movie.backdropUrl, movie.voteAverage, movie.voteCount
+            movie.tmdbId, movie.runtime, movie.genres, movie.backdropUrl, movie.voteAverage, movie.voteCount,
+            movie.vote
         )
 
     fun mapFromMovieEntityList(movieList: List<MovieEntity>) =

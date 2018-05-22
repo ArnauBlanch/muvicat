@@ -54,12 +54,12 @@ class TMDBMovieInfoMapperTest {
         assertEquals(movie.vote_count, mappedInfo.voteCount)
         movie.credits.cast.sortedWith(compareBy<TMDBCastMember> { it.order }.thenBy { it.id }).take(10).
             forEachIndexed { index, castMember ->
-            assertEquals(castMember.id, mappedInfo.cast[index].tmdbId)
-            assertEquals((-1).toLong(), mappedInfo.cast[index].movieId)
-            assertEquals(castMember.character, mappedInfo.cast[index].character)
-            assertEquals(castMember.name, mappedInfo.cast[index].name)
-            assertEquals(castMember.order, mappedInfo.cast[index].order)
-            assertEquals(castMember.profile_path, mappedInfo.cast[index].profile_path)
+            assertEquals(castMember.id, mappedInfo.cast!![index].tmdbId)
+            assertEquals((-1).toLong(), mappedInfo.cast!![index].movieId)
+            assertEquals(castMember.character, mappedInfo.cast!![index].character)
+            assertEquals(castMember.name, mappedInfo.cast!![index].name)
+            assertEquals(castMember.order, mappedInfo.cast!![index].order)
+            assertEquals(castMember.profile_path, mappedInfo.cast!![index].profile_path)
         }
     }
 }

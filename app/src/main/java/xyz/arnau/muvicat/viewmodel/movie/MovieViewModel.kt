@@ -13,7 +13,7 @@ import xyz.arnau.muvicat.repository.model.Resource
 import javax.inject.Inject
 
 class MovieViewModel @Inject constructor(
-    movieRepository: MovieRepository,
+    private val movieRepository: MovieRepository,
     showingRepository: ShowingRepository
 ) : ViewModel() {
     private val movieId = MutableLiveData<Long>()
@@ -27,6 +27,15 @@ class MovieViewModel @Inject constructor(
         Transformations.switchMap(movieId) { id ->
             showingRepository.getShowingsByMovie(id)
         }
+
+    fun rateMovie(tmdbId: Int, rating: Double): LiveData<Resource<Boolean>> {
+        movieId.value?.let {
+            return movieRepository.rateMovie(it, tmdbId, rating)
+        }
+
+        throw NoSuchFieldException("Unknown movie ID")
+    }
+
 
     fun setId(id: Long) {
         movieId.value = id

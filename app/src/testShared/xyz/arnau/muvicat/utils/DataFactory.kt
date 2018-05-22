@@ -5,7 +5,7 @@ import java.util.concurrent.ThreadLocalRandom
 
 class DataFactory {
     companion object Factory {
-        fun randomInt() = ThreadLocalRandom.current().nextInt(0, 1000 + 1)
+        fun randomInt() = ThreadLocalRandom.current().nextInt(0, 1500 + 1)
 
         fun randomLong() = randomInt().toLong()
 
