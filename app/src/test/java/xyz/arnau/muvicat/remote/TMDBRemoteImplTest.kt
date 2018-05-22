@@ -227,6 +227,7 @@ class TMDBRemoteImplTest {
         val result = tmdbRemote.getGuestSession().getValueBlocking()
         assertEquals(TMDBSampleGuestSessionResponse.body.guest_session_id, result!!.body)
         assertEquals(SUCCESSFUL, result.type)
+        verify(preferencesHelper).tmdbGuestSessionId = TMDBSampleGuestSessionResponse.body.guest_session_id
     }
 
     @Suppress("UNCHECKED_CAST")

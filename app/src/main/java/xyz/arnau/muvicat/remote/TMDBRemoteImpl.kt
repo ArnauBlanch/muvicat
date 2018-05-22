@@ -100,6 +100,7 @@ class TMDBRemoteImpl(
             if (apiResponse.status == ResponseStatus.SUCCESSFUL && apiResponse.body != null
                 && apiResponse.body!!.success &&
                 apiResponse.body!!.guest_session_id != null) {
+                preferencesHelper.tmdbGuestSessionId = apiResponse.body!!.guest_session_id
                 data.postValue(Response.successful(apiResponse.body!!.guest_session_id))
                 data
             } else {

@@ -139,11 +139,13 @@ class MovieRepository(
         return Transformations.switchMap(tmdbRemote.rateMovie(tmdbId, rating), {
             val data = MutableLiveData<Resource<Boolean>>()
             if (it.type == SUCCESSFUL) {
-                try {
-                    movieCache.voteMovie(movieId, rating)
-                    data.postValue(Resource.success(true))
-                } catch (e: Exception) {
-                    data.postValue(Resource.error(e.message, null))
+                appExecutors.diskIO().execute {
+                    try {
+                        movieCache.voteMovie(movieId, rating)
+                        data.postValue(Resource.success(true))
+                    } catch (e: Exception) {
+                        data.postValue(Resource.error(e.message, null))
+                    }
                 }
             } else {
                 data.postValue(Resource.error(it.errorMessage, null))

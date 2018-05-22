@@ -6,10 +6,12 @@
     <color name="colorAccentTransparent">#CCAF0000</color>
     <color name="grey">#767676</color>
     <color name="darkGrey">#363636</color>
-    <color name="darkerGrey">#E8000000</color>
+    <color name="darkerGrey">#F7111111</color>
     <color name="yellow">#D5A300</color>
-    <color name="lightYellow">#77FF9D00</color>
-    <color name="darkYellow">#FF9D00</color>
+    <color name="darkYellow">#55FF9D00</color>
+    <color name="lightYellow">#FF9D00</color>
+    <color name="darkRed">#55AF0000</color>
+    <color name="lightRed">#AF0000</color>
     <color name="background_material_light">#ffffff</color>
     <color name="skeleton_light">#E0E0E0</color>
     <color name="skeleton_shimmer">#DCDCDC</color>

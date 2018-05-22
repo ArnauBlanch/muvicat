@@ -3,8 +3,8 @@
     <string name="movies">Pel·lícules</string>
     <string name="movies_lower">pel·lícules</string>
     <string name="movie_lower">pel·lícula</string>
-    <string name="couldnt_update_data">No s\'han pogut actualitzar les dades. Torna-ho a provar més endavant...</string>
-    <string name="couldnt_get_data">No s\'ha pogut descarregar les dades. Torna-ho a provar més endavant...</string>
+    <string name="couldnt_update_data">No s\'han pogut actualitzar les dades. Torna-ho a provar més endavant…</string>
+    <string name="couldnt_get_data">No s\'ha pogut descarregar les dades. Torna-ho a provar més endavant…</string>
     <string name="try_again">Torna a provar</string>
     <string name="release">Estrena %s</string>
     <string name="today">avui</string>
@@ -32,4 +32,8 @@
     <string name="votes">vots</string>
     <string name="vote">vot</string>
     <string name="no_rating">no hi ha valoració</string>
+    <string name="yourRating">LA TEVA VALORACIÓ</string>
+    <string name="rate_it">valora\nla pel·lícula</string>
+    <string name="delete_rating">Elimina valoració</string>
+    <string name="send_rating">Envia valoració</string>
 </resources>
