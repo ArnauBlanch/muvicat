@@ -7,12 +7,15 @@ import xyz.arnau.muvicat.cache.model.MovieExtraInfo
 import xyz.arnau.muvicat.remote.mapper.TMDBMovieInfoMapper
 import xyz.arnau.muvicat.remote.model.Response
 import xyz.arnau.muvicat.remote.model.ResponseStatus
+import xyz.arnau.muvicat.remote.model.tmdb.TMDBRateMovieBody
 import xyz.arnau.muvicat.remote.service.TMDBService
+import xyz.arnau.muvicat.remote.utils.RemotePreferencesHelper
 import xyz.arnau.muvicat.repository.data.TMDBRemote
 
 class TMDBRemoteImpl(
     private val tmdbService: TMDBService,
-    private val tmdbMovieInfoMapper: TMDBMovieInfoMapper
+    private val tmdbMovieInfoMapper: TMDBMovieInfoMapper,
+    private val preferencesHelper: RemotePreferencesHelper
 ) : TMDBRemote {
 
     override fun getMovie(movieTitle: String): LiveData<Response<MovieExtraInfo>> {
@@ -34,7 +37,7 @@ class TMDBRemoteImpl(
                             data.postValue(Response.successful(extraMovieInfo))
                             data
                         } else {
-                            data.postValue(Response.error(apiResponse.errorMessage))
+                            data.postValue(Response.error(apiResponse2.errorMessage, null))
                             data
                         }
                     })
@@ -46,8 +49,8 @@ class TMDBRemoteImpl(
         })
     }
 
-    override fun getMovie(tmdbId: Int): LiveData<Response<MovieExtraInfo>> =
-        Transformations.switchMap(tmdbService.getMovie(tmdbId, append = ""), { apiResponse ->
+    override fun getMovie(tmdbId: Int): LiveData<Response<MovieExtraInfo>> {
+        return Transformations.switchMap(tmdbService.getMovie(tmdbId, append = ""), { apiResponse ->
             val data = MutableLiveData<Response<MovieExtraInfo>>()
             if (apiResponse.status == ResponseStatus.SUCCESSFUL && apiResponse.body != null) {
                 val movieInfo = apiResponse.body!!
@@ -59,5 +62,50 @@ class TMDBRemoteImpl(
                 data
             }
         })
+    }
 
+    override fun rateMovie(tmdbId: Int, rating: Double): LiveData<Response<Boolean>> =
+            Transformations.switchMap(getGuestSession(), {
+                if (it.type == ResponseStatus.SUCCESSFUL) {
+                    val guestSessionId = it.body!!
+                    Transformations.switchMap(
+                        tmdbService.rateMovie(tmdbId, TMDBRateMovieBody(rating), guestSessionId), {
+                            val response = MutableLiveData<Response<Boolean>>()
+                            if (it.status == ResponseStatus.SUCCESSFUL) {
+                                response.postValue(Response.successful(true))
+                            } else {
+                                response.postValue(Response.error(it.errorMessage))
+                            }
+                            response
+                        })
+                } else {
+                    val response = MutableLiveData<Response<Boolean>>()
+                    response.postValue(Response.error(it.errorMessage))
+                    response
+                }
+            })
+
+    internal fun getGuestSession(): LiveData<Response<String>> {
+        val liveData = MutableLiveData<Response<String>>()
+        preferencesHelper.tmdbGuestSessionId?.let {
+            liveData.postValue(Response.successful(it))
+            return liveData
+        }
+        return createGuestSession()
+    }
+
+    private fun createGuestSession(): LiveData<Response<String>> =
+        Transformations.switchMap(tmdbService.createGuestSession(), { apiResponse ->
+            val data = MutableLiveData<Response<String>>()
+            if (apiResponse.status == ResponseStatus.SUCCESSFUL && apiResponse.body != null
+                && apiResponse.body!!.success &&
+                apiResponse.body!!.guest_session_id != null) {
+                preferencesHelper.tmdbGuestSessionId = apiResponse.body!!.guest_session_id
+                data.postValue(Response.successful(apiResponse.body!!.guest_session_id))
+                data
+            } else {
+                data.postValue(Response.error(apiResponse.errorMessage))
+                data
+            }
+        })
 }

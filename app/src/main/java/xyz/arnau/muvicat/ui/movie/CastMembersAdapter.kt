@@ -23,11 +23,18 @@ class CastMembersAdapter @Inject constructor() : RecyclerView.Adapter<CastMember
         holder.name.text = castMember.name
         holder.character.text = castMember.character
 
-        GlideApp.with(holder.itemView.context)
-            .load("https://image.tmdb.org/t/p/w300/${castMember.profile_path}")
-            .placeholder(R.drawable.people_placeholder)
-            .centerCrop()
-            .into(holder.image)
+        if (castMember.profile_path == null) {
+            GlideApp.with(holder.itemView.context)
+                .load(R.drawable.people_placeholder)
+                .centerCrop()
+                .into(holder.image)
+        } else {
+            GlideApp.with(holder.itemView.context)
+                .load("https://image.tmdb.org/t/p/w300/${castMember.profile_path}")
+                .placeholder(R.drawable.people_placeholder)
+                .centerCrop()
+                .into(holder.image)
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

@@ -73,7 +73,7 @@ class MovieRepositoryTest {
     private var movieWithCast =
         MovieWithCastMapper.mapFromMovieEntity(MovieEntityFactory.makeMovieEntity())
     private var updatedMovieWithCast = movieWithCast.apply {
-        this.castMembers = CastMemberMapper.mapFromCastMemberEntityList(remoteMovieExtraInfo.cast)
+        this.castMembers = CastMemberMapper.mapFromCastMemberEntityList(remoteMovieExtraInfo.cast!!)
         this.movie.tmdbId = remoteMovieExtraInfo.tmdbId
         this.movie.runtime = remoteMovieExtraInfo.runtime
         this.movie.genres = remoteMovieExtraInfo.genres
@@ -82,6 +82,7 @@ class MovieRepositoryTest {
         this.movie.voteCount = remoteMovieExtraInfo.voteCount
     }
     private val dbMovieWithCastLiveData = MutableLiveData<MovieWithCast>()
+    private val rateMovieLiveData = MutableLiveData<Response<Boolean>>()
 
     @Before
     fun setUp() {
@@ -90,6 +91,9 @@ class MovieRepositoryTest {
 
         `when`(movieCache.getMovie(movieWithCast.movie.id)).thenReturn(dbMovieWithCastLiveData)
         `when`(tmdbRemote.getMovie(movieWithCast.movie.originalTitle!!)).thenReturn(remoteExtraInfoLiveData)
+        `when`(tmdbRemote.getMovie(movieWithCast.movie.tmdbId!!)).thenReturn(remoteExtraInfoLiveData)
+        `when`(tmdbRemote.getMovie(movieWithCast.movie.title!!)).thenReturn(remoteExtraInfoLiveData)
+        `when`(tmdbRemote.rateMovie(anyInt(), anyDouble())).thenReturn(rateMovieLiveData)
     }
 
     @Test
@@ -358,18 +362,18 @@ class MovieRepositoryTest {
 
     @Test
     fun getMovieWithNullDbResponse() {
-        dbMovieWithCastLiveData.postValue(movieWithCast)
+        dbMovieWithCastLiveData.postValue(null)
         remoteExtraInfoLiveData.postValue(Response.successful(remoteMovieExtraInfo))
 
         val res = movieRepository.getMovie(movieWithCast.movie.id).getValueBlocking()
 
         assertEquals(Status.SUCCESS, res?.status)
-        assertEquals(movieWithCast, res?.data)
+        assertEquals(null, res?.data)
         assertEquals(null, res?.message)
     }
 
     @Test
-    fun getMovieWithSuccessfulRemoteResponse() {
+    fun getMovieWithSuccessfulRemoteResponseWithTmdbId() {
         val result = movieRepository.getMovie(movieWithCast.movie.id)
         result.observeForever(observer as Observer<Resource<MovieWithCast>>)
 
@@ -379,6 +383,42 @@ class MovieRepositoryTest {
         remoteExtraInfoLiveData.postValue(Response.successful(remoteMovieExtraInfo))
         verify(observer).onChanged(Resource.success(updatedMovieWithCast))
 
+        verify(tmdbRemote).getMovie(movieWithCast.movie.tmdbId!!)
+        verify(movieCache).updateExtraMovieInfo(movieWithCast.movie.id, remoteMovieExtraInfo)
+    }
+
+    @Test
+    fun getMovieWithSuccessfulRemoteResponseWithOriginalTitle() {
+        val result = movieRepository.getMovie(movieWithCast.movie.id)
+        result.observeForever(observer as Observer<Resource<MovieWithCast>>)
+        val movieWithCast2 = movieWithCast.copy()
+        movieWithCast2.movie.tmdbId = null
+
+        dbMovieWithCastLiveData.postValue(movieWithCast2)
+        verify(observer).onChanged(Resource.loading(movieWithCast2))
+
+        remoteExtraInfoLiveData.postValue(Response.successful(remoteMovieExtraInfo))
+        verify(observer).onChanged(Resource.success(updatedMovieWithCast))
+
+        verify(tmdbRemote).getMovie(movieWithCast.movie.originalTitle!!)
+        verify(movieCache).updateExtraMovieInfo(movieWithCast.movie.id, remoteMovieExtraInfo)
+    }
+
+    @Test
+    fun getMovieWithSuccessfulRemoteResponseWithTitle() {
+        val result = movieRepository.getMovie(movieWithCast.movie.id)
+        result.observeForever(observer as Observer<Resource<MovieWithCast>>)
+        val movieWithCast2 = movieWithCast.copy()
+        movieWithCast2.movie.tmdbId = null
+        movieWithCast2.movie.originalTitle = null
+
+        dbMovieWithCastLiveData.postValue(movieWithCast2)
+        verify(observer).onChanged(Resource.loading(movieWithCast2))
+
+        remoteExtraInfoLiveData.postValue(Response.successful(remoteMovieExtraInfo))
+        verify(observer).onChanged(Resource.success(updatedMovieWithCast))
+
+        verify(tmdbRemote).getMovie(movieWithCast.movie.title!!)
         verify(movieCache).updateExtraMovieInfo(movieWithCast.movie.id, remoteMovieExtraInfo)
     }
 
@@ -393,7 +433,49 @@ class MovieRepositoryTest {
         remoteExtraInfoLiveData.postValue(Response.error("error msg"))
         verify(observer).onChanged(Resource.error("error msg", movieWithCast))
 
+        verify(tmdbRemote).getMovie(movieWithCast.movie.tmdbId!!)
         verify(movieCache, never()).updateExtraMovieInfo(movieWithCast.movie.id, remoteMovieExtraInfo)
+    }
+
+
+    @Test
+    fun rateMovieWithSuccess() {
+        rateMovieLiveData.postValue(Response.successful(true))
+
+        val result = movieRepository.rateMovie(100.toLong(), 200, 5.0).getValueBlocking()
+        assertEquals(true, result!!.data)
+        assertEquals(null, result.message)
+        assertEquals(Status.SUCCESS, result.status)
+
+        verify(tmdbRemote).rateMovie(200, 5.0)
+        verify(movieCache).voteMovie(100.toLong(), 5.0)
+    }
+
+    @Test
+    fun rateMovieWithRemoteError() {
+        rateMovieLiveData.postValue(Response.error("error msg"))
+
+        val result = movieRepository.rateMovie(100.toLong(), 200, 5.0).getValueBlocking()
+        assertEquals(null, result!!.data)
+        assertEquals("error msg", result.message)
+        assertEquals(Status.ERROR, result.status)
+
+        verify(tmdbRemote).rateMovie(200, 5.0)
+        verify(movieCache, never()).voteMovie(100.toLong(), 5.0)
+    }
+
+    @Test
+    fun rateMovieWithDbError() {
+        rateMovieLiveData.postValue(Response.successful(true))
+        `when`(movieCache.voteMovie(100.toLong(), 5.0)).thenThrow(Exception("exc msg"))
+
+        val result = movieRepository.rateMovie(100.toLong(), 200, 5.0).getValueBlocking()
+        assertEquals(null, result!!.data)
+        assertEquals("exc msg", result.message)
+        assertEquals(Status.ERROR, result.status)
+
+        verify(tmdbRemote).rateMovie(200, 5.0)
+        verify(movieCache).voteMovie(100.toLong(), 5.0)
     }
 
     @Test

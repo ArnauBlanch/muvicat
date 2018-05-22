@@ -30,4 +30,8 @@ class MovieCacheImpl @Inject constructor(private val movieDao: MovieDao) : Movie
     override fun updateExtraMovieInfo(movieId: Long, extraInfo: MovieExtraInfo) {
         movieDao.addMovieExtraInfo(movieId, extraInfo)
     }
+
+    override fun voteMovie(movieId: Long, vote: Double) {
+        movieDao.voteMovie(movieId, vote)
+    }
 }

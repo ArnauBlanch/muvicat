@@ -14,6 +14,7 @@ abstract class NetworkBoundResource<ResultType, RequestType> @MainThread constru
 
     init {
         result.value = Resource.loading(null)
+        @Suppress("LeakingThis")
         val dbSource: LiveData<ResultType> = loadFromDb()
         result.addSource(dbSource, { data ->
             result.removeSource(dbSource)
