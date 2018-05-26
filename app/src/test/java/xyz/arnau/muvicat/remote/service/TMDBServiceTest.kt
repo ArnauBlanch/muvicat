@@ -204,4 +204,44 @@ class TMDBServiceTest {
         assertEquals(TMDBSampleStatusResponse.errorJson, response?.errorMessage)
         assertEquals(null, response?.body)
     }
+
+    @Test
+    fun unrateMovieSucessfulResponse() {
+        mockServer.enqueue(
+            MockResponse()
+                .setResponseCode(HTTP_CREATED)
+                .setBody(TMDBSampleStatusResponse.successJson)
+        )
+
+        val response =
+            tmdbService.unrateMovie(100, "guestSessionId", "apiKey").getValueBlocking()
+        val request = mockServer.takeRequest()
+        assertEquals("/movie/100/rating?guest_session_id=guestSessionId&api_key=apiKey", request.path)
+        assertEquals("DELETE", request.method)
+
+        assertEquals(HTTP_CREATED, response?.code)
+        assertEquals(SUCCESSFUL, response?.status)
+        assertEquals(null, response?.errorMessage)
+        assertEquals(TMDBSampleStatusResponse.successBody, response?.body)
+    }
+
+    @Test
+    fun unrateMovieErrorResponse() {
+        mockServer.enqueue(
+            MockResponse()
+                .setResponseCode(401)
+                .setBody(TMDBSampleStatusResponse.errorJson)
+        )
+
+        val response =
+            tmdbService.unrateMovie(100, "guestSessionId", "apiKey").getValueBlocking()
+        val request = mockServer.takeRequest()
+        assertEquals("/movie/100/rating?guest_session_id=guestSessionId&api_key=apiKey", request.path)
+        assertEquals("DELETE", request.method)
+
+        assertEquals(401, response?.code)
+        assertEquals(ERROR, response?.status)
+        assertEquals(TMDBSampleStatusResponse.errorJson, response?.errorMessage)
+        assertEquals(null, response?.body)
+    }
 }

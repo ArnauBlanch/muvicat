@@ -13,4 +13,5 @@ interface MovieCache {
     fun updateMovies(movies: List<MovieEntity>)
     fun updateExtraMovieInfo(movieId: Long, extraInfo: MovieExtraInfo)
     fun voteMovie(movieId: Long, vote: Double)
+    fun unvoteMovie(movieId: Long)
 }

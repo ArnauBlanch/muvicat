@@ -34,6 +34,10 @@
     <string name="no_rating">no hi ha valoració</string>
     <string name="yourRating">LA TEVA VALORACIÓ</string>
     <string name="rate_it">valora\nla pel·lícula</string>
-    <string name="delete_rating">Elimina valoració</string>
-    <string name="send_rating">Envia valoració</string>
+    <string name="delete_rating">Elimina</string>
+    <string name="send_rating">Envia</string>
+    <string name="rate_movie_error">No s\'ha pogut enviar la teva valoració…</string>
+    <string name="rate_movie_success">La teva valoració s\'ha enviat correctament! Pot tardar unes hores en veure\'s reflectit…</string>
+    <string name="unrate_movie_error">No s\'ha pogut eliminar la teva valoració…</string>
+    <string name="unrate_movie_success">La teva valoració s\'ha eliminat correctament! Pot tardar unes hores en veure\'s reflectit…</string>
 </resources>

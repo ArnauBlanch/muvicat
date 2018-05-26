@@ -36,6 +36,14 @@ class MovieViewModel @Inject constructor(
         throw NoSuchFieldException("Unknown movie ID")
     }
 
+    fun unrateMovie(tmdbId: Int): LiveData<Resource<Boolean>> {
+        movieId.value?.let {
+            return movieRepository.unrateMovie(it, tmdbId)
+        }
+
+        throw NoSuchFieldException("Unknown movie ID")
+    }
+
 
     fun setId(id: Long) {
         movieId.value = id

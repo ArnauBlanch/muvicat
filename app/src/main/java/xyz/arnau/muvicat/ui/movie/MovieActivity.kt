@@ -161,15 +161,30 @@ class MovieActivity : LocationAwareActivity(), ScrollableToTop {
     }
 
     fun rateMovie(tmdbId: Int, rating: Double) {
-        // TODO: ProgressBar
         movieViewModel.rateMovie(tmdbId, rating).observe(
             this, Observer {
                 if (it != null) {
                     if (it.status == Status.SUCCESS) {
-                        Snackbar.make(findViewById(android.R.id.content), "La teva valoració s'ha enviat correctament!", Snackbar.LENGTH_SHORT)
+                        Snackbar.make(findViewById(android.R.id.content), getString(R.string.rate_movie_success), 8000)
                             .show()
                     } else {
-                        Snackbar.make(findViewById(android.R.id.content), "No s'ha pogut enviar la teva valoració...", Snackbar.LENGTH_LONG)
+                        Snackbar.make(findViewById(android.R.id.content), getString(R.string.rate_movie_error), 8000)
+                            .show()
+                    }
+                }
+            }
+        )
+    }
+
+    fun unrateMovie(tmdbId: Int) {
+        movieViewModel.unrateMovie(tmdbId).observe(
+            this, Observer {
+                if (it != null) {
+                    if (it.status == Status.SUCCESS) {
+                        Snackbar.make(findViewById(android.R.id.content), getString(R.string.unrate_movie_success), 8000)
+                            .show()
+                    } else {
+                        Snackbar.make(findViewById(android.R.id.content), getString(R.string.unrate_movie_error), 8000)
                             .show()
                     }
                 }

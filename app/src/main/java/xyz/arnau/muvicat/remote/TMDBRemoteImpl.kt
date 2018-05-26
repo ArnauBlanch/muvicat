@@ -85,6 +85,27 @@ class TMDBRemoteImpl(
                 }
             })
 
+    override fun unrateMovie(tmdbId: Int): LiveData<Response<Boolean>> =
+        Transformations.switchMap(getGuestSession(), {
+            if (it.type == ResponseStatus.SUCCESSFUL) {
+                val guestSessionId = it.body!!
+                Transformations.switchMap(
+                    tmdbService.unrateMovie(tmdbId, guestSessionId), {
+                        val response = MutableLiveData<Response<Boolean>>()
+                        if (it.status == ResponseStatus.SUCCESSFUL) {
+                            response.postValue(Response.successful(true))
+                        } else {
+                            response.postValue(Response.error(it.errorMessage))
+                        }
+                        response
+                    })
+            } else {
+                val response = MutableLiveData<Response<Boolean>>()
+                response.postValue(Response.error(it.errorMessage))
+                response
+            }
+        })
+
     internal fun getGuestSession(): LiveData<Response<String>> {
         val liveData = MutableLiveData<Response<String>>()
         preferencesHelper.tmdbGuestSessionId?.let {

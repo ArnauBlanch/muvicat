@@ -79,4 +79,25 @@ class MovieViewModelTest {
             assertEquals("Unknown movie ID", e.message)
         }
     }
+
+    @Test
+    fun unrateMovieReturnsLiveData() {
+        movieViewModel.setId(10.toLong())
+        val liveData = MutableLiveData<Resource<Boolean>>()
+        `when`(movieRepository.unrateMovie(10.toLong(), 1)).thenReturn(liveData)
+        liveData.postValue(Resource.success(true))
+        val result = movieViewModel.unrateMovie(1).getValueBlocking()
+
+        assertEquals(Resource.success(true), result)
+    }
+
+    @Test
+    fun unrateMovieWithoutIdSet() {
+        try {
+            movieViewModel.unrateMovie(1)
+            fail()
+        } catch (e: NoSuchFieldException) {
+            assertEquals("Unknown movie ID", e.message)
+        }
+    }
 }

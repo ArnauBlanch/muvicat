@@ -49,6 +49,7 @@ class TMDBRemoteImplTest {
         `when`(tmdbService.getMovie(123, append = "")).thenReturn(getMovieLiveData)
         `when`(tmdbService.createGuestSession()).thenReturn(createGuestSessionLiveData)
         `when`(tmdbService.rateMovie(1, TMDBRateMovieBody(1.1), "GUEST_SESSION_ID")).thenReturn(rateMovieLiveData)
+        `when`(tmdbService.unrateMovie(1, "GUEST_SESSION_ID")).thenReturn(rateMovieLiveData)
     }
 
     @Test
@@ -201,6 +202,45 @@ class TMDBRemoteImplTest {
         createGuestSessionLiveData.postValue(apiResponse)
 
         val result = tmdbRemote.rateMovie(1, 1.1).getValueBlocking()
+
+        assertEquals(null, result!!.body)
+        assertEquals(ERROR, result.type)
+        assertEquals(TMDBSampleStatusResponse.errorJson, result.errorMessage)
+    }
+
+    @Test
+    fun unrateMoviesReturnsTrueIfSuccess() {
+        `when`(preferencesHelper.tmdbGuestSessionId).thenReturn("GUEST_SESSION_ID")
+        rateMovieLiveData.postValue(ApiResponse(Response.success(TMDBSampleStatusResponse.successBody)))
+
+        val result = tmdbRemote.unrateMovie(1).getValueBlocking()
+
+        verify(tmdbService).unrateMovie(1, "GUEST_SESSION_ID")
+        assertEquals(true, result!!.body)
+        assertEquals(SUCCESSFUL, result.type)
+        assertEquals(null, result.errorMessage)
+    }
+
+    @Test
+    fun unrateMoviesReturnsErrorIfErrorResponse() {
+        `when`(preferencesHelper.tmdbGuestSessionId).thenReturn("GUEST_SESSION_ID")
+        rateMovieLiveData.postValue(ApiResponse(400, null, "error", ERROR))
+
+        val result = tmdbRemote.unrateMovie(1).getValueBlocking()
+
+        verify(tmdbService).unrateMovie(1, "GUEST_SESSION_ID")
+        assertEquals(null, result!!.body)
+        assertEquals(ERROR, result.type)
+        assertEquals("error", result.errorMessage)
+    }
+
+    @Test
+    fun unrateMoviesReturnsErrorIfCantGetAGuestSession() {
+        `when`(preferencesHelper.tmdbGuestSessionId).thenReturn(null)
+        val apiResponse = ApiResponse<TMDBGuestSessionResponse>(Response.error(404, ResponseBody.create(null, TMDBSampleStatusResponse.errorJson)))
+        createGuestSessionLiveData.postValue(apiResponse)
+
+        val result = tmdbRemote.unrateMovie(1).getValueBlocking()
 
         assertEquals(null, result!!.body)
         assertEquals(ERROR, result.type)
