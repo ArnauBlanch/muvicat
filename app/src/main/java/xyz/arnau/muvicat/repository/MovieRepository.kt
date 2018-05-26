@@ -144,7 +144,26 @@ class MovieRepository(
                         movieCache.voteMovie(movieId, rating)
                         data.postValue(Resource.success(true))
                     } catch (e: Exception) {
-                        data.postValue(Resource.error(e.message, null))
+                        data.postValue(Resource.error("db error", null))
+                    }
+                }
+            } else {
+                data.postValue(Resource.error(it.errorMessage, null))
+            }
+            data
+        })
+    }
+
+    fun unrateMovie(movieId: Long, tmdbId: Int): LiveData<Resource<Boolean>> {
+        return Transformations.switchMap(tmdbRemote.unrateMovie(tmdbId), {
+            val data = MutableLiveData<Resource<Boolean>>()
+            if (it.type == SUCCESSFUL) {
+                appExecutors.diskIO().execute {
+                    try {
+                        movieCache.unvoteMovie(movieId)
+                        data.postValue(Resource.success(true))
+                    } catch (e: Exception) {
+                        data.postValue(Resource.error("db error", null))
                     }
                 }
             } else {

@@ -31,6 +31,11 @@ class RatingDialog(private val activity: MovieActivity, private val movie: Movie
             activity.rateMovie(movie.tmdbId!!, userRatingBar.rating.toDouble() * 2)
             dismiss()
         }
+
+        deleteRatingButton.setOnClickListener {
+            activity.unrateMovie(movie.tmdbId!!)
+            dismiss()
+        }
     }
 
     private fun Double.toString1Decimal(): String = DecimalFormat("0.0").format(this)

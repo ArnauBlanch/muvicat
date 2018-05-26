@@ -31,4 +31,11 @@ interface TMDBService {
         @Query("guest_session_id") guestSessionId: String,
         @Query("api_key") apiKey: String = TMDBApiKey
     ): LiveData<ApiResponse<TMDBStatusResponse>>
+
+    @DELETE("movie/{movie_id}/rating")
+    fun unrateMovie(
+        @Path("movie_id") movieId: Int,
+        @Query("guest_session_id") guestSessionId: String,
+        @Query("api_key") apiKey: String = TMDBApiKey
+    ): LiveData<ApiResponse<TMDBStatusResponse>>
 }

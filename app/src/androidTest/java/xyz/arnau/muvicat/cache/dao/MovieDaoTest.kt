@@ -408,4 +408,16 @@ class MovieDaoTest {
             muvicatDatabase.movieDao().getMovie(movie.id).getValueBlocking()
         )
     }
+
+    @Test
+    fun unvoteMovieSetsVoteAsNull() {
+        val movie = MovieEntityFactory.makeMovieEntity()
+        muvicatDatabase.movieDao().insertMovies(listOf(movie))
+        muvicatDatabase.movieDao().unvoteMovie(movie.id)
+        movie.vote = null
+        assertEquals(
+            MovieWithCastMapper.mapFromMovieEntity(movie),
+            muvicatDatabase.movieDao().getMovie(movie.id).getValueBlocking()
+        )
+    }
 }

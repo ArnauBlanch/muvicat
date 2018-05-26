@@ -147,4 +147,7 @@ abstract class MovieDao {
 
     @Query("UPDATE movies SET vote = :vote WHERE id = :movieId")
     abstract fun voteMovie(movieId: Long, vote: Double)
+
+    @Query("UPDATE movies SET vote = NULL WHERE id = :movieId")
+    abstract fun unvoteMovie(movieId: Long)
 }
