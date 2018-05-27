@@ -5,11 +5,12 @@
 
 
 <a href='https://play.google.com/store/apps/details?id=xyz.arnau.muvicat&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img width="200" alt='Disponible a Google Play' src='https://play.google.com/intl/en_us/badges/images/generic/ca_badge_web_generic.png'/></a>
-#### Beta release (v0.3)
-- Llista de sessions
-- Visualització de sessions d'una pel·lícula
-- Llista de pel·lícules i sessions d'una sala
-- Enllaç a mapa d'una sala
+#### Beta release (v0.4)
+- Informació extra d'una pel·lícula (extreta de TMDb)
+- Valoració de pel·lícules (via TMDb)
+- Llista de pel·lícules valorades
+- Cerca de pel·lícules
+- Filtratge de sessions per data
 
 <br/><br/><br/><br/>
 
