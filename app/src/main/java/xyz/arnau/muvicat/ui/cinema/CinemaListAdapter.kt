@@ -26,7 +26,7 @@ class CinemaListAdapter @Inject constructor() :
         else
             cinema.town
 
-        holder.distance.setVisibleText("≈ ${cinema.distance} km")
+        holder.distance.setVisibleText(if (cinema.distance == null) null else "≈ ${cinema.distance} km")
         holder.stats.text = formatStats(cinema.numMovies, cinema.numShowings)
 
         holder.itemView.setOnClickListener {
@@ -50,7 +50,6 @@ class CinemaListAdapter @Inject constructor() :
     }
 
     fun formatStats(numMovies: Int, numShowings: Int): String {
-        val string = ""
         val movies = if (numMovies > 1)
             context.getString(R.string.movies_lower)
         else

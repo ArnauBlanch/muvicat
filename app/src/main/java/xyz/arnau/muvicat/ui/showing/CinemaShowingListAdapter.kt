@@ -11,9 +11,7 @@ import android.widget.TextView
 import xyz.arnau.muvicat.R
 import xyz.arnau.muvicat.repository.model.CinemaShowing
 import xyz.arnau.muvicat.ui.movie.MovieActivity
-import xyz.arnau.muvicat.utils.DateFormatter
-import xyz.arnau.muvicat.utils.GlideApp
-import xyz.arnau.muvicat.utils.longerVersion
+import xyz.arnau.muvicat.utils.*
 import javax.inject.Inject
 
 
@@ -31,13 +29,26 @@ class CinemaShowingListAdapter @Inject constructor() :
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val showing = showings[position]
         holder.movieTitle.text = showing.movieTitle
+        if (showing.movieVoted)
+            holder.movieTitle
+                .setCompoundDrawablesRelativeWithIntrinsicBounds(
+                    0,
+                    0,
+                    R.drawable.ic_star_yellow_18dp,
+                    0
+                )
+        else
+            holder.movieTitle
+                .setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, 0, 0)
+
         GlideApp.with(holder.itemView.context)
             .load("http://www.gencat.cat/llengua/cinema/${showing.moviePosterUrl}")
             .error(R.drawable.poster_placeholder)
             .centerCrop()
             .into(holder.moviePoster)
         holder.version.text = longerVersion(showing.version)
-        holder.date.text = dateFormatter.shortDate(showing.date)
+        holder.date.setVisibleText(dateFormatter.shortDateWithToday(showing.date))
+        holder.dateDistanceMargin.setGone()
 
         val posterParams = holder.moviePoster.layoutParams
         posterParams.height = convertDpToPixel(65F)

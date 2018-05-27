@@ -16,7 +16,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-
+        
         <com.santalu.aspectratioimageview.AspectRatioImageView
             android:id="@+id/moviePoster"
             android:layout_width="match_parent"
@@ -36,6 +36,16 @@
             android:fontFamily="@font/nunito_sans_semibold"
             android:background="@color/colorAccentTransparent"
             android:layout_alignBottom="@+id/moviePoster" />
+        
+        <ImageView
+            android:id="@+id/star"
+            android:src="@drawable/star_with_border"
+            android:visibility="gone"
+            android:layout_margin="0dp"
+            android:layout_alignTop="@+id/moviePoster"
+            android:layout_alignEnd="@+id/moviePoster"
+            android:layout_width="36dp"
+            android:layout_height="36dp" />
 
         <TextView
             android:id="@+id/movieTitle"

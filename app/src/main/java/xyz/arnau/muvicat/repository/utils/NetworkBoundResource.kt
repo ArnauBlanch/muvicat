@@ -14,6 +14,7 @@ abstract class NetworkBoundResource<ResultType, RequestType> @MainThread constru
 
     init {
         result.value = Resource.loading(null)
+        @Suppress("LeakingThis")
         val dbSource: LiveData<ResultType> = loadFromDb()
         result.addSource(dbSource, { data ->
             result.removeSource(dbSource)
@@ -39,19 +40,16 @@ abstract class NetworkBoundResource<ResultType, RequestType> @MainThread constru
             result.removeSource(apiResponse)
             result.removeSource(dbSource)
             when {
-                response?.type == ResponseStatus.SUCCESSFUL && response.body != null ->
+                (response?.type == ResponseStatus.SUCCESSFUL && response.body != null)
+                        || response?.type == ResponseStatus.NOT_MODIFIED ->
                     appExecutors.diskIO().execute {
                         saveResponse(response)
-                        appExecutors.mainThread().execute({
+                        appExecutors.mainThread().execute {
                             result.addSource(loadFromDb(), { newData ->
                                 setValue(Resource.success(newData))
                             })
-                        })
+                        }
                     }
-                response?.type == ResponseStatus.NOT_MODIFIED -> {
-                    saveResponse(response)
-                    result.addSource(dbSource, { newData -> setValue(Resource.success(newData)) })
-                }
                 else -> {
                     onFetchFailed()
                     result.addSource(dbSource, { newData ->
@@ -78,6 +76,7 @@ abstract class NetworkBoundResource<ResultType, RequestType> @MainThread constru
     @MainThread
     protected abstract fun createCall(): LiveData<Response<RequestType>>
 
+    @Suppress("SuspiciousEqualsCombination")
     private fun equals(a: Any?, b: Any): Boolean {
         return a === b || a != null && a == b
     }

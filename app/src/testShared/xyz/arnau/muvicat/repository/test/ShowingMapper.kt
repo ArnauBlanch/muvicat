@@ -7,7 +7,7 @@ object ShowingMapper {
     fun mapFromShowingEntity(showing: ShowingEntity) =
         Showing(
             showing.id, showing.date, showing.version, showing.seasonId,
-            showing.movieId, null, null, showing.cinemaId.toString(),
+            showing.movieId, null, null, false, showing.cinemaId.toString(),
             null, null, null,
             null, null
         )

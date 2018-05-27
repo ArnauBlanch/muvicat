@@ -52,4 +52,10 @@ class ApiResponse<T> {
             }
         }
     }
+    internal constructor(code: Int, body: T?, errorMessage: String?, status: ResponseStatus) {
+        this.code = code
+        this.body = body
+        this.errorMessage = errorMessage
+        this.status = status
+    }
 }

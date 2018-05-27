@@ -8,16 +8,17 @@ import xyz.arnau.muvicat.repository.MovieRepository
 import xyz.arnau.muvicat.repository.ShowingRepository
 import xyz.arnau.muvicat.repository.model.Movie
 import xyz.arnau.muvicat.repository.model.MovieShowing
+import xyz.arnau.muvicat.repository.model.MovieWithCast
 import xyz.arnau.muvicat.repository.model.Resource
 import javax.inject.Inject
 
 class MovieViewModel @Inject constructor(
-    movieRepository: MovieRepository,
+    private val movieRepository: MovieRepository,
     showingRepository: ShowingRepository
 ) : ViewModel() {
     private val movieId = MutableLiveData<Long>()
 
-    val movie: LiveData<Resource<Movie>> =
+    val movie: LiveData<Resource<MovieWithCast>> =
         Transformations.switchMap(movieId) { id ->
             movieRepository.getMovie(id)
         }
@@ -26,6 +27,23 @@ class MovieViewModel @Inject constructor(
         Transformations.switchMap(movieId) { id ->
             showingRepository.getShowingsByMovie(id)
         }
+
+    fun rateMovie(tmdbId: Int, rating: Double): LiveData<Resource<Boolean>> {
+        movieId.value?.let {
+            return movieRepository.rateMovie(it, tmdbId, rating)
+        }
+
+        throw NoSuchFieldException("Unknown movie ID")
+    }
+
+    fun unrateMovie(tmdbId: Int): LiveData<Resource<Boolean>> {
+        movieId.value?.let {
+            return movieRepository.unrateMovie(it, tmdbId)
+        }
+
+        throw NoSuchFieldException("Unknown movie ID")
+    }
+
 
     fun setId(id: Long) {
         movieId.value = id

@@ -87,6 +87,7 @@
             android:id="@+id/date"
             android:fontFamily="@font/nunito_sans_bold"
             android:textSize="15sp"
+            android:visibility="gone"
             android:textColor="@android:color/transparent"
             android:text="aaaa"
             android:background="@color/skeleton_light"
@@ -95,13 +96,14 @@
             android:layout_height="wrap_content" />
         <View
             android:id="@+id/dateDistanceMargin"
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="16dp" />
 
         <TextView
             android:id="@+id/cinemaDistance"
             android:fontFamily="@font/nunito_sans_semibold"
-            android:textSize="13sp"
+            android:textSize="14sp"
             android:text="aaaaaa"
             android:textColor="@android:color/transparent"
             android:background="@color/skeleton_light"

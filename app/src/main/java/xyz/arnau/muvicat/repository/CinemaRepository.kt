@@ -3,6 +3,8 @@ package xyz.arnau.muvicat.repository
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Transformations
+import android.os.HandlerThread
+import android.support.annotation.WorkerThread
 import xyz.arnau.muvicat.cache.model.CinemaEntity
 import xyz.arnau.muvicat.repository.model.Cinema
 import xyz.arnau.muvicat.repository.model.Resource
