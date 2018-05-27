@@ -1,5 +1,5 @@
 package xyz.arnau.muvicat.ui
 
 interface BackPressable {
-    fun onBackPressed()
+    fun onBackPressed(): Boolean
 }

@@ -77,9 +77,7 @@ class MainActivity : LocationAwareActivity(), HasSupportFragmentInjector {
 
     override fun onBackPressed() {
         val currentFragment = viewPagerAdapter.getItem(fragmentsViewPager.currentItem)
-        if (currentFragment is BackPressable)
-            currentFragment.onBackPressed()
-        else
+        if (!(currentFragment is BackPressable && currentFragment.onBackPressed()))
             super.onBackPressed()
     }
 

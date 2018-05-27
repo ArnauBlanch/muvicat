@@ -89,14 +89,16 @@ class MovieListFragment : BasicMovieListFragment<Movie>(),
         return true
     }
 
-    override fun onBackPressed() {
-        hideSearch()
-    }
+    override fun onBackPressed() = hideSearch()
 
-    private fun hideSearch() {
+    private fun hideSearch(): Boolean {
         val searchView = moviesToolbar.menu.findItem(R.id.action_search).actionView as SearchView
+        if (searchView.isIconified)
+            return false
+
         searchView.setQuery("", false)
         searchView.isIconified = true
+        return true
     }
 
     override fun scrollToTop() {
