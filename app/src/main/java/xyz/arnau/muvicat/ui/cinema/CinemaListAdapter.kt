@@ -50,7 +50,6 @@ class CinemaListAdapter @Inject constructor() :
     }
 
     fun formatStats(numMovies: Int, numShowings: Int): String {
-        val string = ""
         val movies = if (numMovies > 1)
             context.getString(R.string.movies_lower)
         else

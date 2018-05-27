@@ -40,4 +40,6 @@
     <string name="rate_movie_success">La teva valoració s\'ha enviat correctament! Pot tardar unes hores en veure\'s reflectit…</string>
     <string name="unrate_movie_error">No s\'ha pogut eliminar la teva valoració…</string>
     <string name="unrate_movie_success">La teva valoració s\'ha eliminat correctament! Pot tardar unes hores en veure\'s reflectit…</string>
+    <string name="search_movie">Cerca pel·lícula</string>
+    <string name="search_hint">Cerca pel·lícula…</string>
 </resources>

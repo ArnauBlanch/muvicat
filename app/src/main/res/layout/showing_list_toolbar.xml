@@ -10,7 +10,7 @@
         android:id="@+id/showingsToolbarCollapsing"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:expandedTitleMarginTop="20dp"
+        app:expandedTitleMarginTop="15dp"
         app:expandedTitleMarginStart="15dp"
         app:collapsedTitleTextAppearance="@style/CollapsingToolbarLayoutCollapsedTextStyle"
         app:layout_scrollFlags="scroll|exitUntilCollapsed"
