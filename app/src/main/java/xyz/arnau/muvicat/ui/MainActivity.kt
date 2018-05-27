@@ -75,6 +75,14 @@ class MainActivity : LocationAwareActivity(), HasSupportFragmentInjector {
         }
     }
 
+    override fun onBackPressed() {
+        val currentFragment = viewPagerAdapter.getItem(fragmentsViewPager.currentItem)
+        if (currentFragment is BackPressable)
+            currentFragment.onBackPressed()
+        else
+            super.onBackPressed()
+    }
+
     fun isSelectedFragment(fragment: Int): Boolean =
         fragment == fragmentsViewPager.currentItem
 
