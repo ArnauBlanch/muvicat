@@ -23,6 +23,8 @@ import xyz.arnau.muvicat.repository.model.Resource
 import xyz.arnau.muvicat.repository.model.Status
 import xyz.arnau.muvicat.di.Injectable
 import xyz.arnau.muvicat.ui.*
+import xyz.arnau.muvicat.ui.utils.ScrollableToTop
+import xyz.arnau.muvicat.ui.utils.SimpleDividerItemDecoration
 import xyz.arnau.muvicat.utils.LocationUtils
 import xyz.arnau.muvicat.viewmodel.cinema.CinemaListViewModel
 import javax.inject.Inject
@@ -42,7 +44,11 @@ class CinemaListFragment : ListFragment(), ScrollableToTop, Injectable {
         super.onActivityCreated(savedInstanceState)
         setupToolbar()
         setupSkeletonScreen()
-        getRecyclerView().addItemDecoration(SimpleDividerItemDecoration(context!!))
+        getRecyclerView().addItemDecoration(
+            SimpleDividerItemDecoration(
+                context!!
+            )
+        )
     }
 
     override fun onCreateView(

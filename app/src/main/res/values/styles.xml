@@ -21,17 +21,39 @@
         <item name="android:textSize">32sp</item>
     </style>
 
+    <style name="CollapsingToolbarLayoutExpandedTextStyle2" parent="AppTheme">
+        <item name="android:textSize">28sp</item>
+    </style>
+
     <style name="CollapsingToolbarLayoutCollapsedTextStyle" parent="AppTheme">
         <item name="android:textSize">22sp</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:ellipsize">none</item>
     </style>
     <style name="CollapsingToolbarLayoutCollapsedTextStyleMovieInfo" parent="AppTheme">
         <item name="android:textSize">18sp</item>
+        <item name="android:fontFamily">@font/nunito_sans_black</item>
     </style>
 
     <style name="TabTextAppearance" parent="TextAppearance.Design.Tab">
         <item name="android:fontFamily">@font/nunito_sans_extrabold</item>
         <item name="android:textSize">17sp</item>
         <item name="textAllCaps">false</item>
+    </style>
+
+    <!--
+    <style name="CustomRatingBar" parent="@android:style/Widget.Material.RatingBar.Indicator" >
+        <item name="android:scaleX">0.5</item>
+        <item name="android:scaleY">0.5</item>
+        <item name="android:progressTint">@color/darkYellow</item>
+        <item name="android:progressBackgroundTint">@color/lightYellow</item>
+    </style>-->
+
+    <style name="foodRatingBar" parent="@android:style/Widget.RatingBar">
+        <item name="android:progressDrawable">@drawable/rating_stars</item>
+        <item name="android:minHeight">22dip</item>
+        <item name="android:maxHeight">22dip</item>
     </style>
 
 </resources>

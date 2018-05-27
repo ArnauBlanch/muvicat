@@ -1,7 +1,6 @@
 package xyz.arnau.muvicat.ui.movie
 
 import android.os.Bundle
-import android.view.View
 import kotlinx.android.synthetic.main.movie_list_toolbar.*
 import xyz.arnau.muvicat.repository.model.Movie
 import xyz.arnau.muvicat.di.Injectable
@@ -10,7 +9,7 @@ import xyz.arnau.muvicat.utils.setGone
 import xyz.arnau.muvicat.viewmodel.cinema.CinemaViewModel
 import javax.inject.Inject
 
-class CinemaMovieListFragment : BasicMovieListFragment<Movie, MovieListAdapter.ViewHolder>(),
+class CinemaMovieListFragment : BasicMovieListFragment<Movie>(),
     Injectable {
     @Inject
     lateinit var moviesAdapter: MovieListAdapter
@@ -21,6 +20,7 @@ class CinemaMovieListFragment : BasicMovieListFragment<Movie, MovieListAdapter.V
         super.onActivityCreated(savedInstanceState)
 
         viewModel = (activity as CinemaActivity).viewModel
+        moviesAdapter.cinemaId = (activity as CinemaActivity).cinemaId
         moviesToolbarLayout.setGone()
     }
 

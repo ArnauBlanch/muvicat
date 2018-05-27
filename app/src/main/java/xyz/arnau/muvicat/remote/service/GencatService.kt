@@ -3,9 +3,9 @@ package xyz.arnau.muvicat.remote.service
 import android.arch.lifecycle.LiveData
 import retrofit2.http.GET
 import retrofit2.http.Header
-import xyz.arnau.muvicat.remote.model.GencatCinemaResponse
-import xyz.arnau.muvicat.remote.model.GencatMovieResponse
-import xyz.arnau.muvicat.remote.model.GencatShowingResponse
+import xyz.arnau.muvicat.remote.model.gencat.GencatCinemaResponse
+import xyz.arnau.muvicat.remote.model.gencat.GencatMovieResponse
+import xyz.arnau.muvicat.remote.model.gencat.GencatShowingResponse
 import xyz.arnau.muvicat.remote.utils.ApiResponse
 
 interface GencatService {

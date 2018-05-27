@@ -3,8 +3,8 @@
     <string name="movies">Pel·lícules</string>
     <string name="movies_lower">pel·lícules</string>
     <string name="movie_lower">pel·lícula</string>
-    <string name="couldnt_update_data">No s\'han pogut actualitzar les dades. Torna-ho a provar més endavant...</string>
-    <string name="couldnt_get_data">No s\'ha pogut descarregar les dades. Torna-ho a provar més endavant...</string>
+    <string name="couldnt_update_data">No s\'han pogut actualitzar les dades. Torna-ho a provar més endavant…</string>
+    <string name="couldnt_get_data">No s\'ha pogut descarregar les dades. Torna-ho a provar més endavant…</string>
     <string name="try_again">Torna a provar</string>
     <string name="release">Estrena %s</string>
     <string name="today">avui</string>
@@ -28,4 +28,25 @@
     <string name="showing">Sessió</string>
     <string name="more_showings">  més sessions</string>
     <string name="less_showings">menys sessions</string>
+    <string name="tmdbRating">VALORACIÓ TMDb</string>
+    <string name="votes">vots</string>
+    <string name="vote">vot</string>
+    <string name="no_rating">no hi ha valoració</string>
+    <string name="yourRating">LA TEVA VALORACIÓ</string>
+    <string name="rate_it">valora\nla pel·lícula</string>
+    <string name="delete_rating">Elimina</string>
+    <string name="send_rating">Envia</string>
+    <string name="rate_movie_error">No s\'ha pogut enviar la teva valoració…</string>
+    <string name="rate_movie_success">La teva valoració s\'ha enviat correctament! Pot tardar unes hores en veure\'s reflectit…</string>
+    <string name="unrate_movie_error">No s\'ha pogut eliminar la teva valoració…</string>
+    <string name="unrate_movie_success">La teva valoració s\'ha eliminat correctament! Pot tardar unes hores en veure\'s reflectit…</string>
+    <string name="search_movie">Cerca pel·lícula</string>
+    <string name="search_hint">Cerca pel·lícula…</string>
+    <string name="chooseDate">Selecciona data</string>
+    <string name="selection">Selecció</string>
+    <string name="home">Inici</string>
+    <string name="my_selection">La meva selecció</string>
+    <string name="voted">Valorat</string>
+    <string name="voted_movies">Pel·lícules valorades</string>
+    <string name="no_voted_movies">Encara no has valorat\ncap pel·lícula</string>
 </resources>

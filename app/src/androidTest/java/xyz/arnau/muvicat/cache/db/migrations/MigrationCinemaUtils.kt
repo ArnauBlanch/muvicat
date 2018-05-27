@@ -5,7 +5,7 @@ import android.database.Cursor
 import org.junit.Assert
 
 object MigrationCinemaUtils {
-    fun insertCinemas(db: SupportSQLiteDatabase) {
+    fun insertCinemasVersion2(db: SupportSQLiteDatabase) {
         db.execSQL(
             """INSERT INTO cinemas
                 VALUES(1, "name1", "address1", "town1", "region1", "province1", 1)"""
@@ -16,7 +16,7 @@ object MigrationCinemaUtils {
         )
     }
 
-    fun checkCinemas(db: SupportSQLiteDatabase) {
+    fun checkCinemasVersion2to3(db: SupportSQLiteDatabase) {
         val cursor = db.query("SELECT * FROM cinemas ORDER BY id")
         Assert.assertEquals(2, cursor.count)
         cursor.moveToNext()

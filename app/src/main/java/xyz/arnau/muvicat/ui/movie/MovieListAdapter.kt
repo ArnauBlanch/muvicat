@@ -5,28 +5,42 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Filter
+import android.widget.Filterable
 import android.widget.ImageView
 import android.widget.TextView
+import org.apache.commons.lang3.StringUtils
 import xyz.arnau.muvicat.R
 import xyz.arnau.muvicat.repository.model.Movie
-import xyz.arnau.muvicat.utils.DateFormatter
-import xyz.arnau.muvicat.utils.GlideApp
-import xyz.arnau.muvicat.utils.setVisibleText
+import xyz.arnau.muvicat.utils.*
 import javax.inject.Inject
 
-class MovieListAdapter @Inject constructor() : RecyclerView.Adapter<MovieListAdapter.ViewHolder>() {
+class MovieListAdapter @Inject constructor() : RecyclerView.Adapter<MovieListAdapter.ViewHolder>(),
+    Filterable {
     @Inject
     lateinit var dateFormatter: DateFormatter
 
     @Inject
     lateinit var context: Context
 
-    var movies: List<Movie> = arrayListOf()
+    var movies: List<Movie> = listOf()
+        set(movies) {
+            moviesFiltered = movies
+            field = movies
+        }
+
+    private var moviesFiltered: List<Movie> = listOf()
+    var cinemaId: Long? = null
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val movie = movies[position]
+        val movie = moviesFiltered[position]
         holder.titleText.text = movie.title
         holder.releaseDate.setVisibleText(dateFormatter.shortReleaseDate(movie.releaseDate))
+        if (movie.vote !== null) {
+            holder.star.setVisible()
+        } else {
+            holder.star.setGone()
+        }
 
         GlideApp.with(holder.itemView.context)
             .load("http://www.gencat.cat/llengua/cinema/${movie.posterUrl}")
@@ -35,7 +49,13 @@ class MovieListAdapter @Inject constructor() : RecyclerView.Adapter<MovieListAda
             .into(holder.posterImage)
 
         holder.itemView.setOnClickListener {
-            context.startActivity(MovieActivity.createIntent(context, movie.id))
+            context.startActivity(
+                MovieActivity.createIntent(
+                    context,
+                    movie.id,
+                    cinemaId = cinemaId
+                )
+            )
         }
     }
 
@@ -46,12 +66,46 @@ class MovieListAdapter @Inject constructor() : RecyclerView.Adapter<MovieListAda
     }
 
     override fun getItemCount(): Int {
-        return movies.size
+        return moviesFiltered.size
     }
+
+    override fun getFilter(): Filter =
+        object: Filter() {
+            @Suppress("UNCHECKED_CAST")
+            override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
+                results?.values?.let {
+                    moviesFiltered = it as List<Movie>
+                    notifyDataSetChanged()
+                }
+            }
+
+            override fun performFiltering(constraint: CharSequence?): FilterResults {
+                val charString = constraint.toString()
+                var list = listOf<Movie>()
+                if (charString.isEmpty()) {
+                    list = movies
+                } else {
+                    movies.forEach {
+                        val titleString = StringUtils.stripAccents(it.title?.toLowerCase())
+                        val plotString = StringUtils.stripAccents(it.plot?.toLowerCase())
+                        val searchStr = StringUtils.stripAccents(charString.toLowerCase())
+                        if (titleString.contains(searchStr) || plotString.contains(searchStr)) {
+                            list += it
+                        }
+                    }
+                }
+                val filterResults = FilterResults()
+                filterResults.values = list
+                return filterResults
+            }
+
+        }
+
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         var posterImage: ImageView = view.findViewById(R.id.moviePoster)
         var titleText: TextView = view.findViewById(R.id.movieTitle)
         var releaseDate: TextView = view.findViewById(R.id.releaseDate)
+        var star: ImageView = view.findViewById(R.id.star)
     }
 }
