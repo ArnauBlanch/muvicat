@@ -58,12 +58,12 @@ class MovieListFragment : BasicMovieListFragment<Movie>(),
         moviesToolbar.setOnClickListener {
             scrollToTop()
         }
-        moviesToolbarLayout.addOnOffsetChangedListener { _, verticalOffset ->
+        /*moviesToolbarLayout.addOnOffsetChangedListener { _, verticalOffset ->
             if (verticalOffset == 0)
                 moviesToolbar.menu.setGroupVisible(0, false)
             else
                 moviesToolbar.menu.setGroupVisible(0, true)
-        }
+        }*/
         moviesToolbar.inflateMenu(R.menu.movie_list_menu)
         moviesToolbar.setOnMenuItemClickListener {
             if (it?.itemId == R.id.action_search) {

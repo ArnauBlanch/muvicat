@@ -8,8 +8,8 @@
     android:foreground="?android:selectableItemBackgroundBorderless"
     android:paddingStart="18dp"
     android:paddingEnd="8dp"
-    android:paddingTop="18dp"
-    android:paddingBottom="18dp"
+    android:paddingTop="10dp"
+    android:paddingBottom="10dp"
     android:orientation="horizontal"
     android:focusable="true">
 
@@ -82,12 +82,14 @@
             android:id="@+id/date"
             android:fontFamily="@font/nunito_sans_bold"
             android:textSize="15sp"
+            android:visibility="gone"
             android:textColor="@color/colorAccent"
             android:layout_gravity="center_horizontal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
         <View
             android:id="@+id/dateDistanceMargin"
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="16dp" />
 
@@ -95,7 +97,7 @@
             android:id="@+id/cinemaDistance"
             android:visibility="gone"
             android:fontFamily="@font/nunito_sans_semibold"
-            android:textSize="13sp"
+            android:textSize="14sp"
             android:textColor="@color/grey"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />

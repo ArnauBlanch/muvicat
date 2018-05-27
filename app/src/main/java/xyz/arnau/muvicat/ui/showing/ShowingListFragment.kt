@@ -1,29 +1,43 @@
 package xyz.arnau.muvicat.ui.showing
 
 import android.app.Activity
+import android.content.Context
 import android.location.Location
 import android.os.Bundle
 import android.support.v4.content.res.ResourcesCompat
 import com.google.firebase.analytics.FirebaseAnalytics
+import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.showing_list.*
 import kotlinx.android.synthetic.main.showing_list_toolbar.*
+import org.joda.time.LocalDate
 import xyz.arnau.muvicat.R
 import xyz.arnau.muvicat.repository.model.Showing
+import xyz.arnau.muvicat.ui.DateFilterable
 import xyz.arnau.muvicat.ui.LocationAwareActivity
 import xyz.arnau.muvicat.ui.MainActivity
 import xyz.arnau.muvicat.ui.ScrollableToTop
+import xyz.arnau.muvicat.utils.DateFormatter
 import xyz.arnau.muvicat.utils.LocationUtils
+import xyz.arnau.muvicat.utils.setVisible
 import xyz.arnau.muvicat.viewmodel.showing.ShowingListViewModel
 import javax.inject.Inject
 
-class ShowingListFragment : BasicShowingListFragment<Showing>(), ScrollableToTop {
+class ShowingListFragment : BasicShowingListFragment<Showing>(), ScrollableToTop, DateFilterable {
     @Inject
     lateinit var showingsAdapter: ShowingListAdapter
+
+    @Inject
+    lateinit var datesAdapter: DateListAdapter
+
+    @Inject
+    lateinit var dateFormatter: DateFormatter
 
     @Inject
     lateinit var showingListViewModel: ShowingListViewModel
 
     private var hasLocation = false
+    private var showingDates = listOf<LocalDate>()
+    private var selectedDate = LocalDate.now()
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -42,6 +56,10 @@ class ShowingListFragment : BasicShowingListFragment<Showing>(), ScrollableToTop
                 .setCurrentScreen(activity as Activity, "Showing list", "Showing list")
             FirebaseAnalytics.getInstance(it)
         }
+
+        filterShowingsButton.text = dateFormatter.shortDate(selectedDate.toDate())
+        showingsAdapter.filter.filter(selectedDate.toDate().time.toString())
+        showingsAdapter.notifyDataSetChanged()
     }
 
     override fun handleShowingsUpdate(data: List<Showing>) {
@@ -58,7 +76,14 @@ class ShowingListFragment : BasicShowingListFragment<Showing>(), ScrollableToTop
                 nullsLast(),
                 { it.cinemaDistance })
         )
-        showingsAdapter.notifyDataSetChanged()
+
+        showingDates = data.map { LocalDate(it.date.time) }.distinct().sorted()
+        if (showingDates.isNotEmpty()) {
+            filterShowingsButton.text = dateFormatter.shortDate(showingDates.first().toDate())
+            showingsAdapter.filter.filter(showingDates.first().toDate().time.toString())
+            showingsAdapter.notifyDataSetChanged()
+            filterShowingsButton.setVisible()
+        }
     }
 
     private fun setupToolbar() {
@@ -70,6 +95,20 @@ class ShowingListFragment : BasicShowingListFragment<Showing>(), ScrollableToTop
 
         showingsToolbar.setOnClickListener {
             scrollToTop()
+        }
+
+        filterShowingsButton.setOnClickListener {
+            context?.let { context ->
+                datesAdapter.dates = showingDates
+                datesAdapter.currentDate = selectedDate
+                datesAdapter.dateFilterable = this
+                datesAdapter.notifyDataSetChanged()
+
+                DatePickerDialog(context, datesAdapter).apply {
+                    setContentView(layoutInflater.inflate(R.layout.date_picker_dialog, null))
+                    show()
+                }
+            }
         }
     }
 
@@ -100,6 +139,14 @@ class ShowingListFragment : BasicShowingListFragment<Showing>(), ScrollableToTop
     override fun scrollToTop() {
         showingsRecyclerView?.scrollToPosition(0)
         showingsToolbarLayout?.setExpanded(true)
+    }
+
+    override fun onDatePicked(date: LocalDate) {
+        selectedDate = date
+        filterShowingsButton.text = dateFormatter.shortDate(date.toDate())
+        scrollToTop()
+        showingsAdapter.filter.filter(date.toDate().time.toString())
+        showingsAdapter.notifyDataSetChanged()
     }
 
     companion object {

@@ -68,9 +68,12 @@ class MovieListAdapter @Inject constructor() : RecyclerView.Adapter<MovieListAda
 
     override fun getFilter(): Filter =
         object: Filter() {
+            @Suppress("UNCHECKED_CAST")
             override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
-                moviesFiltered = results?.values as List<Movie>
-                notifyDataSetChanged()
+                results?.values?.let {
+                    moviesFiltered = it as List<Movie>
+                    notifyDataSetChanged()
+                }
             }
 
             override fun performFiltering(constraint: CharSequence?): FilterResults {

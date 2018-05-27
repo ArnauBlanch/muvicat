@@ -107,7 +107,7 @@ class MovieShowingsAdapter @Inject constructor() : RecyclerView.Adapter<Recycler
 
             showing?.let {
                 holder.version.text = longerVersion(showing.version)
-                holder.date.text = dateFormatter.shortDate(showing.date)
+                holder.date.text = dateFormatter.shortDateWithToday(showing.date)
                 holder.cinemaName.text = showing.cinemaName
                 holder.cinemaPlace.text = if (showing.cinemaRegion != null)
                     "${showing.cinemaTown} (${showing.cinemaRegion})"
