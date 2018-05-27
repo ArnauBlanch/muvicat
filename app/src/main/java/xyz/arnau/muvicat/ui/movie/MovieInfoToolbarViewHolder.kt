@@ -15,6 +15,7 @@ import com.google.android.youtube.player.YouTubeIntents
 import me.zhanghai.android.materialratingbar.MaterialRatingBar
 import xyz.arnau.muvicat.R
 import xyz.arnau.muvicat.repository.model.Movie
+import xyz.arnau.muvicat.ui.utils.toString1Decimal
 import xyz.arnau.muvicat.utils.GlideApp
 import xyz.arnau.muvicat.utils.setGone
 import xyz.arnau.muvicat.utils.setVisible
@@ -190,6 +191,4 @@ class MovieInfoToolbarViewHolder(private val activity: MovieActivity) {
         }
 
     }
-
-    private fun Double.toString1Decimal(): String = DecimalFormat("0.0").format(this)
 }

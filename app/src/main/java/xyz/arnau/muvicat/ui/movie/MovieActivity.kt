@@ -12,9 +12,9 @@ import kotlinx.android.synthetic.main.movie_info.*
 import xyz.arnau.muvicat.R
 import xyz.arnau.muvicat.repository.model.*
 import xyz.arnau.muvicat.ui.LocationAwareActivity
-import xyz.arnau.muvicat.ui.ScrollableToTop
-import xyz.arnau.muvicat.ui.SimpleDividerItemDecoration
-import xyz.arnau.muvicat.ui.ToolbarUtils
+import xyz.arnau.muvicat.ui.utils.ScrollableToTop
+import xyz.arnau.muvicat.ui.utils.SimpleDividerItemDecoration
+import xyz.arnau.muvicat.ui.utils.UiUtils
 import xyz.arnau.muvicat.utils.DateFormatter
 import xyz.arnau.muvicat.utils.LocationUtils
 import xyz.arnau.muvicat.viewmodel.movie.MovieViewModel
@@ -64,7 +64,7 @@ class MovieActivity : LocationAwareActivity(), ScrollableToTop {
     }
 
     private fun setupToolbar(title: String?) {
-        ToolbarUtils.setupCollapsingToolbar(
+        UiUtils.setupCollapsingToolbar(
             this,
             R.id.movieInfoToolbar,
             R.id.movieInfoToolbarLayout,
@@ -77,7 +77,12 @@ class MovieActivity : LocationAwareActivity(), ScrollableToTop {
     private fun setupRecyclerView() {
         movieInfoAndShowingsRecyclerView.adapter = infoAndShowingsAdapter
         movieInfoAndShowingsRecyclerView.layoutManager = LinearLayoutManager(this)
-        movieInfoAndShowingsRecyclerView.addItemDecoration(SimpleDividerItemDecoration(context, 1))
+        movieInfoAndShowingsRecyclerView.addItemDecoration(
+            SimpleDividerItemDecoration(
+                context,
+                1
+            )
+        )
     }
 
     override fun onStart() {

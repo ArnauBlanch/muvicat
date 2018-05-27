@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.AppBarLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/moviesToolbarLayout"
     android:layout_width="match_parent"
     android:layout_height="80dp">
@@ -15,7 +16,7 @@
         app:collapsedTitleTextAppearance="@style/CollapsingToolbarLayoutCollapsedTextStyle"
         app:layout_scrollFlags="scroll|exitUntilCollapsed"
         app:expandedTitleGravity="top|left"
-        app:title="Pel·lícules">
+        app:title="@string/movies">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/moviesToolbar"
@@ -27,7 +28,8 @@
             app:layout_collapseMode="pin"
             android:fitsSystemWindows="true"
             app:titleTextAppearance="@style/CollapsingToolbarLayoutCollapsedTextStyle"
-            app:layout_scrollFlags="scroll|enterAlways"/>
+            app:layout_scrollFlags="scroll|enterAlways"
+            tools:ignore="RtlSymmetry" />
 
     </android.support.design.widget.CollapsingToolbarLayout>
 </android.support.design.widget.AppBarLayout>

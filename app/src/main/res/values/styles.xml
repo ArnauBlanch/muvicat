@@ -21,6 +21,10 @@
         <item name="android:textSize">32sp</item>
     </style>
 
+    <style name="CollapsingToolbarLayoutExpandedTextStyle2" parent="AppTheme">
+        <item name="android:textSize">28sp</item>
+    </style>
+
     <style name="CollapsingToolbarLayoutCollapsedTextStyle" parent="AppTheme">
         <item name="android:textSize">22sp</item>
         <item name="android:maxLines">1</item>
@@ -29,6 +33,7 @@
     </style>
     <style name="CollapsingToolbarLayoutCollapsedTextStyleMovieInfo" parent="AppTheme">
         <item name="android:textSize">18sp</item>
+        <item name="android:fontFamily">@font/nunito_sans_black</item>
     </style>
 
     <style name="TabTextAppearance" parent="TextAppearance.Design.Tab">

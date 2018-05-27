@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.ethanhua.skeleton.RecyclerViewSkeletonScreen
 import com.ethanhua.skeleton.Skeleton
+import kotlinx.android.synthetic.main.empty_message_layout.*
 import kotlinx.android.synthetic.main.error_layout.*
 import kotlinx.android.synthetic.main.movie_list.*
 import xyz.arnau.muvicat.R
@@ -27,7 +28,7 @@ abstract class BasicMovieListFragment<T> : ListFragment(),
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        setupSkeletonScreen()
+        skeleton = prepareSkeletonScreen()
     }
 
     override fun onCreateView(
@@ -49,19 +50,24 @@ abstract class BasicMovieListFragment<T> : ListFragment(),
     internal abstract fun getMoviesLiveData(): LiveData<Resource<List<T>>>
 
     private fun handleDataState(status: Status, data: List<T>?) {
+        errorMessage.setGone()
+        messageLayout.setGone()
         if (status == Status.SUCCESS) data?.let {
             handleMoviesUpdate(it)
             skeleton.hide()
             restoreRecyclerViewState()
             if (data.isEmpty()) {
                 moviesRecyclerView.setGone()
-                errorMessage.setVisible()
+                displayEmptyOrErrorMessage()
+            } else {
+                moviesRecyclerView.setVisible()
             }
         }
         else if (status == Status.ERROR) {
             skeleton.hide()
             if (data != null && !data.isEmpty()) {
                 handleMoviesUpdate(data)
+                moviesRecyclerView.setVisible()
                 skeleton.hide()
                 view?.let {
                     Snackbar.make(it, getString(R.string.couldnt_update_data), 6000)
@@ -74,18 +80,21 @@ abstract class BasicMovieListFragment<T> : ListFragment(),
         }
     }
 
+    open fun displayEmptyOrErrorMessage() {
+        errorMessage.setVisible()
+    }
+
     abstract fun handleMoviesUpdate(movies: List<T>)
 
     override fun getRecyclerView(): RecyclerView = moviesRecyclerView
 
     override fun getRecyclerViewLayoutManager(): RecyclerView.LayoutManager = GridLayoutManager(context, 2)
 
-    private fun setupSkeletonScreen() {
-        skeleton = Skeleton.bind(moviesRecyclerView)
+    open fun prepareSkeletonScreen(): RecyclerViewSkeletonScreen =
+        Skeleton.bind(moviesRecyclerView)
             .adapter(getRecyclerViewAdapter())
             .count(6)
             .color(R.color.skeleton_shimmer)
             .load(R.layout.movie_item_skeleton)
             .show()
-    }
 }

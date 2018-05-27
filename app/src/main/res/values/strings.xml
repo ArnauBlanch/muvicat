@@ -43,4 +43,10 @@
     <string name="search_movie">Cerca pel·lícula</string>
     <string name="search_hint">Cerca pel·lícula…</string>
     <string name="chooseDate">Selecciona data</string>
+    <string name="selection">Selecció</string>
+    <string name="home">Inici</string>
+    <string name="my_selection">La meva selecció</string>
+    <string name="voted">Votat</string>
+    <string name="voted_movies">Pel·lícules votades</string>
+    <string name="no_voted_movies">Encara no has votat\ncap pel·lícula</string>
 </resources>

@@ -1,4 +1,4 @@
-package xyz.arnau.muvicat.ui
+package xyz.arnau.muvicat.ui.utils
 
 import android.content.Context
 import android.graphics.Canvas

@@ -1,4 +1,4 @@
-package xyz.arnau.muvicat.ui
+package xyz.arnau.muvicat.ui.utils
 
 import android.annotation.SuppressLint
 import android.content.Context

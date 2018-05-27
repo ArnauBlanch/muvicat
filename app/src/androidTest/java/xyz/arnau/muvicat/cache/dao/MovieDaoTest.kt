@@ -51,6 +51,22 @@ class MovieDaoTest {
     }
 
     @Test
+    fun getVotedMoviesRetrievesData() {
+        val movies = MovieEntityFactory.makeMovieEntityList(5)
+        movies[1].vote = 1.1
+        movies[3].vote = 3.3
+
+        muvicatDatabase.movieDao().insertMovies(movies)
+
+        val retrievedMovies = muvicatDatabase.movieDao().getVotedMovies().getValueBlocking()
+        assertEquals(
+            MovieMapper.mapFromMovieEntityList(listOf(movies[1], movies[3]))
+                .sortedWith(compareByDescending<Movie> { it.vote }.thenBy { it.id }),
+            retrievedMovies
+        )
+    }
+
+    @Test
     fun getCurrentMoviesRetrievesMoviesWithCurrentShowings() {
         val movies = MovieEntityFactory.makeMovieEntityList(3)
         muvicatDatabase.movieDao().insertMovies(movies)

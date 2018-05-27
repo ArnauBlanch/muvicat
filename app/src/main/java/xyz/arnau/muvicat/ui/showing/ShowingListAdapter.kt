@@ -33,9 +33,16 @@ class ShowingListAdapter @Inject constructor() :
         val showing = filteredShowings[position]
         holder.movieTitle.text = showing.movieTitle
         if (showing.movieVoted)
-            holder.star.setVisible()
+            holder.movieTitle
+                .setCompoundDrawablesRelativeWithIntrinsicBounds(
+                    0,
+                    0,
+                    R.drawable.ic_star_yellow_18dp,
+                    0
+                )
         else
-            holder.star.setGone()
+            holder.movieTitle
+                .setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, 0, 0)
 
         GlideApp.with(holder.itemView.context)
             .load("http://www.gencat.cat/llengua/cinema/${showing.moviePosterUrl}")
@@ -100,7 +107,6 @@ class ShowingListAdapter @Inject constructor() :
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         var movieTitle: TextView = view.findViewById(R.id.movieTitle)
-        var star: ImageView = view.findViewById(R.id.star)
         var moviePoster: ImageView = view.findViewById(R.id.moviePoster)
         var version: TextView = view.findViewById(R.id.showingVersion)
         var date: TextView = view.findViewById(R.id.date)
