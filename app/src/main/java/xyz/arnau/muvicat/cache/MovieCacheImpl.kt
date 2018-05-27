@@ -15,6 +15,10 @@ class MovieCacheImpl @Inject constructor(private val movieDao: MovieDao) : Movie
         return movieDao.getCurrentMovies()
     }
 
+    override fun getVotedMovies(): LiveData<List<Movie>> {
+        return movieDao.getVotedMovies()
+    }
+
     override fun getMoviesByCinema(cinemaId: Long): LiveData<List<Movie>> {
         return movieDao.getCurrentMoviesByCinema(cinemaId)
     }

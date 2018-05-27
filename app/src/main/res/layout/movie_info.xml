@@ -89,9 +89,9 @@
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:layout_gravity="start|bottom"
+                            android:layout_marginBottom="15dp"
                             android:layout_marginStart="15dp"
                             android:layout_marginTop="100dp"
-                            android:layout_marginBottom="15dp"
                             android:background="@color/darkGrey"
                             app:ari_aspect="width"
                             app:ari_ratio="0.7" />
@@ -202,8 +202,8 @@
                         android:layout_weight="1"
                         android:gravity="center"
                         android:orientation="vertical"
-                        android:paddingTop="6dp"
-                        android:paddingBottom="10dp">
+                        android:paddingBottom="10dp"
+                        android:paddingTop="6dp">
 
                         <TextView
                             android:layout_width="match_parent"
@@ -243,10 +243,10 @@
                                     android:id="@+id/movieTmdbVoteStars"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
+                                    android:layout_marginBottom="5dp"
+                                    android:layout_marginEnd="5dp"
                                     android:layout_marginStart="5dp"
                                     android:layout_marginTop="5dp"
-                                    android:layout_marginEnd="5dp"
-                                    android:layout_marginBottom="5dp"
                                     android:isIndicator="true"
                                     android:numStars="5"
                                     app:mrb_fillBackgroundStars="true"
@@ -285,8 +285,8 @@
                     <View
                         android:layout_width="1dp"
                         android:layout_height="match_parent"
-                        android:layout_marginTop="10dp"
                         android:layout_marginBottom="10dp"
+                        android:layout_marginTop="10dp"
                         android:background="@color/grey" />
 
                     <LinearLayout
@@ -297,8 +297,8 @@
                         android:layout_weight="1"
                         android:gravity="center"
                         android:orientation="vertical"
-                        android:paddingTop="6dp"
-                        android:paddingBottom="10dp">
+                        android:paddingBottom="10dp"
+                        android:paddingTop="6dp">
 
                         <Button
                             android:id="@+id/rateMovieButton"
@@ -306,8 +306,8 @@
                             android:layout_height="wrap_content"
                             android:background="@android:color/transparent"
                             android:backgroundTint="@android:color/transparent"
-                            android:drawableStart="@drawable/ic_star_half_black_24dp"
                             android:drawablePadding="12dp"
+                            android:drawableStart="@drawable/ic_star_half_black_24dp"
                             android:fontFamily="@font/nunito_sans_extrabold"
                             android:gravity="center"
                             android:minHeight="0dp"
@@ -335,43 +335,44 @@
                                 android:textAlignment="center"
                                 android:textColor="@color/light_grey"
                                 android:textSize="12sp" />
+
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:gravity="center"
                                 android:orientation="horizontal">
 
-                            <LinearLayout
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:gravity="center">
-
-                                <me.zhanghai.android.materialratingbar.MaterialRatingBar
-                                    android:id="@+id/movieUserVoteStars"
-                                    android:layout_width="match_parent"
+                                <LinearLayout
+                                    android:layout_width="0dp"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginStart="5dp"
-                                    android:layout_marginTop="5dp"
-                                    android:layout_marginEnd="5dp"
-                                    android:layout_marginBottom="5dp"
-                                    android:isIndicator="true"
-                                    android:numStars="5"
-                                    android:rating="3.5"
-                                    app:mrb_fillBackgroundStars="true"
-                                    app:mrb_progressBackgroundTint="@color/darkRed"
-                                    app:mrb_progressTint="@color/lightRed" />
-                            </LinearLayout>
+                                    android:layout_weight="1"
+                                    android:gravity="center">
 
-                            <TextView
-                                android:id="@+id/movieUserRating"
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-                                android:gravity="center"
-                                android:fontFamily="@font/nunito_sans_extrabold"
-                                android:singleLine="true"
-                                android:textColor="@color/light_grey"
-                                android:textSize="15sp" />
+                                    <me.zhanghai.android.materialratingbar.MaterialRatingBar
+                                        android:id="@+id/movieUserVoteStars"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginBottom="5dp"
+                                        android:layout_marginEnd="5dp"
+                                        android:layout_marginStart="5dp"
+                                        android:layout_marginTop="5dp"
+                                        android:isIndicator="true"
+                                        android:numStars="5"
+                                        android:rating="3.5"
+                                        app:mrb_fillBackgroundStars="true"
+                                        app:mrb_progressBackgroundTint="@color/darkRed"
+                                        app:mrb_progressTint="@color/lightRed" />
+                                </LinearLayout>
+
+                                <TextView
+                                    android:id="@+id/movieUserRating"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:fontFamily="@font/nunito_sans_extrabold"
+                                    android:gravity="center"
+                                    android:singleLine="true"
+                                    android:textColor="@color/light_grey"
+                                    android:textSize="15sp" />
                             </LinearLayout>
                         </LinearLayout>
                     </LinearLayout>

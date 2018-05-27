@@ -1,28 +1,28 @@
 package xyz.arnau.muvicat.ui.showing
 
 import android.app.Activity
-import android.content.Context
 import android.location.Location
 import android.os.Bundle
 import android.support.v4.content.res.ResourcesCompat
 import com.google.firebase.analytics.FirebaseAnalytics
-import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.showing_list.*
 import kotlinx.android.synthetic.main.showing_list_toolbar.*
 import org.joda.time.LocalDate
 import xyz.arnau.muvicat.R
 import xyz.arnau.muvicat.repository.model.Showing
-import xyz.arnau.muvicat.ui.DateFilterable
+import xyz.arnau.muvicat.ui.utils.DateFilterable
 import xyz.arnau.muvicat.ui.LocationAwareActivity
 import xyz.arnau.muvicat.ui.MainActivity
-import xyz.arnau.muvicat.ui.ScrollableToTop
+import xyz.arnau.muvicat.ui.utils.ScrollableToTop
 import xyz.arnau.muvicat.utils.DateFormatter
 import xyz.arnau.muvicat.utils.LocationUtils
 import xyz.arnau.muvicat.utils.setVisible
 import xyz.arnau.muvicat.viewmodel.showing.ShowingListViewModel
 import javax.inject.Inject
 
-class ShowingListFragment : BasicShowingListFragment<Showing>(), ScrollableToTop, DateFilterable {
+class ShowingListFragment : BasicShowingListFragment<Showing>(),
+    ScrollableToTop,
+    DateFilterable {
     @Inject
     lateinit var showingsAdapter: ShowingListAdapter
 

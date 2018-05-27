@@ -1,20 +1,17 @@
 package xyz.arnau.muvicat.ui.movie
 
 import android.app.Activity
-import android.app.SearchManager
-import android.content.Context
 import android.os.Bundle
 import android.support.v4.content.res.ResourcesCompat
-import android.support.v4.view.MenuItemCompat
 import android.support.v7.widget.SearchView
 import com.google.firebase.analytics.FirebaseAnalytics
 import kotlinx.android.synthetic.main.movie_list.*
 import kotlinx.android.synthetic.main.movie_list_toolbar.*
 import xyz.arnau.muvicat.R
 import xyz.arnau.muvicat.repository.model.Movie
-import xyz.arnau.muvicat.ui.BackPressable
+import xyz.arnau.muvicat.ui.utils.BackPressable
 import xyz.arnau.muvicat.ui.MainActivity
-import xyz.arnau.muvicat.ui.ScrollableToTop
+import xyz.arnau.muvicat.ui.utils.ScrollableToTop
 import xyz.arnau.muvicat.viewmodel.movie.MovieListViewModel
 import javax.inject.Inject
 

@@ -89,6 +89,21 @@ class MovieRepository(
 
         }.asLiveData()
 
+    fun getVotedMovies(): LiveData<Resource<List<Movie>>> {
+        return Transformations.switchMap(movieCache.getVotedMovies(), {
+            val liveData = MutableLiveData<Resource<List<Movie>>>()
+            appExecutors.diskIO().execute {
+                beforeLatch.await()
+                if (it == null) {
+                    liveData.postValue(Resource.error("Voted movies not found", it))
+                } else {
+                    liveData.postValue(Resource.success(it))
+                }
+            }
+            liveData
+        })
+    }
+
     fun getMoviesByCinema(cinemaId: Long): LiveData<Resource<List<Movie>>> {
         return Transformations.switchMap(movieCache.getMoviesByCinema(cinemaId), {
             val liveData = MutableLiveData<Resource<List<Movie>>>()

@@ -29,6 +29,18 @@ class CinemaShowingListAdapter @Inject constructor() :
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val showing = showings[position]
         holder.movieTitle.text = showing.movieTitle
+        if (showing.movieVoted)
+            holder.movieTitle
+                .setCompoundDrawablesRelativeWithIntrinsicBounds(
+                    0,
+                    0,
+                    R.drawable.ic_star_yellow_18dp,
+                    0
+                )
+        else
+            holder.movieTitle
+                .setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, 0, 0)
+
         GlideApp.with(holder.itemView.context)
             .load("http://www.gencat.cat/llengua/cinema/${showing.moviePosterUrl}")
             .error(R.drawable.poster_placeholder)

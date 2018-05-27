@@ -1,13 +1,15 @@
-package xyz.arnau.muvicat.ui
+package xyz.arnau.muvicat.ui.utils
 
+import android.content.Context
 import android.support.design.widget.AppBarLayout
 import android.support.design.widget.CollapsingToolbarLayout
 import android.support.v4.content.res.ResourcesCompat
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import xyz.arnau.muvicat.R
+import java.text.DecimalFormat
 
-object ToolbarUtils {
+object UiUtils {
     fun setupCollapsingToolbar(
         activity: AppCompatActivity,
         toolbarId: Int,
@@ -52,3 +54,5 @@ object ToolbarUtils {
 
     }
 }
+
+fun Double.toString1Decimal(): String = DecimalFormat("0.0").format(this)

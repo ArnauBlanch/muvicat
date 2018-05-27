@@ -40,6 +40,17 @@ class MovieCacheImplTest {
     }
 
     @Test
+    fun getVotedMoviesReturnsData() {
+        val movies = MovieMapper.mapFromMovieEntityList(MovieEntityFactory.makeMovieEntityList(5))
+        val moviesLiveData = MutableLiveData<List<Movie>>()
+        moviesLiveData.value = movies
+        `when`(movieDao.getVotedMovies()).thenReturn(moviesLiveData)
+        val moviesFromCache = movieCacheImpl.getVotedMovies()
+        verify(movieDao).getVotedMovies()
+        assertEquals(movies, moviesFromCache.value)
+    }
+
+    @Test
     fun getMoviesByCinemaReturnsData() {
         val cinemaId = 100.toLong()
         val today = LocalDate.now().toDate().time

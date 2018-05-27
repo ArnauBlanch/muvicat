@@ -16,6 +16,7 @@ data class Showing(
     var movieId: Long,
     var movieTitle: String?,
     var moviePosterUrl: String?,
+    var movieVoted: Boolean,
 
     var cinemaName: String,
     var cinemaTown: String?,
