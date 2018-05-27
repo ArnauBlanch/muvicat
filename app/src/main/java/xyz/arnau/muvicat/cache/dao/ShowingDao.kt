@@ -13,7 +13,7 @@ abstract class ShowingDao {
     @Query(
         """SELECT
             s.id, s.date, s.version, s.seasonId,
-            m.id as movieId, m.title as movieTitle, m.posterUrl as moviePosterUrl,
+            m.id as movieId, m.title as movieTitle, m.posterUrl as moviePosterUrl, m.vote as movieVoted,
             c.name as cinemaName, c.town as cinemaTown, c.region as cinemaRegion, c.province as cinemaProvince,
             pc.latitude as cinemaLatitude, pc.longitude as cinemaLongitude
         FROM showings s
@@ -27,7 +27,7 @@ abstract class ShowingDao {
     @Query(
         """SELECT
             s.id, s.date, s.version, s.seasonId,
-            m.id as movieId, m.title as movieTitle, m.posterUrl as moviePosterUrl,
+            m.id as movieId, m.title as movieTitle, m.posterUrl as moviePosterUrl, m.vote as movieVoted,
             c.name as cinemaName, c.town as cinemaTown, c.region as cinemaRegion, c.province as cinemaProvince,
             pc.latitude as cinemaLatitude, pc.longitude as cinemaLongitude
         FROM showings s
@@ -42,7 +42,7 @@ abstract class ShowingDao {
     @Query(
         """SELECT
             s.id, s.date, s.version,
-            m.id as movieId, m.title as movieTitle, m.posterUrl as moviePosterUrl
+            m.id as movieId, m.title as movieTitle, m.posterUrl as moviePosterUrl, m.vote as movieVoted
         FROM showings s
             JOIN movies m ON s.movieId = m.id
         WHERE s.cinemaId = :cinemaId AND s.date >= :today

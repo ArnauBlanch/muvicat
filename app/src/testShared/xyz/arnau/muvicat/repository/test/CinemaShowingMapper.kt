@@ -7,7 +7,7 @@ object CinemaShowingMapper {
     private fun mapFromShowingEntity(showing: ShowingEntity) =
         CinemaShowing(
             showing.id, showing.date, showing.version,
-            showing.movieId, null, null
+            showing.movieId, null, null, false
         )
 
     fun mapFromShowingEntityList(showingList: List<ShowingEntity>) =
