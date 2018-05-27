@@ -36,7 +36,7 @@
             android:fontFamily="@font/nunito_sans_semibold"
             android:background="@color/colorAccentTransparent"
             android:layout_alignBottom="@+id/moviePoster" />
-        
+
         <ImageView
             android:id="@+id/star"
             android:src="@drawable/star_with_border"
@@ -57,6 +57,31 @@
             android:lineSpacingMultiplier="0.9"
             android:textColor="#000000"
             android:textSize="16sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/movieTitle"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="24dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="10dp"
+                android:gravity="center">
+
+                <me.zhanghai.android.materialratingbar.MaterialRatingBar
+                    android:id="@+id/movieUserVoteStars"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:isIndicator="true"
+                    android:numStars="5"
+                    app:mrb_fillBackgroundStars="true"
+                    app:mrb_progressBackgroundTint="@color/darkRed"
+                    app:mrb_progressTint="@color/lightRed" />
+            </LinearLayout>
+        </LinearLayout>
     </RelativeLayout>
 
 </android.support.v7.widget.CardView>

@@ -12,9 +12,7 @@ import android.widget.TextView
 import org.apache.commons.lang3.StringUtils
 import xyz.arnau.muvicat.R
 import xyz.arnau.muvicat.repository.model.Movie
-import xyz.arnau.muvicat.utils.DateFormatter
-import xyz.arnau.muvicat.utils.GlideApp
-import xyz.arnau.muvicat.utils.setVisibleText
+import xyz.arnau.muvicat.utils.*
 import javax.inject.Inject
 
 class MovieListAdapter @Inject constructor() : RecyclerView.Adapter<MovieListAdapter.ViewHolder>(),
@@ -38,6 +36,11 @@ class MovieListAdapter @Inject constructor() : RecyclerView.Adapter<MovieListAda
         val movie = moviesFiltered[position]
         holder.titleText.text = movie.title
         holder.releaseDate.setVisibleText(dateFormatter.shortReleaseDate(movie.releaseDate))
+        if (movie.vote !== null) {
+            holder.star.setVisible()
+        } else {
+            holder.star.setGone()
+        }
 
         GlideApp.with(holder.itemView.context)
             .load("http://www.gencat.cat/llengua/cinema/${movie.posterUrl}")
@@ -103,5 +106,6 @@ class MovieListAdapter @Inject constructor() : RecyclerView.Adapter<MovieListAda
         var posterImage: ImageView = view.findViewById(R.id.moviePoster)
         var titleText: TextView = view.findViewById(R.id.movieTitle)
         var releaseDate: TextView = view.findViewById(R.id.releaseDate)
+        var star: ImageView = view.findViewById(R.id.star)
     }
 }

@@ -5,6 +5,8 @@ import dagger.android.ContributesAndroidInjector
 import xyz.arnau.muvicat.ui.cinema.CinemaListFragment
 import xyz.arnau.muvicat.ui.movie.CinemaMovieListFragment
 import xyz.arnau.muvicat.ui.movie.MovieListFragment
+import xyz.arnau.muvicat.ui.selection.UserSelectionFragment
+import xyz.arnau.muvicat.ui.selection.VotedMoviesListFragment
 import xyz.arnau.muvicat.ui.showing.CinemaShowingListFragment
 import xyz.arnau.muvicat.ui.showing.ShowingListFragment
 
@@ -25,4 +27,10 @@ abstract class FragmentBuildersModule {
 
     @ContributesAndroidInjector
     abstract fun contributeCinemaMovieListFragment(): CinemaMovieListFragment
+
+    @ContributesAndroidInjector
+    abstract fun contributeUserSelectionFragment(): UserSelectionFragment
+
+    @ContributesAndroidInjector
+    abstract fun contributeVotedMoviesListFragment(): VotedMoviesListFragment
 }

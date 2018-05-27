@@ -5,7 +5,7 @@
     android:orientation="vertical"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <xyz.arnau.muvicat.ui.NonSwipeableViewPager
+    <xyz.arnau.muvicat.ui.utils.NonSwipeableViewPager
         android:id="@+id/fragmentsViewPager"
         android:layout_weight="1"
         android:layout_width="match_parent"

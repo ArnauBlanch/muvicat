@@ -11,7 +11,11 @@ import kotlinx.android.synthetic.main.activity_main.*
 import xyz.arnau.muvicat.R
 import xyz.arnau.muvicat.ui.cinema.CinemaListFragment
 import xyz.arnau.muvicat.ui.movie.MovieListFragment
+import xyz.arnau.muvicat.ui.selection.UserSelectionFragment
 import xyz.arnau.muvicat.ui.showing.ShowingListFragment
+import xyz.arnau.muvicat.ui.utils.BackPressable
+import xyz.arnau.muvicat.ui.utils.BottomNavigationViewHelper
+import xyz.arnau.muvicat.ui.utils.ViewPagerAdapter
 import javax.inject.Inject
 
 
@@ -25,7 +29,8 @@ class MainActivity : LocationAwareActivity(), HasSupportFragmentInjector {
         listOf(
             MovieListFragment(),
             ShowingListFragment(),
-            CinemaListFragment()
+            CinemaListFragment(),
+            UserSelectionFragment()
         ), supportFragmentManager
     )
 
@@ -42,6 +47,8 @@ class MainActivity : LocationAwareActivity(), HasSupportFragmentInjector {
     }
 
     private fun setupBottomNavigation() {
+        BottomNavigationViewHelper.removeShiftMode(bottomNavigation)
+
         bottomNavigation.setOnNavigationItemSelectedListener {
             when (it.itemId) {
                 R.id.action_movies -> {
@@ -68,6 +75,15 @@ class MainActivity : LocationAwareActivity(), HasSupportFragmentInjector {
                     )
                     FirebaseAnalytics.getInstance(this)
                         .setCurrentScreen(this, "Cinema list", "Cinema list")
+                    true
+                }
+                R.id.action_selection -> {
+                    fragmentsViewPager.setCurrentItemOrScrollToTop(
+                        UserSelectionFragment.FRAG_ID,
+                        false
+                    )
+                    FirebaseAnalytics.getInstance(this)
+                        .setCurrentScreen(this, "User selection", "User selection")
                     true
                 }
                 else -> false

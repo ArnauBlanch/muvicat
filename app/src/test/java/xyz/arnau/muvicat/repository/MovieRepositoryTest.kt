@@ -332,6 +332,40 @@ class MovieRepositoryTest {
         verify(movieCache, never()).updateMovies(remoteMovies)
     }
 
+
+
+    @Test
+    fun getVOTEDMoviesReturnsMovieLiveDataWithSuccessIfExists() {
+        `when`(movieCache.getVotedMovies()).thenReturn(dbMoviesLiveData)
+        dbMoviesLiveData.postValue(dbMovies)
+
+        val res = movieRepository.getVotedMovies().getValueBlocking()
+        assertEquals(Status.SUCCESS, res?.status)
+        assertEquals(dbMovies, res?.data)
+    }
+
+    @Test
+    fun getVotedMoviesReturnsMovieLiveDataWithErrorIfNullCache() {
+        `when`(movieCache.getVotedMovies()).thenReturn(dbMoviesLiveData)
+        dbMoviesLiveData.postValue(null)
+
+        val res = movieRepository.getVotedMovies().getValueBlocking()
+        assertEquals(Status.ERROR, res?.status)
+        assertEquals(null, res?.data)
+    }
+
+    @Test
+    fun getVotedMoviesReturnsMovieLiveDataIfEmptyCache() {
+        `when`(movieCache.getVotedMovies()).thenReturn(dbMoviesLiveData)
+        dbMoviesLiveData.postValue(listOf())
+
+        val res = movieRepository.getVotedMovies().getValueBlocking()
+        assertEquals(Status.SUCCESS, res?.status)
+        assertEquals(listOf<Movie>(), res?.data)
+    }
+
+
+
     @Test
     fun getMoviesByCinemaReturnsMovieLiveDataWithSuccessIfExists() {
         `when`(movieCache.getMoviesByCinema(100.toLong())).thenReturn(dbMoviesLiveData)

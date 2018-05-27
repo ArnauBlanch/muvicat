@@ -13,5 +13,6 @@ data class CinemaShowing(
 
     var movieId: Long,
     var movieTitle: String?,
-    var moviePosterUrl: String?
+    var moviePosterUrl: String?,
+    var movieVoted: Boolean
 )

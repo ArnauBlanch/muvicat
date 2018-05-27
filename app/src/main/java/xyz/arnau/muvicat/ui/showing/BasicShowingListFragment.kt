@@ -18,7 +18,7 @@ import xyz.arnau.muvicat.repository.model.Resource
 import xyz.arnau.muvicat.repository.model.Status
 import xyz.arnau.muvicat.di.Injectable
 import xyz.arnau.muvicat.ui.ListFragment
-import xyz.arnau.muvicat.ui.SimpleDividerItemDecoration
+import xyz.arnau.muvicat.ui.utils.SimpleDividerItemDecoration
 import xyz.arnau.muvicat.utils.setGone
 import xyz.arnau.muvicat.utils.setVisible
 
@@ -28,7 +28,11 @@ abstract class BasicShowingListFragment<T> : ListFragment(), Injectable {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         setupSkeletonScreen()
-        getRecyclerView().addItemDecoration(SimpleDividerItemDecoration(context!!))
+        getRecyclerView().addItemDecoration(
+            SimpleDividerItemDecoration(
+                context!!
+            )
+        )
     }
 
     override fun onCreateView(

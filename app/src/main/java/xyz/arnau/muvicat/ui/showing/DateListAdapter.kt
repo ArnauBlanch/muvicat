@@ -11,7 +11,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import org.joda.time.LocalDate
 import xyz.arnau.muvicat.R
-import xyz.arnau.muvicat.ui.DateFilterable
+import xyz.arnau.muvicat.ui.utils.DateFilterable
 import xyz.arnau.muvicat.utils.DateFormatter
 import javax.inject.Inject
 
