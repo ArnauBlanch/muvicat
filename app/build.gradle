@@ -14,8 +14,8 @@ android {
         applicationId "xyz.arnau.muvicat"
         minSdkVersion 21
         targetSdkVersion 27
-        versionCode 21
-        versionName "0.4-alpha3"
+        versionCode 22
+        versionName "0.4-beta"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
 
