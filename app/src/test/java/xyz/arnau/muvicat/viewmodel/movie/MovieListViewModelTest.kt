@@ -30,6 +30,7 @@ class MovieListViewModelTest {
     @Before
     fun setUp() {
         `when`(movieRepository.getMovies()).thenReturn(moviesLiveData)
+        `when`(movieRepository.getVotedMovies()).thenReturn(moviesLiveData)
         movieListViewModel = MovieListViewModel(movieRepository)
     }
 
@@ -40,6 +41,18 @@ class MovieListViewModelTest {
 
         val result = movieListViewModel.movies.getValueBlocking()
         verify(movieRepository).getMovies()
+        assertEquals(Status.SUCCESS, result!!.status)
+        assertEquals(null, result.message)
+        assertEquals(movies, result.data)
+    }
+
+    @Test
+    fun getVotedMoviesReturnsLiveData() {
+        val movies = MovieMapper.mapFromMovieEntityList(MovieEntityFactory.makeMovieEntityList(5))
+        moviesLiveData.postValue(Resource.success(movies))
+
+        val result = movieListViewModel.votedMovies.getValueBlocking()
+        verify(movieRepository).getVotedMovies()
         assertEquals(Status.SUCCESS, result!!.status)
         assertEquals(null, result.message)
         assertEquals(movies, result.data)

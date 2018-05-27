@@ -22,6 +22,9 @@ abstract class MovieDao {
     @Query("SELECT * FROM movies ORDER BY priority DESC")
     abstract fun getMovies(): LiveData<List<Movie>>
 
+    @Query("SELECT * FROM movies WHERE vote IS NOT NULL ORDER BY vote DESC")
+    abstract fun getVotedMovies(): LiveData<List<Movie>>
+
     @Query(
         """SELECT *
         FROM movies

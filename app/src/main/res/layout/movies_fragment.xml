@@ -7,4 +7,5 @@
     <include layout="@layout/movie_list_toolbar" />
     <include layout="@layout/movie_list"/>
     <include layout="@layout/error_layout" />
+    <include layout="@layout/empty_message_layout" />
 </android.support.design.widget.CoordinatorLayout>
