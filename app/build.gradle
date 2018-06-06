@@ -218,7 +218,7 @@ task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest', 'crea
                       '**/*Test*.*', 'android/**/*.*', '**/model/**', '**/constants/**',
                       '**/**_Impl**', '**/*_Factory.*', '**/di/**', '**/ui/**', "**/*GlideModule.*",
                       "**/*ViewModelFactory.*", "**/*PreferencesHelper.*", "**/MuvicatApplication.*",
-                      "**/MuvicatDatabase*", "**/UIUtils*"]
+                      "**/MuvicatDatabase*", "**/UIUtilsKt*"]
     def javaClasses = fileTree(dir: "$project.buildDir/intermediates/classes/debug", excludes: fileFilter)
     def kotlinClasses = fileTree(dir: "$project.buildDir/tmp/kotlin-classes/debug", excludes: fileFilter)
     def javaSrc = "$project.projectDir/src/main/java"
