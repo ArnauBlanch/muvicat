@@ -161,6 +161,6 @@ class CinemaListFragment : ListFragment(), ScrollableToTop, Injectable {
     }
 
     companion object {
-        const val FRAG_ID = 2
+        const val FRAG_ID = 3
     }
 }

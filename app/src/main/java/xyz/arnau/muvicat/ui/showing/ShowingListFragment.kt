@@ -150,6 +150,6 @@ class ShowingListFragment : BasicShowingListFragment<Showing>(),
     }
 
     companion object {
-        const val FRAG_ID = 1
+        const val FRAG_ID = 2
     }
 }

@@ -106,6 +106,6 @@ class MovieListFragment : BasicMovieListFragment<Movie>(),
     override fun getRecyclerViewAdapter() = moviesAdapter
 
     companion object {
-        const val FRAG_ID = 0
+        const val FRAG_ID = 1
     }
 }
