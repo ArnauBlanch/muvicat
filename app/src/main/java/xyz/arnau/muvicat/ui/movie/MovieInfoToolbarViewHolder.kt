@@ -11,6 +11,8 @@ import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.RequestBuilder
 import com.google.android.youtube.player.YouTubeIntents
 import me.zhanghai.android.materialratingbar.MaterialRatingBar
 import xyz.arnau.muvicat.R
@@ -97,6 +99,14 @@ class MovieInfoToolbarViewHolder(private val activity: MovieActivity) {
                 GlideApp.with(activity)
                     .load("https://img.youtube.com/vi/$videoId/maxresdefault.jpg")
                     .centerCrop()
+                    .error(
+                        Glide.with(activity)
+                            .load("https://img.youtube.com/vi/$videoId/sddefault.jpg")
+                            .error(
+                                GlideApp.with(activity)
+                                    .load("https://img.youtube.com/vi/$videoId/hqdefault.jpg")
+                            )
+                    )
                     .into(backdrop)
             }
         }
