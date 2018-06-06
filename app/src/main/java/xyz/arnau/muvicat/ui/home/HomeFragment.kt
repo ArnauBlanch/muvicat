@@ -5,6 +5,7 @@ import android.arch.lifecycle.Observer
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
+import android.support.v4.view.ViewPager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,7 +25,7 @@ import xyz.arnau.muvicat.utils.setVisible
 import xyz.arnau.muvicat.viewmodel.movie.MovieListViewModel
 import javax.inject.Inject
 
-class HomeFragment: Fragment(), Injectable, ScrollableToTop {
+class HomeFragment : Fragment(), Injectable, ScrollableToTop {
     private lateinit var viewPagerAdapter: ViewPagerAdapter
 
     @Inject
@@ -51,6 +52,7 @@ class HomeFragment: Fragment(), Injectable, ScrollableToTop {
             })
     }
 
+    // TODO: rate movie a Firebase Analytics
     private fun handleDataState(status: Status, data: List<Movie>?) {
         errorMessage.setGone()
         if (status == Status.SUCCESS) data?.let { data ->
@@ -79,6 +81,22 @@ class HomeFragment: Fragment(), Injectable, ScrollableToTop {
         val featuredTrailers = data.filter { it.trailerUrl != null }.subList(0, 6)
         viewPagerAdapter.fragmentList = featuredTrailers.map { TrailerFragment.create(it) }
         viewPagerAdapter.notifyDataSetChanged()
+        trailerViewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+            override fun onPageSelected(position: Int) {
+                pageIndicatorView.selection = position
+            }
+
+            override fun onPageScrolled(
+                position: Int,
+                positionOffset: Float,
+                positionOffsetPixels: Int
+            ) {
+            }
+
+            override fun onPageScrollStateChanged(state: Int) {}
+
+        })
+        pageIndicatorView.count = featuredTrailers.size
     }
 
     override fun onResume() {
