@@ -69,6 +69,8 @@ class VotedMoviesListFragment : BasicMovieListFragment<Movie>(), ScrollableToTop
             .adapter(getRecyclerViewAdapter())
             .show()
 
+    // TODO
+
     companion object {
         const val FRAG_ID = 3
     }
