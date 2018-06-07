@@ -49,4 +49,6 @@
     <string name="voted">Valorat</string>
     <string name="voted_movies">Pel·lícules valorades</string>
     <string name="no_voted_movies">Encara no has valorat\ncap pel·lícula</string>
+    <string name="most_featured">El més destacat</string>
+    <string name="new_movies">Estrenes</string>
 </resources>
