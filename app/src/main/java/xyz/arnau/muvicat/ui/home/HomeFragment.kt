@@ -6,12 +6,14 @@ import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v4.view.ViewPager
+import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.google.firebase.analytics.FirebaseAnalytics
 import kotlinx.android.synthetic.main.error_layout.*
 import kotlinx.android.synthetic.main.home_fragment.*
+import org.joda.time.LocalDate
 import xyz.arnau.muvicat.R
 import xyz.arnau.muvicat.di.Injectable
 import xyz.arnau.muvicat.repository.model.Movie
@@ -27,6 +29,11 @@ import javax.inject.Inject
 
 class HomeFragment : Fragment(), Injectable, ScrollableToTop {
     private lateinit var viewPagerAdapter: ViewPagerAdapter
+    @Inject
+    lateinit var featuredMoviesAdapter: MovieListAdapter
+
+    @Inject
+    lateinit var newMoviesAdapter: MovieListAdapter
 
     @Inject
     lateinit var viewModel: MovieListViewModel
@@ -39,8 +46,6 @@ class HomeFragment : Fragment(), Injectable, ScrollableToTop {
         return inflater.inflate(R.layout.home_fragment, container, false)
     }
 
-    // TODO: page indicator
-
     override fun onStart() {
         super.onStart()
         viewPagerAdapter = ViewPagerAdapter(listOf(), childFragmentManager)
@@ -50,6 +55,21 @@ class HomeFragment : Fragment(), Injectable, ScrollableToTop {
             Observer<Resource<List<Movie>>> {
                 if (it != null) handleDataState(it.status, it.data)
             })
+
+        setupFeaturedMovies()
+        setupNewMovies()
+    }
+
+    private fun setupFeaturedMovies() {
+        featuredMoviesRecyclerView.layoutManager =
+                LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        featuredMoviesRecyclerView.adapter = featuredMoviesAdapter
+    }
+
+    private fun setupNewMovies() {
+        newMoviesRecyclerView.layoutManager =
+                LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        newMoviesRecyclerView.adapter = newMoviesAdapter
     }
 
     // TODO: rate movie a Firebase Analytics
@@ -79,8 +99,14 @@ class HomeFragment : Fragment(), Injectable, ScrollableToTop {
 
     private fun handleMoviesUpdate(data: List<Movie>) {
         val featuredTrailers = data.filter { it.trailerUrl != null }.subList(0, 6)
+        val featuredMovies = data.subList(0, 8)
+        val newMovies =
+            data.filter { it.releaseDate != null && !LocalDate(it.releaseDate!!).isBefore(LocalDate.now().minusDays(5)) }
+                .sortedBy { it.releaseDate!!.time }.subList(0, 8)
+
         viewPagerAdapter.fragmentList = featuredTrailers.map { TrailerFragment.create(it) }
         viewPagerAdapter.notifyDataSetChanged()
+
         trailerViewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
             override fun onPageSelected(position: Int) {
                 pageIndicatorView.selection = position
@@ -97,6 +123,22 @@ class HomeFragment : Fragment(), Injectable, ScrollableToTop {
 
         })
         pageIndicatorView.count = featuredTrailers.size
+        pageIndicatorView.setVisible()
+
+        updateFeaturedMovies(featuredMovies)
+        updateNewMovies(newMovies)
+    }
+
+    private fun updateFeaturedMovies(featuredMovies: List<Movie>) {
+        featuredMoviesAdapter.movies = featuredMovies
+        featuredMoviesAdapter.showReleaseDate = true
+        featuredMoviesAdapter.notifyDataSetChanged()
+    }
+
+    private fun updateNewMovies(newMovies: List<Movie>) {
+        newMoviesAdapter.movies = newMovies
+        newMoviesAdapter.showReleaseDate = true
+        newMoviesAdapter.notifyDataSetChanged()
     }
 
     override fun onResume() {

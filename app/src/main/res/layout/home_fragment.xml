@@ -9,6 +9,7 @@
     <ScrollView
         android:id="@+id/homeScrollView"
         android:fillViewport="true"
+        android:scrollbars="none"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <LinearLayout
@@ -24,6 +25,17 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
 
+                <com.santalu.aspectratioimageview.AspectRatioImageView
+                    android:id="@+id/movieBackdrop"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:translationZ="-10dp"
+                    android:adjustViewBounds="true"
+                    android:background="@color/skeleton_light"
+                    android:scaleType="centerCrop"
+                    app:ari_aspect="height"
+                    app:ari_ratio="0.65" />
+
                 <ImageView
                     android:id="@+id/muvicat_with_shadow"
                     android:src="@drawable/muvicat_logo"
@@ -35,10 +47,11 @@
 
                 <com.rd.PageIndicatorView
                     android:id="@+id/pageIndicatorView"
+                    android:visibility="gone"
                     android:layout_gravity="bottom|center_horizontal"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
+                    android:layout_marginBottom="12dp"
                     android:scaleX="0.8"
                     android:scaleY="0.8"
                     app:piv_animationType="scale"
@@ -50,10 +63,57 @@
                     attrs:piv_padding="12dp"
                     attrs:piv_radius="6dp" />
             </FrameLayout>
-            <View
-                android:background="@color/colorPrimary"
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="20dp"
                 android:layout_width="match_parent"
-                android:layout_height="1000dp"/>
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/featuredMoviesTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/nunito_sans_black"
+                    android:text="@string/most_featured"
+                    android:textColor="@android:color/black"
+                    android:layout_marginStart="16dp"
+                    android:textSize="20sp" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/featuredMoviesRecyclerView"
+                    android:layout_marginTop="5dp"
+                    android:nestedScrollingEnabled="false"
+                    android:paddingStart="16dp"
+                    android:clipToPadding="false"
+                    android:paddingEnd="10dp"
+                    android:layout_width="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="10dp"
+                    android:layout_height="wrap_content"/>
+
+                <TextView
+                    android:id="@+id/newMoviesTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/nunito_sans_black"
+                    android:text="@string/new_movies"
+                    android:layout_marginStart="16dp"
+                    android:textColor="@android:color/black"
+                    android:textSize="20sp" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/newMoviesRecyclerView"
+                    android:layout_marginTop="5dp"
+                    android:paddingStart="16dp"
+                    android:clipToPadding="false"
+                    android:paddingEnd="10dp"
+                    android:nestedScrollingEnabled="false"
+                    android:layout_width="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 

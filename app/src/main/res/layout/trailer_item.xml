@@ -10,7 +10,7 @@
         <com.santalu.aspectratioimageview.AspectRatioImageView
             android:id="@+id/movieBackdrop"
             android:layout_width="match_parent"
-            android:layout_height="160dp"
+            android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_alignParentBottom="true"
             android:adjustViewBounds="true"
@@ -55,7 +55,7 @@
             android:shadowColor="@android:color/black"
             android:shadowRadius="55"
             android:textColor="@color/colorPrimary"
-            android:fontFamily="@font/nunito_sans_black"
+            android:fontFamily="@font/nunito_sans_extrabold"
             android:textSize="24sp"
             android:padding="15dp"
             android:layout_marginBottom="18dp"
