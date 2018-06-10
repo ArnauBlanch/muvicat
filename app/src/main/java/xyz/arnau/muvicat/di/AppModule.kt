@@ -11,6 +11,7 @@ import xyz.arnau.muvicat.repository.MovieRepository
 import xyz.arnau.muvicat.repository.ShowingRepository
 import xyz.arnau.muvicat.repository.data.*
 import xyz.arnau.muvicat.repository.utils.RepoPreferencesHelper
+import xyz.arnau.muvicat.ui.UiPreferencesHelper
 import xyz.arnau.muvicat.utils.AfterCountDownLatch
 import xyz.arnau.muvicat.utils.AppExecutors
 import xyz.arnau.muvicat.utils.BeforeCountDownLatch
@@ -35,6 +36,12 @@ class AppModule {
     @Provides
     fun provideRepoPreferencesHelper(context: Context): RepoPreferencesHelper {
         return RepoPreferencesHelper(context)
+    }
+
+    @Singleton
+    @Provides
+    fun provideUiPreferencesHelper(context: Context): UiPreferencesHelper {
+        return UiPreferencesHelper(context)
     }
 
     @Singleton

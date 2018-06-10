@@ -11,8 +11,6 @@
             android:id="@+id/movieBackdrop"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentBottom="true"
             android:adjustViewBounds="true"
             android:background="@color/grey_light"
             android:scaleType="centerCrop"

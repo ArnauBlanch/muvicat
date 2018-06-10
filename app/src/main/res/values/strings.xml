@@ -51,4 +51,8 @@
     <string name="no_voted_movies">Encara no has valorat\ncap pel·lícula</string>
     <string name="most_featured">El més destacat</string>
     <string name="new_movies">Estrenes</string>
+    <string name="nearby_showings">A prop teu</string>
+    <string name="max_distance">Distància màxima</string>
+    <string name="ok">D\'acord</string>
+    <string name="no_showings_near_you">no hi ha sessions a prop teu</string>
 </resources>

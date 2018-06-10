@@ -8,52 +8,54 @@
 
     <ScrollView
         android:id="@+id/homeScrollView"
-        android:fillViewport="true"
-        android:scrollbars="none"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:fillViewport="true"
+        android:scrollbars="none">
+
         <LinearLayout
-            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
+
                 <xyz.arnau.muvicat.ui.home.CustomViewPager
                     android:id="@+id/trailerViewPager"
-                    android:background="@color/grey"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content" />
 
                 <com.santalu.aspectratioimageview.AspectRatioImageView
                     android:id="@+id/movieBackdrop"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:translationZ="-10dp"
                     android:adjustViewBounds="true"
-                    android:background="@color/skeleton_light"
                     android:scaleType="centerCrop"
+                    android:src="@color/skeleton_light"
+                    android:translationZ="-10dp"
                     app:ari_aspect="height"
                     app:ari_ratio="0.65" />
 
                 <ImageView
                     android:id="@+id/muvicat_with_shadow"
-                    android:src="@drawable/muvicat_logo"
-                    android:layout_margin="10dp"
-                    android:layout_gravity="start|top"
-                    android:adjustViewBounds="true"
                     android:layout_width="wrap_content"
-                    android:layout_height="36dp"/>
+                    android:layout_height="36dp"
+                    android:layout_gravity="start|top"
+                    android:layout_margin="10dp"
+                    android:adjustViewBounds="true"
+                    android:src="@drawable/muvicat_logo" />
 
                 <com.rd.PageIndicatorView
                     android:id="@+id/pageIndicatorView"
-                    android:visibility="gone"
-                    android:layout_gravity="bottom|center_horizontal"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|center_horizontal"
                     android:layout_marginBottom="12dp"
                     android:scaleX="0.8"
                     android:scaleY="0.8"
+                    android:visibility="gone"
                     app:piv_animationType="scale"
                     app:piv_dynamicCount="true"
                     app:piv_interactiveAnimation="true"
@@ -65,54 +67,113 @@
             </FrameLayout>
 
             <LinearLayout
-                android:orientation="vertical"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="20dp"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:layout_marginTop="10dp"
+                android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/featuredMoviesTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
                     android:fontFamily="@font/nunito_sans_black"
                     android:text="@string/most_featured"
                     android:textColor="@android:color/black"
-                    android:layout_marginStart="16dp"
                     android:textSize="20sp" />
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/featuredMoviesRecyclerView"
-                    android:layout_marginTop="5dp"
-                    android:nestedScrollingEnabled="false"
-                    android:paddingStart="16dp"
-                    android:clipToPadding="false"
-                    android:paddingEnd="10dp"
                     android:layout_width="wrap_content"
-                    android:orientation="horizontal"
+                    android:layout_height="wrap_content"
                     android:layout_marginBottom="10dp"
-                    android:layout_height="wrap_content"/>
+                    android:layout_marginTop="5dp"
+                    android:clipToPadding="false"
+                    android:nestedScrollingEnabled="false"
+                    android:orientation="horizontal"
+                    android:paddingEnd="10dp"
+                    android:paddingStart="16dp" />
 
                 <TextView
                     android:id="@+id/newMoviesTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
                     android:fontFamily="@font/nunito_sans_black"
                     android:text="@string/new_movies"
-                    android:layout_marginStart="16dp"
                     android:textColor="@android:color/black"
                     android:textSize="20sp" />
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/newMoviesRecyclerView"
-                    android:layout_marginTop="5dp"
-                    android:paddingStart="16dp"
-                    android:clipToPadding="false"
-                    android:paddingEnd="10dp"
-                    android:nestedScrollingEnabled="false"
                     android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="10dp"
+                    android:clipToPadding="false"
+                    android:nestedScrollingEnabled="false"
                     android:orientation="horizontal"
-                    android:layout_height="wrap_content"/>
+                    android:paddingEnd="10dp"
+                    android:paddingStart="16dp" />
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/nearbyShowingsTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:fontFamily="@font/nunito_sans_black"
+                        android:text="@string/nearby_showings"
+                        android:textColor="@android:color/black"
+                        android:textSize="20sp" />
+
+                    <LinearLayout
+                        android:id="@+id/nearbyShowingsDistance"
+                        android:gravity="bottom"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="10dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:id="@+id/nearbyShowingsDistanceValue"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/colorAccent"
+                            android:textSize="14sp"
+                            android:fontFamily="@font/nunito_sans_extrabold"/>
+                        <ImageView
+                            android:layout_width="16dp"
+                            android:layout_height="16dp"
+                            android:src="@drawable/ic_keyboard_arrow_down_red_24dp"/>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/nearbyShowingsRecyclerView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:clipToPadding="false"
+                    android:nestedScrollingEnabled="false"
+                    android:orientation="horizontal"
+                    android:paddingEnd="10dp"
+                    android:visibility="gone"
+                    android:paddingStart="16dp" />
+                <TextView
+                    android:id="@+id/nearbyShowingsEmptyMessage"
+                    android:text="@string/no_showings_near_you"
+                    android:gravity="center"
+                    android:fontFamily="@font/nunito_sans_bold"
+                    android:textSize="16sp"
+                    android:textColor="@color/grey"
+                    android:layout_width="match_parent"
+                    android:layout_height="260dp" />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

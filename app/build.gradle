@@ -97,7 +97,7 @@ dependencies {
     implementation 'com.android.support:design:27.1.1'
     implementation 'com.android.support:animated-vector-drawable:27.1.1'
     implementation 'com.android.support:recyclerview-v7:27.1.1'
-    implementation 'com.android.support.constraint:constraint-layout:1.1.0'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.1'
 
     // Retrofit
     implementation 'com.squareup.retrofit2:retrofit:2.4.0'
@@ -107,7 +107,7 @@ dependencies {
     implementation 'com.squareup.okhttp3:okhttp:3.10.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:3.10.0'
     implementation 'com.squareup.retrofit2:adapter-rxjava2:2.3.0'
-    implementation 'com.google.firebase:firebase-core:15.0.2'
+    implementation 'com.google.firebase:firebase-core:16.0.0'
     testImplementation 'com.squareup.okhttp3:mockwebserver:3.10.0'
 
     // ViewModel and LiveData
@@ -175,7 +175,7 @@ dependencies {
     implementation group: 'org.joda', name: 'joda-convert', version: '2.0.1', classifier: 'classic'
     implementation 'joda-time:joda-time:2.9.9'
 
-    implementation 'com.crashlytics.sdk.android:crashlytics:2.9.2'
+    implementation 'com.crashlytics.sdk.android:crashlytics:2.9.3'
     implementation 'com.android.support:multidex:1.0.3'
 
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.5.4'
@@ -187,7 +187,6 @@ dependencies {
     implementation files('my-libs/YouTubeAndroidPlayerApi.jar')
     implementation 'org.apache.commons:commons-lang3:3.7'
     implementation 'com.romandanylyk:pageindicatorview:1.0.1'
-
 }
 
 configurations {
