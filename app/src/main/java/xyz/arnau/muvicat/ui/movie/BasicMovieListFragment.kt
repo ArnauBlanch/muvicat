@@ -95,6 +95,6 @@ abstract class BasicMovieListFragment<T> : ListFragment(),
             .adapter(getRecyclerViewAdapter())
             .count(6)
             .color(R.color.skeleton_shimmer)
-            .load(R.layout.movie_item_skeleton)
+            .load(R.layout.movie_item_vert_skeleton)
             .show()
 }

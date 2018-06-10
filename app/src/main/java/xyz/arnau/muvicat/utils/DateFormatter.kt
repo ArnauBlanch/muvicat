@@ -4,7 +4,6 @@ package xyz.arnau.muvicat.utils
 
 import android.content.Context
 import org.joda.time.LocalDate
-import org.joda.time.format.DateTimeFormat.shortDate
 import xyz.arnau.muvicat.R
 import java.util.*
 import javax.inject.Inject
