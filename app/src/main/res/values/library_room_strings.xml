@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+	<string name="define_room">year;owner</string>
+	<!-- Author section -->
+	<string name="library_room_author">AOSP</string>
+	<string name="library_room_libraryName">Android Persistence (Room)</string>
+	<string name="library_room_libraryDescription">Android Persistence library, including Room</string>
+	<string name="library_room_isOpenSource">true</string>
+	<string name="library_room_libraryWebsite">https://developer.android.com/reference/android/arch</string>
+	<string name="library_room_licenseId">apache_2_0</string>
+	<string name="library_room_year">2018</string>
+	<string name="library_room_owner">AOSP</string>
+</resources>

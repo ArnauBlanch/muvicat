@@ -40,6 +40,7 @@ class NearbyShowingsAdapter @Inject constructor() :
         } else {
             holder.star.setGone()
         }
+        holder.cinemaText.text = showing.cinemaName
 
         GlideApp.with(holder.itemView.context)
             .load("http://www.gencat.cat/llengua/cinema/${showing.moviePosterUrl}")
@@ -96,6 +97,7 @@ class NearbyShowingsAdapter @Inject constructor() :
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         var posterImage: ImageView = view.findViewById(R.id.moviePoster)
         var titleText: TextView = view.findViewById(R.id.movieTitle)
+        var cinemaText: TextView = view.findViewById(R.id.cinemaName)
         var date: TextView = view.findViewById(R.id.showingDate)
         var distance: TextView = view.findViewById(R.id.showingDistance)
         var star: ImageView = view.findViewById(R.id.star)

@@ -47,6 +47,16 @@
                     android:adjustViewBounds="true"
                     android:src="@drawable/muvicat_logo" />
 
+                <ImageButton
+                    android:id="@+id/infoButton"
+                    android:layout_gravity="top|end"
+                    android:layout_margin="16dp"
+                    android:background="@android:color/transparent"
+                    android:adjustViewBounds="true"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_info" />
+
                 <com.rd.PageIndicatorView
                     android:id="@+id/pageIndicatorView"
                     android:layout_width="wrap_content"

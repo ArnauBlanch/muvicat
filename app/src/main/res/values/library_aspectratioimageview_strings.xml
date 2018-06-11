@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+	<string name="define_aspectratioimageview">year;owner</string>
+	<!-- Author section -->
+	<string name="library_aspectratioimageview_author">Fatih Santalu</string>
+	<string name="library_aspectratioimageview_libraryName">Aspect Ratio Image View</string>
+	<string name="library_aspectratioimageview_libraryDescription">A simple imageview which scales the width or height aspect with the given ratio</string>
+	<string name="library_aspectratioimageview_isOpenSource">true</string>
+	<string name="library_aspectratioimageview_libraryWebsite">https://github.com/santalu/aspect-ratio-imageview</string>
+	<string name="library_aspectratioimageview_licenseId">apache_2_0</string>
+	<string name="library_aspectratioimageview_year">2017</string>
+	<string name="library_aspectratioimageview_owner">Fatih Santalu</string>
+</resources>

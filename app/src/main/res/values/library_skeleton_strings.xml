@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+	<string name="define_skeleton">year;owner</string>
+	<!-- Author section -->
+	<string name="library_skeleton_author">Ethan Hua</string>
+	<string name="library_skeleton_libraryName">Skeleton</string>
+	<string name="library_skeleton_libraryDescription">A library provides an easy way to show skeleton loading view like Facebook and Alipay</string>
+	<string name="library_skeleton_isOpenSource">true</string>
+	<string name="library_skeleton_libraryWebsite">https://github.com/ethanhua/Skeleton</string>
+	<string name="library_skeleton_licenseId">apache_2_0</string>
+	<string name="library_skeleton_year">2018</string>
+	<string name="library_skeleton_owner">Ethan Hua</string>
+</resources>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+	<string name="define_shimmerlayout">year;owner</string>
+	<!-- Author section -->
+	<string name="library_shimmerlayout_author">Supercharge</string>
+	<string name="library_shimmerlayout_libraryName">ShimmerLayout</string>
+	<string name="library_shimmerlayout_libraryDescription">Memory efficient shimmering effect for Android applications by Supercharge.</string>
+	<string name="library_shimmerlayout_isOpenSource">true</string>
+	<string name="library_shimmerlayout_libraryWebsite">https://github.com/team-supercharge/ShimmerLayout</string>
+	<string name="library_shimmerlayout_licenseId">apache_2_0</string>
+	<string name="library_shimmerlayout_year">2018</string>
+	<string name="library_shimmerlayout_owner">Supercharge</string>
+</resources>

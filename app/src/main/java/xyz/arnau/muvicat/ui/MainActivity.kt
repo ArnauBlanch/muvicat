@@ -120,6 +120,8 @@ class MainActivity : LocationAwareActivity(), HasSupportFragmentInjector {
     }
 
     override fun processLastLocation(location: Location) {
+        (viewPagerAdapter.getItem(HomeFragment.FRAG_ID) as HomeFragment)
+            .notifyLastLocation(location)
         (viewPagerAdapter.getItem(CinemaListFragment.FRAG_ID) as CinemaListFragment)
             .notifyLastLocation(location)
     }
