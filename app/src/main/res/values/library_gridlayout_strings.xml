@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+	<string name="define_gridlayout">year;owner</string>
+	<!-- Author section -->
+	<string name="library_gridlayout_author">AOSP</string>
+	<string name="library_gridlayout_libraryName">Grid Layout</string>
+	<string name="library_gridlayout_libraryDescription">A layout that places its children in a rectangular grid.</string>
+	<string name="library_gridlayout_isOpenSource">true</string>
+	<string name="library_gridlayout_libraryWebsite">https://developer.android.com/reference/android/widget/GridLayout</string>
+	<string name="library_gridlayout_licenseId">apache_2_0</string>
+	<string name="library_gridlayout_year">2018</string>
+	<string name="library_gridlayout_owner">AOSP</string>
+</resources>

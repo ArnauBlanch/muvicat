@@ -55,4 +55,9 @@
     <string name="max_distance">Distància màxima</string>
     <string name="ok">D\'acord</string>
     <string name="no_showings_near_you">no hi ha sessions a prop teu</string>
+    <string name="about_app">Sobre l\'aplicació</string>
+    <string name="privacy_policy">Política de privacitat</string>
+    <string name="version">Versió</string>
+    <string name="muvicat_privacy_policy"><b>MUVICAT</b> PRIVACY POLICY</string>
+    <string name="by_clicking_accept">Prem el botó \"D\'acord\" per acceptar la política de privacitat de Muvicat.</string>
 </resources>

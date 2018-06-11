@@ -1,18 +1,15 @@
 package xyz.arnau.muvicat.ui.home
 
 import android.annotation.SuppressLint
-import android.annotation.TargetApi
 import android.app.Activity
 import android.arch.lifecycle.Observer
 import android.location.Location
-import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v4.view.ViewPager
 import android.support.v7.widget.LinearLayoutManager
-import android.view.DragEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,6 +17,8 @@ import android.widget.Filter
 import com.ethanhua.skeleton.Skeleton
 import com.ethanhua.skeleton.ViewSkeletonScreen
 import com.google.firebase.analytics.FirebaseAnalytics
+import com.mikepenz.aboutlibraries.Libs
+import com.mikepenz.aboutlibraries.LibsBuilder
 import kotlinx.android.synthetic.main.error_layout.*
 import kotlinx.android.synthetic.main.home_fragment.*
 import org.joda.time.LocalDate
@@ -90,6 +89,27 @@ class HomeFragment : Fragment(), Injectable, ScrollableToTop, Filter.FilterListe
         setupFeaturedMovies()
         setupNewMovies()
         setupNearbyShowings()
+
+        infoButton.setOnClickListener {
+            LibsBuilder()
+                .withActivityStyle(Libs.ActivityStyle.LIGHT)
+                .withAboutAppName(getString(R.string.app_name))
+                .withAboutIconShown(true)
+                .withAboutVersionShownName(true)
+                .withActivityTitle(getString(R.string.about_app))
+                .withLicenseShown(true)
+                .withAboutDescription("L'aplicació <i>Muvicat</i> ha estat desenvolupada per l'<b>Arnau Blanch Cortès</b>. Si tens qualsevol pregunta o suggeriment, contacta a <b><i>muvicat@arnau.xyz</i></b>." +
+                        "<br>El codi font d'aquesta app està disponible a <b>https://github.com/ArnauBlanch/muvicat</b> sota la llicència GNU General Public License v2." +
+                        "<h5>Aquesta app utilitza llibreries de tercers:</h5>")
+                .withLicenseDialog(true)
+                .withAutoDetect(true)
+                .withLibraries("skeleton", "lifecycle", "room",
+                    "materialratingbar", "youtube", "pageindicatorview", "shimmerlayout",
+                    "aspectratioimageview", "gridlayout", "cardview", "apachecommons")
+                .withAboutSpecial1(getString(R.string.privacy_policy))
+                .withAboutSpecial1Description(getString(R.string.muvicat_privacy_policy))
+                .start(context)
+        }
     }
 
     private fun setupTrailersTimer() {
@@ -138,7 +158,7 @@ class HomeFragment : Fragment(), Injectable, ScrollableToTop, Filter.FilterListe
 
     private fun getLastLocation() = (activity as LocationAwareActivity).lastLocation
 
-    private fun notifyLastLocation(lastLocation: Location) {
+    fun notifyLastLocation(lastLocation: Location) {
         if (::nearbyShowingsAdapter.isInitialized) {
             updateNearbyShowings(nearbyShowingsAdapter.showings, lastLocation)
         } else {

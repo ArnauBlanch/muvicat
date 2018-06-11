@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+	<string name="define_pageindicatorview">year;owner</string>
+	<!-- Author section -->
+	<string name="library_pageindicatorview_author">Roman Danylyk</string>
+	<string name="library_pageindicatorview_libraryName">PageIndicatorView</string>
+	<string name="library_pageindicatorview_libraryDescription">PageIndicatorView is light library to indicate ViewPager\'s selected page with different animations and ability to customise it as you need.</string>
+	<string name="library_pageindicatorview_isOpenSource">true</string>
+	<string name="library_pageindicatorview_libraryWebsite">https://github.com/romandanylyk/PageIndicatorView</string>
+	<string name="library_pageindicatorview_licenseId">apache_2_0</string>
+	<string name="library_pageindicatorview_year">2017</string>
+	<string name="library_pageindicatorview_owner">Roman Danylyk</string>
+</resources>

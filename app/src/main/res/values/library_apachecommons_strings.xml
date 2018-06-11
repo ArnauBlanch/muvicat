@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+	<string name="define_apachecommons">year;owner</string>
+	<!-- Author section -->
+	<string name="library_apachecommons_author">Apache Software Foundation</string>
+	<string name="library_apachecommons_libraryName">Apache Commons Lang</string>
+	<string name="library_apachecommons_libraryDescription">The standard Java libraries fail to provide enough methods for manipulation of its core classes. Apache Commons Lang provides these extra methods.</string>
+	<string name="library_apachecommons_isOpenSource">true</string>
+	<string name="library_apachecommons_libraryWebsite">https://commons.apache.org/proper/commons-lang/</string>
+	<string name="library_apachecommons_licenseId">apache_2_0</string>
+	<string name="library_apachecommons_year">2018</string>
+	<string name="library_apachecommons_owner">Apache Software Foundation</string>
+</resources>
