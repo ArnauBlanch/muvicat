@@ -3,6 +3,7 @@ package xyz.arnau.muvicat.ui.home
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.arch.lifecycle.Observer
+import android.content.Intent
 import android.location.Location
 import android.os.Bundle
 import android.os.Handler
@@ -17,8 +18,6 @@ import android.widget.Filter
 import com.ethanhua.skeleton.Skeleton
 import com.ethanhua.skeleton.ViewSkeletonScreen
 import com.google.firebase.analytics.FirebaseAnalytics
-import com.mikepenz.aboutlibraries.Libs
-import com.mikepenz.aboutlibraries.LibsBuilder
 import kotlinx.android.synthetic.main.error_layout.*
 import kotlinx.android.synthetic.main.home_fragment.*
 import org.joda.time.LocalDate
@@ -86,21 +85,15 @@ class HomeFragment : Fragment(), Injectable, ScrollableToTop, Filter.FilterListe
         viewPagerAdapter = ViewPagerAdapter(listOf(), childFragmentManager)
         trailerViewPager.adapter = viewPagerAdapter
 
-        setupFeaturedMovies()
-        setupNewMovies()
-        setupNearbyShowings()
-
         infoButton.setOnClickListener {
-            LibsBuilder()
+            /*LibsBuilder()
                 .withActivityStyle(Libs.ActivityStyle.LIGHT)
                 .withAboutAppName(getString(R.string.app_name))
                 .withAboutIconShown(true)
                 .withAboutVersionShownName(true)
                 .withActivityTitle(getString(R.string.about_app))
                 .withLicenseShown(true)
-                .withAboutDescription("L'aplicació <i>Muvicat</i> ha estat desenvolupada per l'<b>Arnau Blanch Cortès</b>. Si tens qualsevol pregunta o suggeriment, contacta a <b><i>muvicat@arnau.xyz</i></b>." +
-                        "<br>El codi font d'aquesta app està disponible a <b>https://github.com/ArnauBlanch/muvicat</b> sota la llicència GNU General Public License v2." +
-                        "<h5>Aquesta app utilitza llibreries de tercers:</h5>")
+                .withAboutDescription(getString(R.string.app_description))
                 .withLicenseDialog(true)
                 .withAutoDetect(true)
                 .withLibraries("skeleton", "lifecycle", "room",
@@ -108,7 +101,8 @@ class HomeFragment : Fragment(), Injectable, ScrollableToTop, Filter.FilterListe
                     "aspectratioimageview", "gridlayout", "cardview", "apachecommons")
                 .withAboutSpecial1(getString(R.string.privacy_policy))
                 .withAboutSpecial1Description(getString(R.string.muvicat_privacy_policy))
-                .start(context)
+                .start(context)*/
+            startActivity(Intent(activity, AboutActivity::class.java))
         }
     }
 
@@ -116,10 +110,10 @@ class HomeFragment : Fragment(), Injectable, ScrollableToTop, Filter.FilterListe
         val handler = Handler()
 
         val update = Runnable {
-            if (trailerViewPager.currentItem == viewPagerAdapter.count - 1)
+            if (trailerViewPager?.currentItem == viewPagerAdapter.count - 1)
                 trailerViewPager.currentItem = 0
             else
-                trailerViewPager.currentItem += 1
+                trailerViewPager?.let { it.currentItem += 1 }
         }
 
         trailerTimer.schedule(object : TimerTask() {
@@ -131,6 +125,10 @@ class HomeFragment : Fragment(), Injectable, ScrollableToTop, Filter.FilterListe
 
     override fun onStart() {
         super.onStart()
+
+        setupFeaturedMovies()
+        setupNewMovies()
+        setupNearbyShowings()
 
         nearbyDistance = preferencesHelper.nearbyShowingsDistance
 
