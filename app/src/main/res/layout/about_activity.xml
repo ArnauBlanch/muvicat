@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/darkGrey"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/aboutToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?android:attr/actionBarSize"
+        android:background="@color/darkGrey"
+        app:layout_collapseMode="pin"
+        app:layout_scrollFlags="scroll|enterAlways"
+        app:title="@string/about_app"
+        app:titleMarginStart="0dp"
+        app:titleMarginTop="5dp"
+        app:titleTextAppearance="@style/AboutToolbarText"
+        app:titleTextColor="@color/colorPrimary" />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="80dp"
+        android:layout_marginTop="-25dp"
+        android:layout_marginBottom="-10dp"
+        android:layout_marginStart="80dp"
+        android:src="@drawable/muvicat_logo" />
+
+    <TextView
+        android:id="@+id/appDescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="30dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginBottom="36dp"
+        android:textSize="15sp"
+        android:gravity="center"
+        android:textColor="@color/colorPrimary" />
+
+    <Button
+        android:id="@+id/privacyPolicyButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/privacy_policy"
+        android:textColor="@color/light_grey"
+        android:fontFamily="@font/nunito_sans_extrabold"
+        style="?android:attr/borderlessButtonStyle"/>
+
+    <Button
+        android:id="@+id/dataConsentButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/modify_data_consent"
+        android:textColor="@color/light_grey"
+        android:fontFamily="@font/nunito_sans_extrabold"
+        style="?android:attr/borderlessButtonStyle"/>
+
+    <Button
+        android:id="@+id/usedLibrariesButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/used_libraries"
+        android:textColor="@color/light_grey"
+        android:fontFamily="@font/nunito_sans_extrabold"
+        style="?android:attr/borderlessButtonStyle"/>
+
+    <Button
+        android:id="@+id/dataSourceButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/data_sources"
+        android:textColor="@color/light_grey"
+        android:fontFamily="@font/nunito_sans_extrabold"
+        style="?android:attr/borderlessButtonStyle"/>
+</LinearLayout>
