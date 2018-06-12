@@ -32,6 +32,7 @@ import xyz.arnau.muvicat.ui.MainActivity
 import xyz.arnau.muvicat.ui.UiPreferencesHelper
 import xyz.arnau.muvicat.ui.utils.ScrollableToTop
 import xyz.arnau.muvicat.ui.utils.ViewPagerAdapter
+import xyz.arnau.muvicat.utils.AppExecutors
 import xyz.arnau.muvicat.utils.LocationUtils
 import xyz.arnau.muvicat.utils.setGone
 import xyz.arnau.muvicat.utils.setVisible
@@ -44,6 +45,8 @@ class HomeFragment : Fragment(), Injectable, ScrollableToTop, Filter.FilterListe
     private lateinit var viewPagerAdapter: ViewPagerAdapter
     @Inject
     lateinit var featuredMoviesAdapter: MovieListAdapter
+    @Inject
+    lateinit var appExecutors: AppExecutors
     private lateinit var featuredMoviesSkeleton: ViewSkeletonScreen
     private lateinit var newMoviesSkeleton: ViewSkeletonScreen
     private lateinit var nearbyShowingsSkeleton: ViewSkeletonScreen
@@ -61,7 +64,7 @@ class HomeFragment : Fragment(), Injectable, ScrollableToTop, Filter.FilterListe
     lateinit var preferencesHelper: UiPreferencesHelper
 
     private var hasLocation = false
-    private val trailerTimer = Timer()
+    private var trailerTimer = Timer()
     internal var nearbyDistance = 0
         @SuppressLint("SetTextI18n")
         set(value) {
@@ -86,41 +89,22 @@ class HomeFragment : Fragment(), Injectable, ScrollableToTop, Filter.FilterListe
         trailerViewPager.adapter = viewPagerAdapter
 
         infoButton.setOnClickListener {
-            /*LibsBuilder()
-                .withActivityStyle(Libs.ActivityStyle.LIGHT)
-                .withAboutAppName(getString(R.string.app_name))
-                .withAboutIconShown(true)
-                .withAboutVersionShownName(true)
-                .withActivityTitle(getString(R.string.about_app))
-                .withLicenseShown(true)
-                .withAboutDescription(getString(R.string.app_description))
-                .withLicenseDialog(true)
-                .withAutoDetect(true)
-                .withLibraries("skeleton", "lifecycle", "room",
-                    "materialratingbar", "youtube", "pageindicatorview", "shimmerlayout",
-                    "aspectratioimageview", "gridlayout", "cardview", "apachecommons")
-                .withAboutSpecial1(getString(R.string.privacy_policy))
-                .withAboutSpecial1Description(getString(R.string.muvicat_privacy_policy))
-                .start(context)*/
             startActivity(Intent(activity, AboutActivity::class.java))
         }
     }
 
     private fun setupTrailersTimer() {
-        val handler = Handler()
-
-        val update = Runnable {
-            if (trailerViewPager?.currentItem == viewPagerAdapter.count - 1)
-                trailerViewPager.currentItem = 0
-            else
-                trailerViewPager?.let { it.currentItem += 1 }
-        }
-
-        trailerTimer.schedule(object : TimerTask() {
+        trailerTimer.schedule(object: TimerTask() {
             override fun run() {
-                handler.post(update)
+                appExecutors.mainThread().execute {
+                    if (trailerViewPager?.currentItem == viewPagerAdapter.count - 1) {
+                        trailerViewPager?.currentItem = 0
+                    } else {
+                        trailerViewPager?.let { it.currentItem += 1 }
+                    }
+                }
             }
-        }, 8000, 8000)
+        }, 6000)
     }
 
     override fun onStart() {
@@ -129,6 +113,27 @@ class HomeFragment : Fragment(), Injectable, ScrollableToTop, Filter.FilterListe
         setupFeaturedMovies()
         setupNewMovies()
         setupNearbyShowings()
+
+        trailerViewPager.addOnPageChangeListener(object: ViewPager.OnPageChangeListener {
+            override fun onPageSelected(position: Int) {
+                trailerTimer.cancel()
+                trailerTimer = Timer()
+                setupTrailersTimer()
+            }
+
+            override fun onPageScrolled(
+                position: Int,
+                positionOffset: Float,
+                positionOffsetPixels: Int
+            ) {
+                print('t')
+            }
+
+            override fun onPageScrollStateChanged(state: Int) {
+                print('t')
+            }
+
+        })
 
         nearbyDistance = preferencesHelper.nearbyShowingsDistance
 
