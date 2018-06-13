@@ -53,7 +53,7 @@ class PrivacyPolicyActivity : AppCompatActivity(), ConsentReceiver {
 
             FirebaseAnalytics.getInstance(this)
                 .logEvent("privacy_policy_accepted", Bundle().apply { putInt("version", POLICY_VERSION) })
-            startActivity(Intent(this, SplashActivity::class.java))
+            startActivity(Intent(this, SplashActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
             finish()
         }
 
