@@ -92,7 +92,7 @@ class HomeFragment : Fragment(), Injectable, ScrollableToTop, Filter.FilterListe
         trailerViewPager.adapter = viewPagerAdapter
 
         infoButton.setOnClickListener {
-            startActivity(Intent(activity, AboutActivity::class.java))
+            startActivity(Intent(activity, AboutActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
         }
     }
 

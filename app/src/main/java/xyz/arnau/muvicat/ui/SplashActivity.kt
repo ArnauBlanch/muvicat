@@ -20,15 +20,15 @@ class SplashActivity : AppCompatActivity() {
 
         when {
             (application as MuvicatApplication).isInFirebaseTestLab ->
-                startActivity(Intent(this, MainActivity::class.java))
+                startActivity(Intent(this, MainActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
             preferencesHelper.privacyPolicyVersion < PrivacyPolicyActivity.POLICY_VERSION ->
-                startActivity(Intent(this, PrivacyPolicyActivity::class.java))
+                startActivity(Intent(this, PrivacyPolicyActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
             else -> {
                 if (preferencesHelper.consentUsageStats)
                     FirebaseAnalytics.getInstance(applicationContext).setAnalyticsCollectionEnabled(true)
                 if (preferencesHelper.consentCrashReporting)
                     Fabric.with(applicationContext, Crashlytics())
-                startActivity(Intent(this, MainActivity::class.java))
+                startActivity(Intent(this, MainActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
             }
         }
 

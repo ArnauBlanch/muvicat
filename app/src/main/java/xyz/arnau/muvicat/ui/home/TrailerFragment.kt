@@ -89,11 +89,12 @@ class TrailerFragment : Fragment(), Injectable {
         try {
             context.startActivity(
                 YouTubeIntents.createPlayVideoIntentWithOptions(activity, id, true, true)
+                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             )
         } catch (ex: ActivityNotFoundException) {
             context.startActivity(
                 Intent(Intent.ACTION_VIEW, Uri.parse("https://www.youtube.com/watch?v=$id"))
-            )
+                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
         }
 
     }

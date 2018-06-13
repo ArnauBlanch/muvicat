@@ -143,7 +143,7 @@ class CinemaActivity : LocationAwareActivity(), HasSupportFragmentInjector {
                                 "https://www.google.com/maps/search/?api=1&query=" +
                                         "${cinema.name}, ${cinema.address}"
                             )
-                        )
+                        ).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                         FirebaseAnalytics.getInstance(this)
                             .logEvent("show_cinema_map", Bundle())
                         startActivity(intent)
