@@ -67,6 +67,9 @@ class MovieShowingsAdapter @Inject constructor() : RecyclerView.Adapter<Recycler
                         holder.showingsTitle.setVisibleText(context.getString(R.string.showings))
                     else
                         holder.showingsTitle.setVisibleText(context.getString(R.string.showing))
+                    holder.noShowingsMessage.setGone()
+                } else {
+                    holder.noShowingsMessage.setVisible()
                 }
 
                 if (showingId != null || cinemaId != null) {
@@ -159,6 +162,7 @@ class MovieShowingsAdapter @Inject constructor() : RecyclerView.Adapter<Recycler
         var castMembers: RecyclerView = view.findViewById(R.id.castRecyclerView)
         var showingsTitle: TextView = view.findViewById(R.id.movieShowingsTitle)
         var moreShowingsButton: ToggleButton = view.findViewById(R.id.moreShowingsButton)
+        var noShowingsMessage: View = view.findViewById(R.id.noShowingsMessage)
     }
 
     inner class ShowingViewHolder(view: View) : RecyclerView.ViewHolder(view) {
