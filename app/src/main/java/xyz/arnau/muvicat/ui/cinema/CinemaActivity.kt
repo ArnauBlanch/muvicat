@@ -13,6 +13,7 @@ import android.support.design.widget.AppBarLayout
 import android.support.design.widget.TabLayout
 import android.support.v4.app.Fragment
 import android.support.v4.content.res.ResourcesCompat
+import com.google.firebase.analytics.FirebaseAnalytics
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
@@ -143,6 +144,8 @@ class CinemaActivity : LocationAwareActivity(), HasSupportFragmentInjector {
                                         "${cinema.name}, ${cinema.address}"
                             )
                         )
+                        FirebaseAnalytics.getInstance(this)
+                            .logEvent("show_cinema_map", Bundle())
                         startActivity(intent)
                     }
                 }

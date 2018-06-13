@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.bumptech.glide.Glide
 import com.google.android.youtube.player.YouTubeIntents
+import com.google.firebase.analytics.FirebaseAnalytics
 import kotlinx.android.synthetic.main.trailer_item.*
 import xyz.arnau.muvicat.R
 import xyz.arnau.muvicat.di.Injectable
@@ -54,7 +55,13 @@ class TrailerFragment : Fragment(), Injectable {
         }
         trailerUrl?.let { videoId ->
             playTrailer.setVisible()
-            playTrailer.setOnClickListener { watchYoutubeVideo(contextAux, videoId) }
+            playTrailer.setOnClickListener {
+                watchYoutubeVideo(contextAux, videoId)
+                activity?.let {
+                    FirebaseAnalytics.getInstance(it)
+                        .logEvent("play_trailer", Bundle().apply { putString("source", "home") })
+                }
+            }
 
             if (backdropUrl == null) {
                 GlideApp.with(this)

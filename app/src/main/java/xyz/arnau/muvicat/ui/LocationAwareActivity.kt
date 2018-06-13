@@ -15,6 +15,7 @@ import android.view.View
 import android.widget.TextView
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import com.google.firebase.analytics.FirebaseAnalytics
 import timber.log.Timber
 import xyz.arnau.muvicat.BuildConfig.APPLICATION_ID
 import xyz.arnau.muvicat.MuvicatApplication
@@ -58,8 +59,14 @@ abstract class LocationAwareActivity : AppCompatActivity() {
         if (requestCode == REQUEST_PERMISSIONS_REQUEST_CODE) {
             when {
                 grantResults.isEmpty() -> Timber.i("User location was cancelled.")
-                (grantResults[0] == PERMISSION_GRANTED) -> getLastLocationFromClient()
+                (grantResults[0] == PERMISSION_GRANTED) -> {
+                    getLastLocationFromClient()
+                    FirebaseAnalytics.getInstance(this)
+                        .logEvent("location_permission_granted", null)
+                }
                 else -> {
+                    FirebaseAnalytics.getInstance(this)
+                        .logEvent("location_permission_denied", null)
                     showSnackbar(
                         R.string.permission_denied_explanation,
                         R.string.settings,

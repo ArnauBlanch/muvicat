@@ -51,6 +51,8 @@ class PrivacyPolicyActivity : AppCompatActivity(), ConsentReceiver {
             }
             preferencesHelper.consentCrashReporting = crashReportingStatus == ENABLE
 
+            FirebaseAnalytics.getInstance(this)
+                .logEvent("privacy_policy_accepted", Bundle().apply { putInt("version", POLICY_VERSION) })
             startActivity(Intent(this, SplashActivity::class.java))
             finish()
         }
