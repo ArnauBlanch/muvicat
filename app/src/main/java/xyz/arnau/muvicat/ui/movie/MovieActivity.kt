@@ -7,6 +7,7 @@ import android.location.Location
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v7.widget.LinearLayoutManager
+import com.google.firebase.analytics.FirebaseAnalytics
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.movie_info.*
 import xyz.arnau.muvicat.R
@@ -174,6 +175,10 @@ class MovieActivity : LocationAwareActivity(), ScrollableToTop {
                                 getString(R.string.rate_movie_success),
                                 6000
                             ))
+                        FirebaseAnalytics.getInstance(this).logEvent("rate_movie", Bundle().apply {
+                            putInt("tmdbId", tmdbId)
+                            putDouble("rating", rating)
+                        })
                     } else {
                         Snackbar.make(findViewById(android.R.id.content), getString(R.string.rate_movie_error), 8000)
                             .show()
@@ -200,6 +205,7 @@ class MovieActivity : LocationAwareActivity(), ScrollableToTop {
                             getString(R.string.unrate_movie_success),
                             6000
                         ))
+                        FirebaseAnalytics.getInstance(this).logEvent("unrate_movie", Bundle().apply { putInt("tmdbId", tmdbId) })
                     } else {
                         snackQueue.enqueueSnack(QueuedSnack(
                             this,
