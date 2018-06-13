@@ -6,7 +6,6 @@ import android.arch.lifecycle.Observer
 import android.content.Intent
 import android.location.Location
 import android.os.Bundle
-import android.os.Handler
 import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v4.view.ViewPager
@@ -30,7 +29,9 @@ import xyz.arnau.muvicat.repository.model.Status
 import xyz.arnau.muvicat.ui.LocationAwareActivity
 import xyz.arnau.muvicat.ui.MainActivity
 import xyz.arnau.muvicat.ui.UiPreferencesHelper
+import xyz.arnau.muvicat.ui.utils.QueuedSnack
 import xyz.arnau.muvicat.ui.utils.ScrollableToTop
+import xyz.arnau.muvicat.ui.utils.SnackQueue
 import xyz.arnau.muvicat.ui.utils.ViewPagerAdapter
 import xyz.arnau.muvicat.utils.AppExecutors
 import xyz.arnau.muvicat.utils.LocationUtils
@@ -50,6 +51,8 @@ class HomeFragment : Fragment(), Injectable, ScrollableToTop, Filter.FilterListe
     private lateinit var featuredMoviesSkeleton: ViewSkeletonScreen
     private lateinit var newMoviesSkeleton: ViewSkeletonScreen
     private lateinit var nearbyShowingsSkeleton: ViewSkeletonScreen
+    @Inject
+    lateinit var snackQueue: SnackQueue
 
     @Inject
     lateinit var newMoviesAdapter: MovieListAdapter
@@ -94,7 +97,7 @@ class HomeFragment : Fragment(), Injectable, ScrollableToTop, Filter.FilterListe
     }
 
     private fun setupTrailersTimer() {
-        trailerTimer.schedule(object: TimerTask() {
+        trailerTimer.schedule(object : TimerTask() {
             override fun run() {
                 appExecutors.mainThread().execute {
                     if (trailerViewPager?.currentItem == viewPagerAdapter.count - 1) {
@@ -114,7 +117,7 @@ class HomeFragment : Fragment(), Injectable, ScrollableToTop, Filter.FilterListe
         setupNewMovies()
         setupNearbyShowings()
 
-        trailerViewPager.addOnPageChangeListener(object: ViewPager.OnPageChangeListener {
+        trailerViewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
             override fun onPageSelected(position: Int) {
                 trailerTimer.cancel()
                 trailerTimer = Timer()
@@ -187,9 +190,9 @@ class HomeFragment : Fragment(), Injectable, ScrollableToTop, Filter.FilterListe
             hasLocation = true
             nearbyShowingsAdapter.showings = data
             nearbyShowingsAdapter.filter.filter(nearbyDistance.toString())
-            nearbyShowingsRecyclerView.setVisible()
             nearbyShowingsAdapter.notifyDataSetChanged()
         } else {
+            nearbyShowingsAdapter.showings = data
             nearbyShowingsRecyclerView.setGone()
         }
     }
@@ -247,7 +250,8 @@ class HomeFragment : Fragment(), Injectable, ScrollableToTop, Filter.FilterListe
                 trailerViewPager.setVisible()
                 setupTrailersTimer()
             } else {
-                trailerViewPager.setGone()
+                homeScrollView.setGone()
+                errorMessage.setVisible()
             }
         } else if (status == Status.ERROR) {
             if (data != null && !data.isEmpty()) {
@@ -256,12 +260,14 @@ class HomeFragment : Fragment(), Injectable, ScrollableToTop, Filter.FilterListe
                 newMoviesSkeleton.hide()
                 trailerViewPager.setVisible()
                 setupTrailersTimer()
-                view?.let {
-                    Snackbar.make(it, getString(R.string.couldnt_update_data), 6000)
-                        .show()
-                }
+
+                snackQueue.enqueueSnack(QueuedSnack(
+                    activity!!,
+                    getString(R.string.couldnt_update_data),
+                    Snackbar.LENGTH_LONG
+                ), SnackQueue.COULDNT_UPDATE)
             } else {
-                trailerViewPager.setGone()
+                homeScrollView.setGone()
                 errorMessage.setVisible()
             }
         }
@@ -272,8 +278,6 @@ class HomeFragment : Fragment(), Injectable, ScrollableToTop, Filter.FilterListe
         if (status == Status.SUCCESS) data?.let { d ->
             if (d.isNotEmpty()) {
                 updateNearbyShowings(d, getLastLocation())
-                nearbyShowingsRecyclerView.setVisible()
-                nearbyShowingsSkeleton.hide()
             } else {
                 nearbyShowingsRecyclerView.setGone()
             }
@@ -281,8 +285,12 @@ class HomeFragment : Fragment(), Injectable, ScrollableToTop, Filter.FilterListe
             if (data != null && !data.isEmpty()) {
                 updateNearbyShowings(data, getLastLocation())
                 nearbyShowingsSkeleton.hide()
-            } else {
-                errorMessage.setVisible()
+
+                snackQueue.enqueueSnack(QueuedSnack(
+                    activity!!,
+                    getString(R.string.couldnt_update_data),
+                    Snackbar.LENGTH_LONG
+                ), SnackQueue.COULDNT_UPDATE)
             }
         }
     }
@@ -330,11 +338,19 @@ class HomeFragment : Fragment(), Injectable, ScrollableToTop, Filter.FilterListe
     }
 
     override fun onFilterComplete(count: Int) {
-        if (count == 0) {
-            nearbyShowingsRecyclerView.setGone()
-            nearbyShowingsEmptyMessage.setVisible()
+        nearbyShowingsSkeleton.hide()
+        if (hasLocation) {
+            nearbyShowingsTitleLayout.setVisible()
+            if (count == 0) {
+                nearbyShowingsRecyclerView.setGone()
+                nearbyShowingsEmptyMessage.setVisible()
+            } else {
+                nearbyShowingsRecyclerView.setVisible()
+                nearbyShowingsEmptyMessage.setGone()
+            }
         } else {
-            nearbyShowingsRecyclerView.setVisible()
+            nearbyShowingsTitleLayout.setGone()
+            nearbyShowingsRecyclerView.setGone()
             nearbyShowingsEmptyMessage.setGone()
         }
     }

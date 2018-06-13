@@ -24,7 +24,8 @@
         android:id="@+id/webView"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
-        android:background="@color/darkGrey"
+        android:background="@android:color/transparent"
+        android:backgroundTint="@android:color/transparent"
         android:layout_width="match_parent"
         android:layout_weight="1"
         android:layout_height="0dp"/>

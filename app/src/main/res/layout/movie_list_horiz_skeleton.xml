@@ -2,12 +2,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_height="wrap_content"
-    android:layout_width="wrap_content"
+    android:layout_width="500dp"
     android:orientation="horizontal"
     android:paddingStart="10dp"
-    android:clipToPadding="false"
+    android:fitsSystemWindows="false"
     tools:ignore="RtlSymmetry">
-    <include layout="@layout/movie_item_horiz_skeleton" />
     <include layout="@layout/movie_item_horiz_skeleton" />
     <include layout="@layout/movie_item_horiz_skeleton" />
     <include layout="@layout/movie_item_horiz_skeleton" />

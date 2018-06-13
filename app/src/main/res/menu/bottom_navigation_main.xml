@@ -28,7 +28,7 @@
     <item
         android:id="@+id/action_selection"
         android:enabled="true"
-        android:icon="@drawable/ic_user"
-        android:title="@string/selection"
+        android:icon="@drawable/ic_star"
+        android:title="@string/valorades"
         app:showAsAction="ifRoom|withText" />
 </menu>

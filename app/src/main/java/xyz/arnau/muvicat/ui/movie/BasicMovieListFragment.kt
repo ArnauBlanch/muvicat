@@ -19,12 +19,17 @@ import xyz.arnau.muvicat.repository.model.Resource
 import xyz.arnau.muvicat.repository.model.Status
 import xyz.arnau.muvicat.di.Injectable
 import xyz.arnau.muvicat.ui.ListFragment
+import xyz.arnau.muvicat.ui.utils.QueuedSnack
+import xyz.arnau.muvicat.ui.utils.SnackQueue
 import xyz.arnau.muvicat.utils.setGone
 import xyz.arnau.muvicat.utils.setVisible
+import javax.inject.Inject
 
 abstract class BasicMovieListFragment<T> : ListFragment(),
     Injectable {
     private lateinit var skeleton: RecyclerViewSkeletonScreen
+    @Inject
+    lateinit var snackQueue: SnackQueue
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -69,10 +74,11 @@ abstract class BasicMovieListFragment<T> : ListFragment(),
                 handleMoviesUpdate(data)
                 moviesRecyclerView.setVisible()
                 skeleton.hide()
-                view?.let {
-                    Snackbar.make(it, getString(R.string.couldnt_update_data), 6000)
-                        .show()
-                }
+                snackQueue.enqueueSnack(QueuedSnack(
+                    activity!!,
+                    getString(R.string.couldnt_update_data),
+                    8000
+                ), SnackQueue.COULDNT_UPDATE)
             } else {
                 moviesRecyclerView.setGone()
                 errorMessage.setVisible()
