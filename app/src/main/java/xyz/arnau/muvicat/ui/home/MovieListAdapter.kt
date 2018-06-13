@@ -7,11 +7,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import xyz.arnau.muvicat.R
 import xyz.arnau.muvicat.repository.model.Movie
 import xyz.arnau.muvicat.ui.movie.MovieActivity
 import xyz.arnau.muvicat.utils.*
 import javax.inject.Inject
+import com.bumptech.glide.request.RequestOptions
+import com.bumptech.glide.request.target.Target
+
 
 class MovieListAdapter @Inject constructor() : RecyclerView.Adapter<MovieListAdapter.ViewHolder>() {
     @Inject
@@ -34,7 +38,7 @@ class MovieListAdapter @Inject constructor() : RecyclerView.Adapter<MovieListAda
             holder.star.setGone()
         }
 
-        GlideApp.with(holder.itemView.context)
+        GlideApp.with(context)
             .load("http://www.gencat.cat/llengua/cinema/${movie.posterUrl}")
             .error(R.drawable.poster_placeholder)
             .centerCrop()

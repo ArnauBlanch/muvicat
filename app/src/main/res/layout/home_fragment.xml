@@ -28,7 +28,6 @@
                     android:layout_height="wrap_content" />
 
                 <com.santalu.aspectratioimageview.AspectRatioImageView
-                    android:id="@+id/movieBackdrop"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:adjustViewBounds="true"
@@ -95,8 +94,10 @@
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/featuredMoviesRecyclerView"
-                    android:layout_width="wrap_content"
+                    android:fitsSystemWindows="false"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:clipChildren="false"
                     android:layout_marginBottom="10dp"
                     android:layout_marginTop="5dp"
                     android:clipToPadding="false"
@@ -128,6 +129,7 @@
                     android:paddingStart="16dp" />
 
                 <LinearLayout
+                    android:id="@+id/nearbyShowingsTitleLayout"
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
@@ -173,10 +175,10 @@
                     android:nestedScrollingEnabled="false"
                     android:orientation="horizontal"
                     android:paddingEnd="10dp"
-                    android:visibility="gone"
                     android:paddingStart="16dp" />
                 <TextView
                     android:id="@+id/nearbyShowingsEmptyMessage"
+                    android:visibility="gone"
                     android:text="@string/no_showings_near_you"
                     android:gravity="center"
                     android:fontFamily="@font/nunito_sans_bold"

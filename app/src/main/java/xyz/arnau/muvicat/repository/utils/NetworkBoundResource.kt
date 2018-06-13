@@ -51,7 +51,9 @@ abstract class NetworkBoundResource<ResultType, RequestType> @MainThread constru
                         }
                     }
                 else -> {
-                    onFetchFailed()
+                    appExecutors.diskIO().execute {
+                        onFetchFailed()
+                    }
                     result.addSource(dbSource, { newData ->
                         setValue(Resource.error(response?.errorMessage, newData))
                     })

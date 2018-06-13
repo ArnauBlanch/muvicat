@@ -2,8 +2,8 @@
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/movieCardView"
-    android:layout_width="wrap_content"
-    android:layout_height="260dp"
+    android:layout_width="145dp"
+    android:layout_height="wrap_content"
     android:layout_gravity="center"
     android:layout_marginEnd="6dp"
     android:clickable="true"
@@ -13,12 +13,12 @@
     app:cardElevation="0dp">
 
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <RelativeLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
             android:orientation="vertical">
@@ -29,11 +29,11 @@
 
                 <com.santalu.aspectratioimageview.AspectRatioImageView
                     android:id="@+id/moviePoster"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:background="@color/skeleton_light"
-                    app:ari_aspect="width"
-                    app:ari_ratio="0.7" />
+                    app:ari_aspect="height"
+                    app:ari_ratio="1.43" />
 
                 <TextView
                     android:id="@+id/releaseDate"

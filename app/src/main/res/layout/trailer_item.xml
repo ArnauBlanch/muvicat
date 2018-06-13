@@ -51,7 +51,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:shadowColor="@android:color/black"
-            android:shadowRadius="55"
+            android:shadowRadius="25"
             android:textColor="@color/colorPrimary"
             android:fontFamily="@font/nunito_sans_extrabold"
             android:textSize="24sp"

@@ -33,7 +33,8 @@ class PrivacyPolicyActivity : AppCompatActivity(), ConsentReceiver {
         AndroidInjection.inject(this)
 
         setContentView(R.layout.privacy_policy)
-        webView.loadData(streamToString(resources.openRawResource(R.raw.privacy_policy_v1)), "text/html", null)
+        webView.setBackgroundColor(0x00000000)
+        webView.loadData(streamToString(resources.openRawResource(R.raw.privacy_policy_v1)), "text/html; charset=UTF-8", null)
 
         acceptButton.setOnClickListener {
             preferencesHelper.privacyPolicyVersion = POLICY_VERSION

@@ -12,9 +12,7 @@ import kotlinx.android.synthetic.main.movie_info.*
 import xyz.arnau.muvicat.R
 import xyz.arnau.muvicat.repository.model.*
 import xyz.arnau.muvicat.ui.LocationAwareActivity
-import xyz.arnau.muvicat.ui.utils.ScrollableToTop
-import xyz.arnau.muvicat.ui.utils.SimpleDividerItemDecoration
-import xyz.arnau.muvicat.ui.utils.UiUtils
+import xyz.arnau.muvicat.ui.utils.*
 import xyz.arnau.muvicat.utils.DateFormatter
 import xyz.arnau.muvicat.utils.LocationUtils
 import xyz.arnau.muvicat.viewmodel.movie.MovieViewModel
@@ -170,11 +168,20 @@ class MovieActivity : LocationAwareActivity(), ScrollableToTop {
             this, Observer {
                 if (it != null) {
                     if (it.status == Status.SUCCESS) {
-                        Snackbar.make(findViewById(android.R.id.content), getString(R.string.rate_movie_success), 8000)
-                            .show()
+                        snackQueue.enqueueSnack(
+                            QueuedSnack(
+                                this,
+                                getString(R.string.rate_movie_success),
+                                6000
+                            ))
                     } else {
                         Snackbar.make(findViewById(android.R.id.content), getString(R.string.rate_movie_error), 8000)
                             .show()
+                        snackQueue.enqueueSnack(QueuedSnack(
+                            this,
+                            getString(R.string.rate_movie_error),
+                            6000
+                        ))
                     }
                 }
             }
@@ -188,9 +195,17 @@ class MovieActivity : LocationAwareActivity(), ScrollableToTop {
                     if (it.status == Status.SUCCESS) {
                         Snackbar.make(findViewById(android.R.id.content), getString(R.string.unrate_movie_success), 8000)
                             .show()
+                        snackQueue.enqueueSnack(QueuedSnack(
+                            this,
+                            getString(R.string.unrate_movie_success),
+                            6000
+                        ))
                     } else {
-                        Snackbar.make(findViewById(android.R.id.content), getString(R.string.unrate_movie_error), 8000)
-                            .show()
+                        snackQueue.enqueueSnack(QueuedSnack(
+                            this,
+                            getString(R.string.unrate_movie_error),
+                            6000
+                        ))
                     }
                 }
             }

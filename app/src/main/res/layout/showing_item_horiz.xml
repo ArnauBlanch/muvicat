@@ -17,11 +17,6 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="254dp"
-            android:orientation="vertical">
-
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="0dp"
@@ -34,11 +29,11 @@
 
                 <com.santalu.aspectratioimageview.AspectRatioImageView
                     android:id="@+id/moviePoster"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+                    android:layout_width="145dp"
+                    android:layout_height="wrap_content"
                     android:background="@color/skeleton_light"
-                    app:ari_aspect="width"
-                    app:ari_ratio="0.7" />
+                    app:ari_aspect="height"
+                    app:ari_ratio="1.43" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -97,15 +92,14 @@
             android:paddingTop="3dp"
             android:textColor="#000000"
             android:textSize="15sp" />
-    </LinearLayout>
 
         <TextView
             android:id="@+id/cinemaName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:ellipsize="marquee"
             android:fontFamily="@font/nunito_sans_bold"
             android:lineSpacingMultiplier="0.9"
-            android:ellipsize="marquee"
             android:lines="2"
             android:paddingBottom="6dp"
             android:paddingTop="3dp"

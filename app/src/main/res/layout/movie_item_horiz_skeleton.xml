@@ -3,8 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/movieCardView"
-    android:layout_width="wrap_content"
-    android:layout_height="260dp"
+    android:layout_width="145dp"
+    android:layout_height="wrap_content"
     android:layout_gravity="center"
     android:layout_marginStart="6dp"
     android:layout_marginBottom="16dp"
@@ -17,28 +17,28 @@
     tools:ignore="RtlSymmetry">
 
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <RelativeLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
             android:background="@color/darkRed"
             android:orientation="vertical">
 
             <RelativeLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
                 <com.santalu.aspectratioimageview.AspectRatioImageView
                     android:id="@+id/moviePoster"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:background="@color/skeleton_light"
-                    app:ari_aspect="width"
-                    app:ari_ratio="0.7" />
+                    app:ari_aspect="height"
+                    app:ari_ratio="1.43" />
 
             </RelativeLayout>
         </RelativeLayout>

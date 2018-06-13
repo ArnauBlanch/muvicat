@@ -19,11 +19,16 @@ import timber.log.Timber
 import xyz.arnau.muvicat.BuildConfig.APPLICATION_ID
 import xyz.arnau.muvicat.MuvicatApplication
 import xyz.arnau.muvicat.R
+import xyz.arnau.muvicat.ui.utils.QueuedSnack
+import xyz.arnau.muvicat.ui.utils.SnackQueue
+import javax.inject.Inject
 
 abstract class LocationAwareActivity : AppCompatActivity() {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private val REQUEST_PERMISSIONS_REQUEST_CODE = 34
     lateinit var app: MuvicatApplication
+    @Inject
+    lateinit var snackQueue: SnackQueue
 
     var lastLocation: Location? = null
         private set
@@ -106,7 +111,7 @@ abstract class LocationAwareActivity : AppCompatActivity() {
                     android.R.string.ok,
                     View.OnClickListener {
                         startLocationPermissionRequest()
-                    })
+                    }, SnackQueue.COULDNT_GET_LOCATION)
             } else {
                 startLocationPermissionRequest()
             }
@@ -115,16 +120,17 @@ abstract class LocationAwareActivity : AppCompatActivity() {
 
     private fun showSnackbar(
         snackStrId: Int,
-        actionStrId: Int = 0,
-        listener: View.OnClickListener? = null
+        actionStrId: Int? = null,
+        listener: View.OnClickListener? = null,
+        code: Int? = null
     ) {
-        val snackbar =
-            Snackbar.make(findViewById(android.R.id.content), getString(snackStrId), 12000)
-        (snackbar.view.findViewById(android.support.design.R.id.snackbar_text) as TextView).maxLines =
-                5
-        if (actionStrId != 0 && listener != null) {
-            snackbar.setAction(getString(actionStrId), listener)
-        }
-        snackbar.show()
+        snackQueue.enqueueSnack(QueuedSnack(
+            this,
+            getString(snackStrId),
+            Snackbar.LENGTH_LONG,
+            actionStrId?.let{ getString(it) },
+            listener,
+            5
+        ), code)
     }
 }

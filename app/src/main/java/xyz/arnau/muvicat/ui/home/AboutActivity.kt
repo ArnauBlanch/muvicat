@@ -45,7 +45,7 @@ class AboutActivity : AppCompatActivity() {
                 .setView(WebView(this).apply {
                     loadData(
                         streamToString(resources.openRawResource(R.raw.privacy_policy_v1)),
-                        "text/html",
+                        "text/html; charset=UTF-8",
                         null
                     )
                 })
