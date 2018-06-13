@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:background="@color/darkGrey"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="55dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="10dp"
+        android:src="@drawable/muvicat_logo"/>
+    <TextView
+        android:text="Política de privacitat"
+        android:fontFamily="@font/nunito_sans_extrabold"
+        android:textSize="22sp"
+        android:gravity="center"
+        android:textColor="@color/colorPrimary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <WebView
+        android:id="@+id/webView"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:background="@android:color/transparent"
+        android:backgroundTint="@android:color/transparent"
+        android:layout_width="match_parent"
+        android:layout_weight="1"
+        android:layout_height="0dp"/>
+
+    <TextView
+        android:layout_marginEnd="30dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="10dp"
+        android:fontFamily="@font/nunito_sans_bold"
+        android:text="@string/by_clicking_accept"
+        android:textSize="14sp"
+        android:gravity="center"
+        android:textColor="@color/colorPrimary"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:weightSum="2"
+        android:layout_margin="20dp"
+        android:layout_marginBottom="32dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/optionsButton"
+            android:layout_weight="1"
+            style="?android:attr/borderlessButtonStyle"
+            android:textColor="@color/colorPrimary"
+            android:textSize="16sp"
+            android:lines="2"
+            android:layout_gravity="start"
+            android:fontFamily="@font/nunito_sans_bold"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/manage_preferences"/>
+
+        <Button
+            android:id="@+id/acceptButton"
+            android:layout_weight="1"
+            style="?android:attr/borderlessButtonStyle"
+            android:textColor="@color/colorPrimary"
+            android:textSize="16sp"
+            android:layout_gravity="end"
+            android:fontFamily="@font/nunito_sans_extrabold"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/ok"/>
+    </LinearLayout>
+</LinearLayout>

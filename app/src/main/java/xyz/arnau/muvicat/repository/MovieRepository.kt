@@ -34,6 +34,7 @@ class MovieRepository(
     }
 
     private var countDownDone = false
+    private var currentlyFetching = false
 
     internal fun hasExpired(): Boolean {
         val currentTime = System.currentTimeMillis()
@@ -60,6 +61,7 @@ class MovieRepository(
                     countDownDone = true
                 }
                 afterLatch.await()
+                currentlyFetching = false
             }
 
             override fun onFetchFailed() {
@@ -68,9 +70,11 @@ class MovieRepository(
                     countDownDone = true
                 }
                 afterLatch.await()
+                currentlyFetching = false
             }
 
             override fun createCall(): LiveData<Response<List<MovieEntity>>> {
+                currentlyFetching = true
                 return gencatRemote.getMovies()
             }
 
@@ -79,7 +83,7 @@ class MovieRepository(
             }
 
             override fun shouldFetch(data: List<Movie>?): Boolean {
-                val shouldFetch = data == null || data.isEmpty() || hasExpired()
+                val shouldFetch = !currentlyFetching && (data == null || data.isEmpty() || hasExpired())
                 if (!shouldFetch && !countDownDone) {
                     beforeLatch.countDown()
                     countDownDone = true

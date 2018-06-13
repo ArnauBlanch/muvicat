@@ -10,6 +10,7 @@ import dagger.android.support.HasSupportFragmentInjector
 import kotlinx.android.synthetic.main.activity_main.*
 import xyz.arnau.muvicat.R
 import xyz.arnau.muvicat.ui.cinema.CinemaListFragment
+import xyz.arnau.muvicat.ui.home.HomeFragment
 import xyz.arnau.muvicat.ui.movie.MovieListFragment
 import xyz.arnau.muvicat.ui.selection.UserSelectionFragment
 import xyz.arnau.muvicat.ui.showing.ShowingListFragment
@@ -27,6 +28,7 @@ class MainActivity : LocationAwareActivity(), HasSupportFragmentInjector {
 
     private val viewPagerAdapter = ViewPagerAdapter(
         listOf(
+            HomeFragment(),
             MovieListFragment(),
             ShowingListFragment(),
             CinemaListFragment(),
@@ -51,8 +53,21 @@ class MainActivity : LocationAwareActivity(), HasSupportFragmentInjector {
 
         bottomNavigation.setOnNavigationItemSelectedListener {
             when (it.itemId) {
+                R.id.action_home -> {
+                    fragmentsViewPager.setCurrentItemOrScrollToTop(
+                        HomeFragment.FRAG_ID,
+                        false
+                    )
+
+                    FirebaseAnalytics.getInstance(this)
+                        .setCurrentScreen(this, "Home page", "Home page")
+                    true
+                }
                 R.id.action_movies -> {
-                    fragmentsViewPager.setCurrentItemOrScrollToTop(MovieListFragment.FRAG_ID, false)
+                    fragmentsViewPager.setCurrentItemOrScrollToTop(
+                        MovieListFragment.FRAG_ID,
+                        false
+                    )
 
                     FirebaseAnalytics.getInstance(this)
                         .setCurrentScreen(this, "Movie list", "Movie list")
@@ -105,6 +120,8 @@ class MainActivity : LocationAwareActivity(), HasSupportFragmentInjector {
     }
 
     override fun processLastLocation(location: Location) {
+        (viewPagerAdapter.getItem(HomeFragment.FRAG_ID) as HomeFragment)
+            .notifyLastLocation(location)
         (viewPagerAdapter.getItem(CinemaListFragment.FRAG_ID) as CinemaListFragment)
             .notifyLastLocation(location)
     }

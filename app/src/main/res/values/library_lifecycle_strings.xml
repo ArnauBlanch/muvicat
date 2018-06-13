@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+	<string name="define_lifecycle">year;owner</string>
+	<!-- Author section -->
+	<string name="library_lifecycle_author">AOSP</string>
+	<string name="library_lifecycle_libraryName">Android Lifecycle</string>
+	<string name="library_lifecycle_libraryDescription">Android Lifecycle library</string>
+	<string name="library_lifecycle_isOpenSource">true</string>
+	<string name="library_lifecycle_libraryWebsite">https://developer.android.com/reference/android/arch/lifecycle/package-summary</string>
+	<string name="library_lifecycle_licenseId">apache_2_0</string>
+	<string name="library_lifecycle_year">2018</string>
+	<string name="library_lifecycle_owner">AOSP</string>
+</resources>

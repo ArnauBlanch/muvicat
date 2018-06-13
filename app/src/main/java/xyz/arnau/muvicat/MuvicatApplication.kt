@@ -4,7 +4,6 @@ import android.app.Activity
 import android.provider.Settings
 import android.support.multidex.MultiDexApplication
 import com.google.firebase.analytics.FirebaseAnalytics
-//import com.squareup.leakcanary.LeakCanary
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasActivityInjector
@@ -43,7 +42,6 @@ class MuvicatApplication : MultiDexApplication(), HasActivityInjector {
     private fun setupDebug() {
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
-            // Stetho.initializeWithDefaults(this)
         }
     }
 

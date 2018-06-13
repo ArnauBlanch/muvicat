@@ -4,6 +4,7 @@ import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider
 import dagger.Binds
 import dagger.Module
+import dagger.Provides
 import dagger.multibindings.IntoMap
 import xyz.arnau.muvicat.viewmodel.MuvicatViewModelFactory
 import xyz.arnau.muvicat.viewmodel.cinema.CinemaListViewModel
@@ -11,6 +12,7 @@ import xyz.arnau.muvicat.viewmodel.cinema.CinemaViewModel
 import xyz.arnau.muvicat.viewmodel.movie.MovieListViewModel
 import xyz.arnau.muvicat.viewmodel.movie.MovieViewModel
 import xyz.arnau.muvicat.viewmodel.showing.ShowingListViewModel
+import javax.inject.Singleton
 
 @Suppress("unused")
 @Module

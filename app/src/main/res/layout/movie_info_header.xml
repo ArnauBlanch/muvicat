@@ -3,8 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginStart="16dp"
-    android:layout_marginEnd="16dp"
     android:layout_marginTop="16dp"
     android:layout_marginBottom="6dp"
     android:orientation="vertical">
@@ -14,6 +12,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
         android:lineSpacingMultiplier="1.2"
         android:textSize="16sp"
         android:visibility="gone" />
@@ -23,6 +23,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
         android:orientation="vertical"
         android:visibility="gone">
 
@@ -48,6 +50,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
         android:orientation="vertical"
         android:visibility="gone">
 
@@ -72,6 +76,8 @@
         android:layout_height="wrap_content"
         android:baselineAligned="false"
         android:orientation="horizontal"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
         android:weightSum="2">
 
         <LinearLayout
@@ -137,6 +143,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="2dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
             android:fontFamily="@font/nunito_sans_extrabold"
             android:text="@string/cast"
             android:textColor="@android:color/black"
@@ -146,6 +154,8 @@
             android:id="@+id/movieCast"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
             android:textSize="15sp" />
 
         <android.support.v7.widget.RecyclerView
@@ -155,14 +165,19 @@
             android:nestedScrollingEnabled="false"
             android:scrollbarSize="2dp"
             android:fadeScrollbars="true"
+            android:clipToPadding="false"
+            android:paddingEnd="16dp"
+            android:paddingStart="16dp"
             android:scrollbarDefaultDelayBeforeFade="1000"
             android:scrollbarFadeDuration="400"
             android:layout_width="wrap_content"
-            android:layout_height="200dp"/>
+            android:layout_height="wrap_content"/>
     </LinearLayout>
 
     <RelativeLayout
         android:orientation="horizontal"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <TextView
@@ -202,4 +217,15 @@
             android:textColor="@drawable/showings_button_color"
             android:textSize="15sp" />
     </RelativeLayout>
+    <TextView
+        android:id="@+id/noShowingsMessage"
+        android:text="@string/no_showings"
+        android:visibility="gone"
+        android:textColor="@color/grey"
+        android:fontFamily="@font/nunito_sans_semibold_italic"
+        android:gravity="center"
+        android:textSize="16sp"
+        android:layout_margin="60dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 </LinearLayout>
