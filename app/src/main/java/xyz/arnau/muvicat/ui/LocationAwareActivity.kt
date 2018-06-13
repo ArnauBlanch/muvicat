@@ -15,15 +15,21 @@ import android.view.View
 import android.widget.TextView
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import com.google.firebase.analytics.FirebaseAnalytics
 import timber.log.Timber
 import xyz.arnau.muvicat.BuildConfig.APPLICATION_ID
 import xyz.arnau.muvicat.MuvicatApplication
 import xyz.arnau.muvicat.R
+import xyz.arnau.muvicat.ui.utils.QueuedSnack
+import xyz.arnau.muvicat.ui.utils.SnackQueue
+import javax.inject.Inject
 
 abstract class LocationAwareActivity : AppCompatActivity() {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private val REQUEST_PERMISSIONS_REQUEST_CODE = 34
     lateinit var app: MuvicatApplication
+    @Inject
+    lateinit var snackQueue: SnackQueue
 
     var lastLocation: Location? = null
         private set
@@ -53,8 +59,14 @@ abstract class LocationAwareActivity : AppCompatActivity() {
         if (requestCode == REQUEST_PERMISSIONS_REQUEST_CODE) {
             when {
                 grantResults.isEmpty() -> Timber.i("User location was cancelled.")
-                (grantResults[0] == PERMISSION_GRANTED) -> getLastLocationFromClient()
+                (grantResults[0] == PERMISSION_GRANTED) -> {
+                    getLastLocationFromClient()
+                    FirebaseAnalytics.getInstance(this)
+                        .logEvent("location_permission_granted", null)
+                }
                 else -> {
+                    FirebaseAnalytics.getInstance(this)
+                        .logEvent("location_permission_denied", null)
                     showSnackbar(
                         R.string.permission_denied_explanation,
                         R.string.settings,
@@ -106,7 +118,7 @@ abstract class LocationAwareActivity : AppCompatActivity() {
                     android.R.string.ok,
                     View.OnClickListener {
                         startLocationPermissionRequest()
-                    })
+                    }, SnackQueue.COULDNT_GET_LOCATION)
             } else {
                 startLocationPermissionRequest()
             }
@@ -115,16 +127,17 @@ abstract class LocationAwareActivity : AppCompatActivity() {
 
     private fun showSnackbar(
         snackStrId: Int,
-        actionStrId: Int = 0,
-        listener: View.OnClickListener? = null
+        actionStrId: Int? = null,
+        listener: View.OnClickListener? = null,
+        code: Int? = null
     ) {
-        val snackbar =
-            Snackbar.make(findViewById(android.R.id.content), getString(snackStrId), 12000)
-        (snackbar.view.findViewById(android.support.design.R.id.snackbar_text) as TextView).maxLines =
-                5
-        if (actionStrId != 0 && listener != null) {
-            snackbar.setAction(getString(actionStrId), listener)
-        }
-        snackbar.show()
+        snackQueue.enqueueSnack(QueuedSnack(
+            this,
+            getString(snackStrId),
+            Snackbar.LENGTH_LONG,
+            actionStrId?.let{ getString(it) },
+            listener,
+            5
+        ), code)
     }
 }

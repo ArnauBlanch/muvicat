@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <com.santalu.aspectratioimageview.AspectRatioImageView
+            android:id="@+id/movieBackdrop"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:background="@color/grey_light"
+            android:scaleType="centerCrop"
+            app:ari_aspect="height"
+            app:ari_ratio="0.65" />
+        <ImageView
+            android:id="@+id/playTrailer"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_play"
+            android:translationY="-15dp" />
+    </FrameLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/gradient_topdown"
+        android:fitsSystemWindows="true" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="110dp"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/gradient_downtop" />
+
+    <LinearLayout
+        android:id="@+id/bottomLayout"
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/movieTitle"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:shadowColor="@android:color/black"
+            android:shadowRadius="25"
+            android:textColor="@color/colorPrimary"
+            android:fontFamily="@font/nunito_sans_extrabold"
+            android:textSize="24sp"
+            android:padding="15dp"
+            android:layout_marginBottom="18dp"
+            android:text="Star Wars"
+            android:ellipsize="marquee"
+            android:singleLine="true" />
+
+        <ImageView
+            android:id="@+id/arrow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_gravity="center_vertical"
+            android:contentDescription="@string/showings"
+            android:src="@drawable/ic_chevron_right_white_big" />
+    </LinearLayout>
+</RelativeLayout>

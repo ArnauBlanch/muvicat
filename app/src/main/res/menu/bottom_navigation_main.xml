@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <!--<item
+    <item
         android:id="@+id/action_home"
         android:enabled="true"
         android:icon="@drawable/ic_popcorn"
         android:title="@string/home"
-        app:showAsAction="ifRoom|withText" />-->
+        app:showAsAction="ifRoom|withText" />
     <item
         android:id="@+id/action_movies"
         android:enabled="true"
@@ -28,7 +28,7 @@
     <item
         android:id="@+id/action_selection"
         android:enabled="true"
-        android:icon="@drawable/ic_user"
-        android:title="@string/selection"
+        android:icon="@drawable/ic_star"
+        android:title="@string/valorades"
         app:showAsAction="ifRoom|withText" />
 </menu>

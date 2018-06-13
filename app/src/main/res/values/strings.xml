@@ -49,4 +49,45 @@
     <string name="voted">Valorat</string>
     <string name="voted_movies">Pel·lícules valorades</string>
     <string name="no_voted_movies">Encara no has valorat\ncap pel·lícula</string>
+    <string name="most_featured">El més destacat</string>
+    <string name="new_movies">Estrenes</string>
+    <string name="nearby_showings">A prop teu</string>
+    <string name="max_distance">Distància màxima</string>
+    <string name="ok">D\'acord</string>
+    <string name="no_showings_near_you">no hi ha sessions a prop teu</string>
+    <string name="about_app">Sobre l\'aplicació</string>
+    <string name="privacy_policy">Política de privacitat</string>
+    <string name="version">Versió</string>
+    <string name="muvicat_privacy_policy"><h2>Política de privacitat de Muvicat</h2>
+<p><em>Data d\'actualització:</em> 11 de juny de 2018</p>
+<p>Des de Muvicat, volem deixar clar quines dades pot recollir l\'aplicació, quin ús en fa i què pot compartir amb tercers. A continuació, detallem els diversos casos:</p>
+<ul>
+<li><strong>Estadístiques anònimes d\'ús.</strong> Per tal d\'analitzar l\'ús real que es fa de l\'aplicació i les seves funcionalitats, Muvicat utilitza <em>Google Analytics for Firebase</em> i per així poder millorar l\'experiència d\'usuari i incorporar millores i funcionalitats noves en el futur. Això suposa la recol·lecció de dades d\'ús associades a un identificador del teu dispositiu, el qual no permet la teva identificació personal. </li>
+<li><strong>Informes d\'errors de funcionament.</strong> Per tal de solucionar els errors de l\'aplicació que succeixin al teu dispositiu, Muvicat utilitza <em>Firebase Crashlytics</em> per recollir informació sobre l\'error ocurregut i característiques del teu dispositiu per poder esbrinar què l\'ha causat i arreglar-ho.</li>
+<li><strong>Ubicació del dispositiu.</strong> Per tal de personalitzar la visualització de la informació de la cartellera de cinema i facilitar l\'experiència d\'usuari, Muvicat demana permís per a utilitzar la ubicació del dispositiu (de precisió baixa) i així poder calcular la distància respecte a les sales de cinema. La ubicació <strong>no s\'emmagatzema</strong> i <strong>en cap cas surt del dispositiu</strong>.</li>
+<li><strong>Identificador pseudoanònim per a la valoració de pel·lícules.</strong> Per tal de permetre la valoració de pel·lícules via <em>TheMovieDB</em>, Muvicat demana a aquest servei que generi un identificador de sessió de convidat, el qual s\'emmagatzema al dispositiu mòbil i permet associar valoracions de pel·lícules a aquest identificador.</li>
+
+</ul>
+<p>Per tant, l\'aplicació pot compartir algunes dades amb <em>Firebase</em> (propietat de Google) i <em>The Movie Database</em>. Muvicat no emmagatzema cap altre tipus de dades en cap altre servidor. La pol·lítica de privacitat d\'aquests serveis de tercers pot consultar a:</p>
+<ul>
+<li>Google: <a href='https://policies.google.com/technologies/partner-sites?hl=ca' target='_blank' class='url'>https://policies.google.com/technologies/partner-sites?hl=ca</a></li>
+<li>TMDb: <a href='https://www.themoviedb.org/privacy-policy' target='_blank' class='url'>https://www.themoviedb.org/privacy-policy</a></li>
+
+</ul>
+        <br />
+<p>Pots comprovar com es tracten les teves dades consultant el codi font de l\'aplicació a <a href='https://github.com/ArnauBlanch/muvicat' target='_blank' class='url'>https://github.com/ArnauBlanch/muvicat</a>. A més, si tens alguna qüestió, pots enviar-la a <em>muvicat@arnau.xyz</em>.</p>
+
+</string>
+    <string name="by_clicking_accept">Pots acceptar la política de privacitat de Muvicat i donar el consentiment per a utilitzar aquestes dades o gestionar les teves preferències.</string>
+    <string name="usage_stats">Estadístiques d\'ús</string>
+    <string name="crash_reports">Informes d\'errors</string>
+    <string name="i_consent">Accepto i dono consentiment per a:</string>
+    <string name="crash_reports_disabled_message">Els informes d\'errors es deixaran de recollir la propera vegada que obris Muvicat.</string>
+    <string name="manage_preferences">Gestiona preferències</string>
+    <string name="app_description"><![CDATA[L\'aplicació <i>Muvicat</i> ha estat desenvolupada per l\'<b>Arnau Blanch Cortès</b>. Si tens qualsevol pregunta o suggeriment, contacta a <b><i>muvicat@arnau.xyz</i></b>.<br/><br/>El codi font d\'aquesta app està disponible a <b>https://github.com/ArnauBlanch/muvicat</b> sota la llicència GNU General Public License v2.]]></string>
+    <string name="used_libraries">Llibreries utilitzades</string>
+    <string name="modify_data_consent">Modifica consentiment</string>
+    <string name="data_sources">Fonts d\'informació</string>
+    <string name="valorades">Valorades</string>
+    <string name="no_showings">no hi ha cap sessió programada</string>
 </resources>

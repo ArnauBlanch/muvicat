@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:background="@color/darkGrey"
+    android:padding="16dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <TextView
+        android:layout_marginEnd="30dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="10dp"
+        android:fontFamily="@font/nunito_sans_semibold"
+        android:text="Aquesta aplicació consumeix dades de les següents fonts:"
+        android:textSize="14sp"
+        android:gravity="center"
+        android:textColor="@color/colorPrimary"
+        android:layout_marginBottom="12dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:fontFamily="@font/nunito_sans_extrabold"
+        android:text="Informació sobre la cartellera"
+        android:textSize="14sp"
+        android:gravity="center"
+        android:layout_marginBottom="5dp"
+        android:textColor="@color/colorPrimary"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="70dp"
+        android:src="@drawable/gencat"/>
+
+    <TextView
+        android:text="Data d'actualització:"
+        android:textSize="12sp"
+        android:layout_marginTop="6dp"
+        android:fontFamily="@font/nunito_sans_italic"
+        android:textColor="@color/light_grey"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/updateDate"
+        android:textSize="12sp"
+        android:fontFamily="@font/nunito_sans_extrabold"
+        android:textColor="@color/light_grey"
+        android:layout_marginBottom="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:fontFamily="@font/nunito_sans_extrabold"
+        android:text="Informació extra i valoracions sobre pel·lícules"
+        android:textSize="14sp"
+        android:gravity="center"
+        android:layout_marginBottom="10dp"
+        android:textColor="@color/colorPrimary"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="80dp"
+        android:layout_marginBottom="16dp"
+        android:src="@drawable/tmdb"/>
+    
+    <TextView
+        android:text="Aquest producte utilitza l'API de TMDb i les dades del DGPL però no està aprovat ni certificat per TMDb ni la Generalitat de Catalunya."
+        android:textSize="11sp"
+        android:layout_marginTop="20dp"
+        android:textAlignment="center"
+        android:fontFamily="@font/nunito_sans_italic"
+        android:textColor="@color/light_grey"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+</LinearLayout>

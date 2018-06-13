@@ -61,7 +61,7 @@ class MovieListAdapter @Inject constructor() : RecyclerView.Adapter<MovieListAda
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val itemView = LayoutInflater.from(parent.context)
-            .inflate(R.layout.movie_item, parent, false)
+            .inflate(R.layout.movie_item_vert, parent, false)
         return ViewHolder(itemView)
     }
 

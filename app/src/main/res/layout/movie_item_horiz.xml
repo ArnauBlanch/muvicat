@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/movieCardView"
+    android:layout_width="145dp"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:layout_marginEnd="6dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?android:selectableItemBackground"
+    app:cardCornerRadius="0dp"
+    app:cardElevation="0dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <com.santalu.aspectratioimageview.AspectRatioImageView
+                    android:id="@+id/moviePoster"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/skeleton_light"
+                    app:ari_aspect="height"
+                    app:ari_ratio="1.43" />
+
+                <TextView
+                    android:id="@+id/releaseDate"
+                    android:visibility="gone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/moviePoster"
+                    android:background="@color/colorAccentTransparent"
+                    android:fontFamily="@font/nunito_sans_semibold"
+                    android:padding="3dp"
+                    android:textAlignment="center"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="14sp" />
+
+                <ImageView
+                    android:id="@+id/star"
+                    android:visibility="gone"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_alignEnd="@+id/moviePoster"
+                    android:layout_alignTop="@+id/moviePoster"
+                    android:layout_margin="0dp"
+                    android:src="@drawable/star_with_border" />
+            </RelativeLayout>
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/movieTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="3dp"
+            android:paddingBottom="6dp"
+            android:fontFamily="@font/nunito_sans_extrabold"
+            android:lineSpacingMultiplier="0.9"
+            android:lines="2"
+            android:textColor="#000000"
+            android:textSize="15sp" />
+    </LinearLayout>
+</android.support.v7.widget.CardView>

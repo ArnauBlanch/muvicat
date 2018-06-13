@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+	<string name="define_youtube">year;owner</string>
+	<!-- Author section -->
+	<string name="library_youtube_author">Google</string>
+	<string name="library_youtube_libraryName">YouTube Android Player API</string>
+	<string name="library_youtube_libraryDescription">The YouTube Android Player API enables you to incorporate video playback functionality into your Android applications. The API defines methods for loading and playing YouTube videos (and playlists) and for customizing and controlling the video playback experience.</string>
+	<string name="library_youtube_isOpenSource">true</string>
+	<string name="library_youtube_libraryWebsite">https://developers.google.com/youtube/android/player</string>
+	<string name="library_youtube_licenseId">apache_2_0</string>
+	<string name="library_youtube_year">2018</string>
+	<string name="library_youtube_owner">Google</string>
+</resources>

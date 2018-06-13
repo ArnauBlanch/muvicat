@@ -32,6 +32,7 @@ class ShowingRepository(
     }
 
     private var countDownDone = false
+    private var currentlyFetching = false
 
     internal fun hasExpired(): Boolean {
         val currentTime = System.currentTimeMillis()
@@ -59,6 +60,7 @@ class ShowingRepository(
                     afterLatch.countDown()
                     countDownDone = true
                 }
+                currentlyFetching = false
             }
 
             override fun onFetchFailed() {
@@ -66,9 +68,11 @@ class ShowingRepository(
                     afterLatch.countDown()
                     countDownDone = true
                 }
+                currentlyFetching = false
             }
 
             override fun createCall(): LiveData<Response<List<ShowingEntity>>> {
+                currentlyFetching = true
                 return gencatRemote.getShowings()
             }
 
@@ -77,7 +81,7 @@ class ShowingRepository(
             }
 
             override fun shouldFetch(data: List<Showing>?): Boolean {
-                val shouldFetch = data == null || data.isEmpty() || hasExpired()
+                val shouldFetch = !currentlyFetching && (data == null || data.isEmpty() || hasExpired())
                 if (!shouldFetch && !countDownDone) {
                     afterLatch.countDown()
                     countDownDone = true

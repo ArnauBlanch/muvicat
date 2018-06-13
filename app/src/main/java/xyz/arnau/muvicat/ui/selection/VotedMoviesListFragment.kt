@@ -58,8 +58,6 @@ class VotedMoviesListFragment : BasicMovieListFragment<Movie>(), ScrollableToTop
 
     override fun getMoviesLiveData() = movieListViewModel.votedMovies
 
-    //override fun getRecyclerViewLayoutManager() = LinearLayoutManager(context)
-
     override fun getRecyclerView(): RecyclerView = moviesRecyclerView
 
     override fun getRecyclerViewAdapter() = moviesAdapter
@@ -67,6 +65,9 @@ class VotedMoviesListFragment : BasicMovieListFragment<Movie>(), ScrollableToTop
     override fun prepareSkeletonScreen(): RecyclerViewSkeletonScreen =
         Skeleton.bind(moviesRecyclerView)
             .adapter(getRecyclerViewAdapter())
+            .count(6)
+            .color(R.color.skeleton_shimmer)
+            .load(R.layout.movie_item_vert_skeleton)
             .show()
 
     companion object {

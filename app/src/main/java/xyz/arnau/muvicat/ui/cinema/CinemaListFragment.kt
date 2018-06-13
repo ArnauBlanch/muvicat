@@ -23,8 +23,10 @@ import xyz.arnau.muvicat.repository.model.Resource
 import xyz.arnau.muvicat.repository.model.Status
 import xyz.arnau.muvicat.di.Injectable
 import xyz.arnau.muvicat.ui.*
+import xyz.arnau.muvicat.ui.utils.QueuedSnack
 import xyz.arnau.muvicat.ui.utils.ScrollableToTop
 import xyz.arnau.muvicat.ui.utils.SimpleDividerItemDecoration
+import xyz.arnau.muvicat.ui.utils.SnackQueue
 import xyz.arnau.muvicat.utils.LocationUtils
 import xyz.arnau.muvicat.viewmodel.cinema.CinemaListViewModel
 import javax.inject.Inject
@@ -33,6 +35,8 @@ import javax.inject.Inject
 class CinemaListFragment : ListFragment(), ScrollableToTop, Injectable {
     @Inject
     lateinit var cinemasAdapter: CinemaListAdapter
+    @Inject
+    lateinit var snackQueue: SnackQueue
 
     @Inject
     lateinit var cinemaListViewModel: CinemaListViewModel
@@ -93,10 +97,12 @@ class CinemaListFragment : ListFragment(), ScrollableToTop, Injectable {
             if (data != null && !data.isEmpty()) {
                 updateCinemaList(data, getLastLocation())
                 skeleton.hide()
-                view?.let {
-                    Snackbar.make(it, getString(R.string.couldnt_update_data), 6000)
-                        .show()
-                }
+                snackQueue.enqueueSnack(
+                    QueuedSnack(
+                        activity!!,
+                        getString(R.string.couldnt_update_data),
+                        8000
+                    ), SnackQueue.COULDNT_UPDATE)
             } else {
                 cinemasRecyclerView.visibility = View.GONE
                 errorMessage.visibility = View.VISIBLE
@@ -161,6 +167,6 @@ class CinemaListFragment : ListFragment(), ScrollableToTop, Injectable {
     }
 
     companion object {
-        const val FRAG_ID = 2
+        const val FRAG_ID = 3
     }
 }

@@ -6,12 +6,16 @@ import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.media.Rating
 import android.net.Uri
+import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.RequestBuilder
 import com.google.android.youtube.player.YouTubeIntents
+import com.google.firebase.analytics.FirebaseAnalytics
 import me.zhanghai.android.materialratingbar.MaterialRatingBar
 import xyz.arnau.muvicat.R
 import xyz.arnau.muvicat.repository.model.Movie
@@ -91,12 +95,24 @@ class MovieInfoToolbarViewHolder(private val activity: MovieActivity) {
 
         movie.trailerUrl?.let { videoId ->
             playTrailerButton.setVisible()
-            playTrailerButton.setOnClickListener { watchYoutubeVideo(activity, videoId) }
+            playTrailerButton.setOnClickListener {
+                watchYoutubeVideo(activity, videoId)
+                FirebaseAnalytics.getInstance(activity)
+                    .logEvent("play_trailer", Bundle().apply { putString("source", "movie_info") })
+            }
 
             if (movie.backdropUrl == null) {
                 GlideApp.with(activity)
                     .load("https://img.youtube.com/vi/$videoId/maxresdefault.jpg")
                     .centerCrop()
+                    .error(
+                        Glide.with(activity)
+                            .load("https://img.youtube.com/vi/$videoId/sddefault.jpg")
+                            .error(
+                                GlideApp.with(activity)
+                                    .load("https://img.youtube.com/vi/$videoId/hqdefault.jpg")
+                            )
+                    )
                     .into(backdrop)
             }
         }
@@ -183,10 +199,12 @@ class MovieInfoToolbarViewHolder(private val activity: MovieActivity) {
         try {
             context.startActivity(
                 YouTubeIntents.createPlayVideoIntentWithOptions(activity, id, true, true)
+                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             )
         } catch (ex: ActivityNotFoundException) {
             context.startActivity(
                 Intent(Intent.ACTION_VIEW, Uri.parse("https://www.youtube.com/watch?v=$id"))
+                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             )
         }
 

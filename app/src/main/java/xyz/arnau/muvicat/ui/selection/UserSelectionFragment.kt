@@ -45,10 +45,12 @@ class UserSelectionFragment: Fragment(), ScrollableToTop {
     }
 
     override fun scrollToTop() {
-
+        if (::tabAdapter.isInitialized)
+            (tabAdapter.getItem(0) as ScrollableToTop).scrollToTop()
+        selectionToolbarLayout.setExpanded(true)
     }
 
     companion object {
-        const val FRAG_ID = 3
+        const val FRAG_ID = 4
     }
 }
