@@ -217,4 +217,15 @@
             android:textColor="@drawable/showings_button_color"
             android:textSize="15sp" />
     </RelativeLayout>
+    <TextView
+        android:id="@+id/noShowingsMessage"
+        android:text="@string/no_showings"
+        android:visibility="gone"
+        android:textColor="@color/grey"
+        android:fontFamily="@font/nunito_sans_semibold_italic"
+        android:gravity="center"
+        android:textSize="16sp"
+        android:layout_margin="60dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 </LinearLayout>

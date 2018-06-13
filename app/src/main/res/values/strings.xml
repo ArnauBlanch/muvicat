@@ -89,4 +89,5 @@
     <string name="modify_data_consent">Modifica consentiment</string>
     <string name="data_sources">Fonts d\'informació</string>
     <string name="valorades">Valorades</string>
+    <string name="no_showings">no hi ha cap sessió programada</string>
 </resources>
