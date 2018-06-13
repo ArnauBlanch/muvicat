@@ -45,7 +45,8 @@ class UserSelectionFragment: Fragment(), ScrollableToTop {
     }
 
     override fun scrollToTop() {
-        (tabAdapter.getItem(0) as ScrollableToTop).scrollToTop()
+        if (::tabAdapter.isInitialized)
+            (tabAdapter.getItem(0) as ScrollableToTop).scrollToTop()
         selectionToolbarLayout.setExpanded(true)
     }
 
